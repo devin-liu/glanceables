@@ -45,21 +45,56 @@ class WebViewCoordinator: NSObject, WKNavigationDelegate {
 struct ContentView: View {
     let columnLayout = Array(repeating: GridItem(), count: 3)
 
-    @State private var urlString = "https://maps.app.goo.gl/DaxShLmLsBvqTVwz7"
-    @State private var url = URL(string: "https://maps.app.goo.gl/DaxShLmLsBvqTVwz7")!
-    
+    @State private var urls: [String] = []
+
     var body: some View {
         ScrollView {
+            
+//            HeaderView()
+//                         .frame(height: 110)
+//                         .padding()
+                               
             LazyVGrid(columns: columnLayout) {
-                WebBrowserView(url: URL(string: "https://maps.app.goo.gl/DaxShLmLsBvqTVwz7") ?? URL(string: "https://fallback-url.com")!)
-                    .frame(height: 300)
-                
-                WebBrowserView(url: URL(string: "https://www.caltrain.com/") ?? URL(string: "https://fallback-url.com")!)
-                    .frame(height: 300)
-                
+                Text("Glanceables")
+                    .font(.system(size: 60)) // Smaller font size for the text
+                    .fontWeight(.medium) // Medium font weight
+                    .foregroundColor(Color.black) // Text color set to gray
+                    
+            }
+            LazyVGrid(columns: columnLayout) {
+                if urls.isEmpty {
+                    emptyStateView
+                } else {
+                    urlGrid
+                }
             }
         }
         .padding()
-                    .background(Color.black.opacity(0.8))
+        .background(Color.gray.opacity(0.1)) // Adjust the background color to match your Figma design
+    }
+
+    var emptyStateView: some View {
+        VStack {
+            Spacer()
+            CreateButtonView()
+            .padding()
+            Spacer()
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+
+    var urlGrid: some View {
+            ForEach(urls, id: \.self) { urlString in
+                if let url = URL(string: urlString) {
+                    WebBrowserView(url: url)
+                        .frame(height: 300)
+                }
+            }
     }
 }
+
+
+#Preview {
+    ContentView()
+}
+

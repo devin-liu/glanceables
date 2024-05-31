@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		030062972C0A7F2600B0242D /* HeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 030062962C0A7F2600B0242D /* HeaderView.swift */; };
+		030062992C0A833200B0242D /* CreateButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 030062982C0A833200B0242D /* CreateButtonView.swift */; };
 		0378B8672C096D850005BAE5 /* glanceablesApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0378B8662C096D850005BAE5 /* glanceablesApp.swift */; };
 		0378B8692C096D850005BAE5 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0378B8682C096D850005BAE5 /* ContentView.swift */; };
 		0378B86B2C096D850005BAE5 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0378B86A2C096D850005BAE5 /* Item.swift */; };
@@ -16,6 +18,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		030062962C0A7F2600B0242D /* HeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderView.swift; sourceTree = "<group>"; };
+		030062982C0A833200B0242D /* CreateButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateButtonView.swift; sourceTree = "<group>"; };
 		0378B8632C096D850005BAE5 /* glanceables.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = glanceables.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0378B8662C096D850005BAE5 /* glanceablesApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = glanceablesApp.swift; sourceTree = "<group>"; };
 		0378B8682C096D850005BAE5 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -39,6 +43,8 @@
 		0378B85A2C096D850005BAE5 = {
 			isa = PBXGroup;
 			children = (
+				030062982C0A833200B0242D /* CreateButtonView.swift */,
+				030062962C0A7F2600B0242D /* HeaderView.swift */,
 				0378B8652C096D850005BAE5 /* glanceables */,
 				0378B8642C096D850005BAE5 /* Products */,
 			);
@@ -143,9 +149,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				030062972C0A7F2600B0242D /* HeaderView.swift in Sources */,
 				0378B8772C096DB00005BAE5 /* WebBrowserView.swift in Sources */,
 				0378B8692C096D850005BAE5 /* ContentView.swift in Sources */,
 				0378B86B2C096D850005BAE5 /* Item.swift in Sources */,
+				030062992C0A833200B0242D /* CreateButtonView.swift in Sources */,
 				0378B8672C096D850005BAE5 /* glanceablesApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

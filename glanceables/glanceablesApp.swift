@@ -1,7 +1,7 @@
 import SwiftUI
 
 @main
-struct ColorGridApp: App {
+struct glanceablesApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
