@@ -12,6 +12,7 @@
 		0378B86B2C096D850005BAE5 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0378B86A2C096D850005BAE5 /* Item.swift */; };
 		0378B86D2C096D860005BAE5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0378B86C2C096D860005BAE5 /* Assets.xcassets */; };
 		0378B8702C096D860005BAE5 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0378B86F2C096D860005BAE5 /* Preview Assets.xcassets */; };
+		0378B8772C096DB00005BAE5 /* WebBrowserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0378B8762C096DB00005BAE5 /* WebBrowserView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -21,6 +22,7 @@
 		0378B86A2C096D850005BAE5 /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
 		0378B86C2C096D860005BAE5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		0378B86F2C096D860005BAE5 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		0378B8762C096DB00005BAE5 /* WebBrowserView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebBrowserView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -55,6 +57,7 @@
 			children = (
 				0378B8662C096D850005BAE5 /* glanceablesApp.swift */,
 				0378B8682C096D850005BAE5 /* ContentView.swift */,
+				0378B8762C096DB00005BAE5 /* WebBrowserView.swift */,
 				0378B86A2C096D850005BAE5 /* Item.swift */,
 				0378B86C2C096D860005BAE5 /* Assets.xcassets */,
 				0378B86E2C096D860005BAE5 /* Preview Content */,
@@ -140,6 +143,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0378B8772C096DB00005BAE5 /* WebBrowserView.swift in Sources */,
 				0378B8692C096D850005BAE5 /* ContentView.swift in Sources */,
 				0378B86B2C096D850005BAE5 /* Item.swift in Sources */,
 				0378B8672C096D850005BAE5 /* glanceablesApp.swift in Sources */,

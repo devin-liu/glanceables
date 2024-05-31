@@ -1,61 +1,65 @@
-//
-//  ContentView.swift
-//  glanceables
-//
-//  Created by Devin Liu on 5/30/24.
-//
-
 import SwiftUI
-import SwiftData
+import WebKit
 
-struct ContentView: View {
-    @Environment(\.modelContext) private var modelContext
-    @Query private var items: [Item]
-
-    var body: some View {
-        NavigationSplitView {
-            List {
-                ForEach(items) { item in
-                    NavigationLink {
-                        Text("Item at \(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))")
-                    } label: {
-                        Text(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))
-                    }
-                }
-                .onDelete(perform: deleteItems)
-            }
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    EditButton()
-                }
-                ToolbarItem {
-                    Button(action: addItem) {
-                        Label("Add Item", systemImage: "plus")
-                    }
-                }
-            }
-        } detail: {
-            Text("Select an item")
-        }
+// WebView wrapper for displaying web content with zoom and scroll capabilities
+struct WebView: UIViewRepresentable {
+    @Binding var url: URL
+    
+    func makeUIView(context: Context) -> WKWebView {
+        let preferences = WKPreferences()
+        preferences.javaScriptEnabled = true
+        
+        let configuration = WKWebViewConfiguration()
+        configuration.preferences = preferences
+        
+        let webView = WKWebView(frame: .zero, configuration: configuration)
+        webView.navigationDelegate = context.coordinator
+        webView.allowsBackForwardNavigationGestures = true
+        webView.scrollView.isScrollEnabled = true
+        webView.scrollView.minimumZoomScale = 1.0
+        webView.scrollView.maximumZoomScale = 3.0
+        
+        return webView
     }
-
-    private func addItem() {
-        withAnimation {
-            let newItem = Item(timestamp: Date())
-            modelContext.insert(newItem)
-        }
+    
+    func updateUIView(_ webView: WKWebView, context: Context) {
+        let request = URLRequest(url: url)
+        webView.load(request)
     }
-
-    private func deleteItems(offsets: IndexSet) {
-        withAnimation {
-            for index in offsets {
-                modelContext.delete(items[index])
-            }
-        }
+    
+    func makeCoordinator() -> WebViewCoordinator {
+        return WebViewCoordinator()
     }
 }
 
-#Preview {
-    ContentView()
-        .modelContainer(for: Item.self, inMemory: true)
+class WebViewCoordinator: NSObject, WKNavigationDelegate {
+    func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
+        print("WebView load failed: \(error.localizedDescription)")
+    }
+    
+    func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
+        print("WebView provisional load failed: \(error.localizedDescription)")
+    }
+}
+
+struct ContentView: View {
+    let columnLayout = Array(repeating: GridItem(), count: 3)
+
+    @State private var urlString = "https://maps.app.goo.gl/DaxShLmLsBvqTVwz7"
+    @State private var url = URL(string: "https://maps.app.goo.gl/DaxShLmLsBvqTVwz7")!
+    
+    var body: some View {
+        ScrollView {
+            LazyVGrid(columns: columnLayout) {
+                WebBrowserView(url: URL(string: "https://maps.app.goo.gl/DaxShLmLsBvqTVwz7") ?? URL(string: "https://fallback-url.com")!)
+                    .frame(height: 300)
+                
+                WebBrowserView(url: URL(string: "https://www.caltrain.com/") ?? URL(string: "https://fallback-url.com")!)
+                    .frame(height: 300)
+                
+            }
+        }
+        .padding()
+                    .background(Color.black.opacity(0.8))
+    }
 }
