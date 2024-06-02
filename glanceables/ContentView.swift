@@ -49,8 +49,8 @@ struct ContentView: View {
     @State private var urls: [String] = []
     @State private var newURLString = "" // State to capture the new URL input
 
-
     var body: some View {
+        BlackMenuBarView(isShowingModal: $showingAddURLModal)
         ScrollView {
             LazyVGrid(columns: columnLayout) {
                 Text("Glanceables")
@@ -72,6 +72,12 @@ struct ContentView: View {
         .sheet(isPresented: $showingAddURLModal) {
             addURLModal
         }
+        .onAppear {
+               loadURLs()
+           }
+           .onChange(of: urls) { _ in
+               saveURLs()
+           }
     }
 
     var emptyStateView: some View {
@@ -92,6 +98,14 @@ struct ContentView: View {
                 }
             }
     }
+    
+    private func loadURLs() {
+           urls = UserDefaultsManager.shared.loadURLs()
+       }
+
+       private func saveURLs() {
+           UserDefaultsManager.shared.saveURLs(urls)
+       }
     
     
     var addURLModal: some View {
