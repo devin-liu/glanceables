@@ -95,8 +95,29 @@ struct ContentView: View {
                 if let url = URL(string: urlString) {
                     WebBrowserView(url: url)
                         .frame(height: 300)
+                        .contextMenu {  // Context menu for each web browser view
+                                            Button(action: {
+                                                deleteURL(urlString)  // Function to delete the URL
+                                            }) {
+                                                Label("Delete", systemImage: "trash")
+                                            }
+                                        }
                 }
             }
+            .onDelete(perform: deleteItems)  // Handling swipe to delete if needed
+
+    }
+    
+    // Function to delete a URL from the array
+    private func deleteURL(_ urlString: String) {
+        urls = urls.filter { $0 != urlString }
+        saveURLs()  // Save the modified list to UserDefaults
+    }
+
+    // Function to handle swipe to delete
+    private func deleteItems(at offsets: IndexSet) {
+        urls.remove(atOffsets: offsets)
+        saveURLs()
     }
     
     private func loadURLs() {
