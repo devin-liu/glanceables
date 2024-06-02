@@ -1,43 +1,64 @@
 import SwiftUI
 
 struct CreateButtonView: View {
+    @Binding var isShowingModal: Bool // Add a binding property
+
     var body: some View {
-        
-            VStack { // Adjust spacing between the icon box and the text
+        Button(action: {
+            isShowingModal.toggle() // Action to show modal
+        }) {
+            VStack {
                 ZStack {
                     Rectangle()
-                        .frame(width: 60, height: 60) // Define the size of the square
-                        .foregroundColor(Color.white) // Set the color of the square
-                        .cornerRadius(10) // Rounded corners for the square
+                        .frame(width: 60, height: 60)
+                        .foregroundColor(Color.white)
+                        .cornerRadius(10)
                     
                     Image(systemName: "plus")
                         .resizable()
                         .scaledToFit()
-                        .frame(width: 30, height: 24) // Adjust the size of the plus icon
-                        .foregroundColor(Color.gray) // Set the icon color to white
+                        .frame(width: 30, height: 24)
+                        .foregroundColor(Color.gray)
                 }
-                
-                
+                .frame(width: 144, height: 170)
+                .background(Color.black.opacity(0.3))
+                .cornerRadius(24)
+                .shadow(radius: 6)
+
+                Text("Create Your First Glanceable")
+                    .font(.system(size: 12))
+                    .fontWeight(.medium)
+                    .foregroundColor(Color.black)
             }
-            .frame(width: 144, height: 170) // Define the overall frame size of the button
-            .background(Color.black.opacity(0.3)) // Background color of the whole component
-            .cornerRadius(24) // Rounded corners for the entire component
-            .shadow(radius: 6) // Optional: add shadow for a slight depth effect
-            
-            Text("Create Your First Glanceable")
-                .font(.system(size: 12)) // Smaller font size for the text
-                .fontWeight(.medium) // Medium font weight
-                .foregroundColor(Color.black) // Text color set to gray
         }
-    
+    }
 }
+
 
 struct CreateButtonView_Previews: PreviewProvider {
     static var previews: some View {
-        VStack{
-            CreateButtonView()
-                .previewLayout(.sizeThatFits)
-                .padding()
+        // Use a state wrapper in your preview environment
+        StatefulPreviewWrapper(false) { isShowingModal in
+            VStack {
+                CreateButtonView(isShowingModal: isShowingModal)
+                    .previewLayout(.sizeThatFits)
+                    .padding()
+            }
         }
+    }
+}
+
+/// Helper struct to provide a mutable state for previews
+struct StatefulPreviewWrapper<Value, Content: View>: View {
+    @State private var value: Value
+    let content: (Binding<Value>) -> Content
+    
+    init(_ initialValue: Value, @ViewBuilder content: @escaping (Binding<Value>) -> Content) {
+        _value = State(initialValue: initialValue)
+        self.content = content
+    }
+
+    var body: some View {
+        content($value)
     }
 }

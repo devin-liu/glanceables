@@ -45,15 +45,13 @@ class WebViewCoordinator: NSObject, WKNavigationDelegate {
 struct ContentView: View {
     let columnLayout = Array(repeating: GridItem(), count: 3)
 
+    @State private var showingAddURLModal = false // State to manage modal visibility
     @State private var urls: [String] = []
+    @State private var newURLString = "" // State to capture the new URL input
+
 
     var body: some View {
         ScrollView {
-            
-//            HeaderView()
-//                         .frame(height: 110)
-//                         .padding()
-                               
             LazyVGrid(columns: columnLayout) {
                 Text("Glanceables")
                     .font(.system(size: 60)) // Smaller font size for the text
@@ -70,13 +68,16 @@ struct ContentView: View {
             }
         }
         .padding()
-        .background(Color.gray.opacity(0.1)) // Adjust the background color to match your Figma design
+        .background(Color.gray.opacity(0.1))
+        .sheet(isPresented: $showingAddURLModal) {
+            addURLModal
+        }
     }
 
     var emptyStateView: some View {
         VStack {
             Spacer()
-            CreateButtonView()
+            CreateButtonView(isShowingModal: $showingAddURLModal)
             .padding()
             Spacer()
         }
@@ -91,6 +92,34 @@ struct ContentView: View {
                 }
             }
     }
+    
+    
+    var addURLModal: some View {
+        NavigationView {
+            Form {
+                Section(header: Text("Add a new URL")) {
+                    TextField("Enter URL here", text: $newURLString)
+                }
+                Section {
+                    Button("Save") {
+                        if !newURLString.isEmpty {
+                            urls.append(newURLString)
+                            newURLString = "" // Reset the text field
+                            showingAddURLModal = false // Dismiss the modal
+                        }
+                    }
+                }
+            }
+            .navigationBarTitle("New URL", displayMode: .inline)
+            .navigationBarItems(trailing: Button("Cancel") {
+                showingAddURLModal = false
+                newURLString = "" // Reset the text field
+            })
+        }
+    }
+    
+    
+    
 }
 
 
