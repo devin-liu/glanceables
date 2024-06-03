@@ -26,7 +26,7 @@ struct CreateButtonView: View {
                 .shadow(radius: 6)
 
                 Text("Create Your First Glanceable")
-                    .font(.system(size: 12))
+                    .font(.system(.footnote, design: .rounded)) // Use dynamic type with style
                     .fontWeight(.medium)
                     .foregroundColor(Color.black)
             }

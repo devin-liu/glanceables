@@ -7,22 +7,20 @@ struct BlackMenuBarView: View {
     var body: some View {
         
             HStack {
-                Text("Favorites")
-                    .font(.system(size: 24, weight: .bold))
-                    .foregroundColor(.white)
-
                 Spacer()
+
+                
 
                 Button(action: {
                     self.isShowingModal.toggle()  // Toggle the modal visibilityÏÏ
                 }) {
                     Image(systemName: "plus")
-                        .font(.system(size: 20))
+                        .font(.system(size: 40))
                         .foregroundColor(.white)
                 }
-
-                SearchBar(text: $searchText)
-                    .frame(width: 200)
+                
+                
+                
             }
             .padding()
             .background(Color.black) // Black background for the menu bar

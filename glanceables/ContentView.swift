@@ -54,7 +54,7 @@ struct ContentView: View {
         ScrollView {
             LazyVGrid(columns: columnLayout) {
                 Text("Glanceables")
-                    .font(.system(size: 60)) // Smaller font size for the text
+                    .font(.system(.largeTitle, design: .rounded)) // Use dynamic type with style
                     .fontWeight(.medium) // Medium font weight
                     .foregroundColor(Color.black) // Text color set to gray
                     
