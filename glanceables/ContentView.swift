@@ -2,12 +2,14 @@ import SwiftUI
 import WebKit
 
 struct ContentView: View {
-    @State private var showingAddURLModal = false // State to manage modal visibility
+    @State private var showingURLModal = false // State to manage modal visibility
     @State private var urls: [String] = []
-    @State private var newURLString = "" // State to capture the new URL input
+    @State private var urlString = "" // State to capture the URL input
+    @State private var isEditing = false // State to determine if editing or adding a URL
+    @State private var selectedURLIndex: Int? = nil // State to capture the index of the URL being edited
 
     var body: some View {
-        BlackMenuBarView(isShowingModal: $showingAddURLModal)
+        BlackMenuBarView(isShowingModal: $showingURLModal)
         ScrollView {
             LazyVGrid(columns: [GridItem(.adaptive(minimum: 300))]) {
                 Text("Glanceables")
@@ -25,8 +27,8 @@ struct ContentView: View {
         }
         .padding()
         .background(Color.gray.opacity(0.1))
-        .sheet(isPresented: $showingAddURLModal) {
-            addURLModal
+        .sheet(isPresented: $showingURLModal) {
+            urlModal
         }
         .onAppear {
             loadURLs()
@@ -39,7 +41,7 @@ struct ContentView: View {
     var emptyStateView: some View {
         VStack {
             Spacer()
-            CreateButtonView(isShowingModal: $showingAddURLModal)
+            CreateButtonView(isShowingModal: $showingURLModal)
                 .padding()
             Spacer()
         }
@@ -49,13 +51,24 @@ struct ContentView: View {
     var urlGrid: some View {
         ForEach(urls, id: \.self) { urlString in
             if let url = URL(string: urlString) {
-                WebBrowserView(url: url)                    
+                WebBrowserView(url: url)
                     .contextMenu {
+                        Button(action: {
+                            if let index = urls.firstIndex(of: urlString) {
+                                selectedURLIndex = index
+                                self.urlString = urlString
+                                isEditing = true
+                                showingURLModal = true
+                            }
+                        }) {
+                            Label("Edit", systemImage: "pencil")
+                        }
                         Button(action: {
                             deleteURL(urlString)
                         }) {
                             Label("Delete", systemImage: "trash")
                         }
+                     
                     }
             }
         }
@@ -82,28 +95,37 @@ struct ContentView: View {
         UserDefaultsManager.shared.saveURLs(urls)
     }
 
-    var addURLModal: some View {
+    var urlModal: some View {
         NavigationView {
             Form {
-                Section(header: Text("Add a new URL")) {
-                    TextField("Enter URL here", text: $newURLString)
+                Section(header: Text(isEditing ? "Edit URL" : "Add a new URL")) {
+                    TextField("Enter URL here", text: $urlString)
                 }
                 Section {
                     Button("Save") {
-                        if !newURLString.isEmpty {
-                            urls.append(newURLString)
-                            newURLString = "" // Reset the text field
-                            showingAddURLModal = false // Dismiss the modal
+                        if !urlString.isEmpty {
+                            if isEditing, let index = selectedURLIndex {
+                                urls[index] = urlString
+                            } else {
+                                urls.append(urlString)
+                            }
+                            resetModalState()
                         }
                     }
                 }
             }
-            .navigationBarTitle("New URL", displayMode: .inline)
+            .navigationBarTitle(isEditing ? "Edit URL" : "New URL", displayMode: .inline)
             .navigationBarItems(trailing: Button("Cancel") {
-                showingAddURLModal = false
-                newURLString = "" // Reset the text field
+                resetModalState()
             })
         }
+    }
+
+    private func resetModalState() {
+        showingURLModal = false
+        urlString = "" // Reset the text field
+        isEditing = false
+        selectedURLIndex = nil // Reset the selected index
     }
 }
 
