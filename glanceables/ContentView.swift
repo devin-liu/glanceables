@@ -1,10 +1,7 @@
 import SwiftUI
 import WebKit
 
-
 struct ContentView: View {
-    let columnLayout = Array(repeating: GridItem(), count: 3)
-
     @State private var showingAddURLModal = false // State to manage modal visibility
     @State private var urls: [String] = []
     @State private var newURLString = "" // State to capture the new URL input
@@ -12,14 +9,13 @@ struct ContentView: View {
     var body: some View {
         BlackMenuBarView(isShowingModal: $showingAddURLModal)
         ScrollView {
-            LazyVGrid(columns: columnLayout) {
+            LazyVGrid(columns: [GridItem(.adaptive(minimum: 300))]) {
                 Text("Glanceables")
                     .font(.system(.largeTitle, design: .rounded)) // Use dynamic type with style
                     .fontWeight(.medium) // Medium font weight
                     .foregroundColor(Color.black) // Text color set to gray
-                    
             }
-            LazyVGrid(columns: columnLayout) {
+            LazyVGrid(columns: [GridItem(.adaptive(minimum: 300))]) {
                 if urls.isEmpty {
                     emptyStateView
                 } else {
@@ -33,41 +29,40 @@ struct ContentView: View {
             addURLModal
         }
         .onAppear {
-               loadURLs()
-           }
-           .onChange(of: urls) { _ in
-               saveURLs()
-           }
+            loadURLs()
+        }
+        .onChange(of: urls) { _ in
+            saveURLs()
+        }
     }
 
     var emptyStateView: some View {
         VStack {
             Spacer()
             CreateButtonView(isShowingModal: $showingAddURLModal)
-            .padding()
+                .padding()
             Spacer()
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
     var urlGrid: some View {
-            ForEach(urls, id: \.self) { urlString in
-                if let url = URL(string: urlString) {
-                    WebBrowserView(url: url)
-                        .frame(height: 300)
-                        .contextMenu {  // Context menu for each web browser view
-                                            Button(action: {
-                                                deleteURL(urlString)  // Function to delete the URL
-                                            }) {
-                                                Label("Delete", systemImage: "trash")
-                                            }
-                                        }
-                }
+        ForEach(urls, id: \.self) { urlString in
+            if let url = URL(string: urlString) {
+                WebBrowserView(url: url)
+                    .frame(height: 300) // Adjust the height as needed
+                    .contextMenu {
+                        Button(action: {
+                            deleteURL(urlString)
+                        }) {
+                            Label("Delete", systemImage: "trash")
+                        }
+                    }
             }
-            .onDelete(perform: deleteItems)  // Handling swipe to delete if needed
-
+        }
+        .onDelete(perform: deleteItems)
     }
-    
+
     // Function to delete a URL from the array
     private func deleteURL(_ urlString: String) {
         urls = urls.filter { $0 != urlString }
@@ -79,16 +74,15 @@ struct ContentView: View {
         urls.remove(atOffsets: offsets)
         saveURLs()
     }
-    
-    private func loadURLs() {
-           urls = UserDefaultsManager.shared.loadURLs()
-       }
 
-       private func saveURLs() {
-           UserDefaultsManager.shared.saveURLs(urls)
-       }
-    
-    
+    private func loadURLs() {
+        urls = UserDefaultsManager.shared.loadURLs()
+    }
+
+    private func saveURLs() {
+        UserDefaultsManager.shared.saveURLs(urls)
+    }
+
     var addURLModal: some View {
         NavigationView {
             Form {
@@ -112,13 +106,10 @@ struct ContentView: View {
             })
         }
     }
-    
-    
-    
 }
 
-
-#Preview {
-    ContentView()
+struct ContentView_Previews: PreviewProvider {
+    static var previews: some View {
+        ContentView()
+    }
 }
-
