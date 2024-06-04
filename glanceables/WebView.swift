@@ -1,11 +1,12 @@
 import SwiftUI
 import WebKit
 
-// WebView wrapper for displaying web content with zoom and scroll capabilities
+// WebView wrapper for displaying web content with zoom, scroll, and refresh capabilities
 struct WebView: UIViewRepresentable {
     @Binding var url: URL
     @Binding var pageTitle: String
-    
+    var refreshAction: (() -> Void)?  // Optional closure for custom refresh action
+
     func makeUIView(context: Context) -> WKWebView {
         let preferences = WKWebpagePreferences()
         preferences.allowsContentJavaScript = true
@@ -29,15 +30,17 @@ struct WebView: UIViewRepresentable {
     }
     
     func makeCoordinator() -> WebViewCoordinator {
-        WebViewCoordinator(self)
+        WebViewCoordinator(self, refreshAction: refreshAction)
     }
 }
 
 class WebViewCoordinator: NSObject, WKNavigationDelegate {
     var parent: WebView
+    var refreshAction: (() -> Void)?
     
-    init(_ parent: WebView) {
+    init(_ parent: WebView, refreshAction: (() -> Void)?) {
         self.parent = parent
+        self.refreshAction = refreshAction
     }
     
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
@@ -59,8 +62,8 @@ struct WebViewPreview: View {
     
     var body: some View {
         VStack {
-            WebView(url: $url, pageTitle: $pageTitle)
-                .edgesIgnoringSafeArea(.all)
+            WebView(url: $url, pageTitle: $pageTitle, refreshAction: nil) // No custom action provided; uses default
+            .edgesIgnoringSafeArea(.all)
             
             Text(pageTitle)
                 .font(.headline)

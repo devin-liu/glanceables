@@ -16,7 +16,9 @@ struct WebBrowserView: View {
     var body: some View {
         VStack {
             ZStack(alignment: .top) {
-                WebView(url: $url, pageTitle: $pageTitle)
+                WebView(url: $url, pageTitle: $pageTitle, refreshAction: {
+                    self.reloadWebView()
+                })
                     .frame(height: 300)
                     .edgesIgnoringSafeArea(.all)
             }
@@ -38,6 +40,10 @@ struct WebBrowserView: View {
                     .foregroundColor(.gray)
             }
             .padding()
+            .contentShape(Rectangle())  // Makes the entire HStack tappable
+            .onTapGesture {
+                reloadWebView()  // Reload WebView when the HStack is tapped
+            }
         }
         .onAppear {
             startTimer()
