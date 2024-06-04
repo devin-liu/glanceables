@@ -49,8 +49,7 @@ struct ContentView: View {
     var urlGrid: some View {
         ForEach(urls, id: \.self) { urlString in
             if let url = URL(string: urlString) {
-                WebBrowserView(url: url)
-                    .frame(height: 300) // Adjust the height as needed
+                WebBrowserView(url: url)                    
                     .contextMenu {
                         Button(action: {
                             deleteURL(urlString)
