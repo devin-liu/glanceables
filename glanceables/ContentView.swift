@@ -1,41 +1,50 @@
 import SwiftUI
-import WebKit
+import UniformTypeIdentifiers
+
 
 struct ContentView: View {
     @State private var showingURLModal = false
-    @State private var urls: [String] = []  // This stores the URLs as strings
+    @State private var urls: [WebViewItem] = [
+        WebViewItem(id: UUID(), url: URL(string: "https://example.com")!),
+        WebViewItem(id: UUID(), url: URL(string: "https://example.org")!)
+    ]
+    @State private var draggedItem: WebViewItem?
     @State private var urlString = ""
     @State private var isEditing = false
     @State private var selectedURLIndex: Int? = nil
     @State private var isURLValid = true
 
     var body: some View {
-        BlackMenuBarView(isShowingModal: $showingURLModal)
-        ScrollView {
-            LazyVGrid(columns: [GridItem(.adaptive(minimum: 300))]) {
-                Text("Glanceables")
-                    .font(.system(.largeTitle, design: .rounded))
-                    .fontWeight(.medium)
-                    .foregroundColor(Color.black)
-            }
-            LazyVGrid(columns: [GridItem(.adaptive(minimum: 300))]) {
-                if urls.isEmpty {
-                    emptyStateView
-                } else {
-                    urlGrid
+        VStack {
+            BlackMenuBarView(isShowingModal: $showingURLModal)
+            ScrollView {
+                LazyVGrid(columns: [GridItem(.adaptive(minimum: 300))]) {
+                    Text("Glanceables")
+                        .font(.system(.largeTitle, design: .rounded))
+                        .fontWeight(.medium)
+                        .foregroundColor(Color.black)
+                }
+                LazyVGrid(columns: [GridItem(.adaptive(minimum: 300))]) {
+                    if urls.isEmpty {
+                        emptyStateView
+                    } else {
+                        urlGrid
+                    }
                 }
             }
-        }
-        .padding()
-        .background(Color.gray.opacity(0.1))
-        .sheet(isPresented: $showingURLModal) {
-            URLModalView(showingURLModal: $showingURLModal, urlString: $urlString, isURLValid: $isURLValid, urls: $urls, selectedURLIndex: $selectedURLIndex, isEditing: $isEditing)
-        }
-        .onAppear {
-            loadURLs()
-        }
-        .onChange(of: urls) {
-            saveURLs()
+            .padding()
+            .background(Color.gray.opacity(0.1))
+            .sheet(isPresented: $showingURLModal) {
+                URLModalView(showingURLModal: $showingURLModal, urlString: $urlString, isURLValid: $isURLValid, urls: Binding(get: { urls.map { $0.url.absoluteString } }, set: { newUrls in
+                    urls = newUrls.map { WebViewItem(id: UUID(), url: URL(string: $0)!) }
+                }), selectedURLIndex: $selectedURLIndex, isEditing: $isEditing)
+            }
+            .onAppear {
+                loadURLs()
+            }
+            .onChange(of: urls) {
+                saveURLs()
+            }
         }
     }
 
@@ -50,45 +59,42 @@ struct ContentView: View {
     }
 
     var urlGrid: some View {
-        ForEach(urls.indices, id: \.self) { index in
-            if let url = URL(string: urls[index]) {
-                WebBrowserView(url: url, id: UUID())
-                    .contextMenu {
-                        Button(action: {
+        ForEach(urls) { item in
+            WebBrowserView(item: item)
+                .onDrag {
+                    self.draggedItem = item
+                    return NSItemProvider(object: item.url.absoluteString as NSString)
+                }
+                .onDrop(of: [UTType.text], delegate: DropViewDelegate(item: item, viewModel: $urls, draggedItem: $draggedItem))
+                .contextMenu {
+                    Button(action: {
+                        if let index = urls.firstIndex(where: { $0.id == item.id }) {
                             selectedURLIndex = index
-                            urlString = urls[index]
+                            urlString = urls[index].url.absoluteString
                             isEditing = true
                             showingURLModal = true
-                        }) {
-                            Label("Edit", systemImage: "pencil")
                         }
-                        Button(action: {
-                            deleteURL(at: index)
-                        }) {
-                            Label("Delete", systemImage: "trash")
-                        }
+                    }) {
+                        Label("Edit", systemImage: "pencil")
                     }
-            }
+                    Button(action: {
+                        if let index = urls.firstIndex(where: { $0.id == item.id }) {
+                            urls.remove(at: index)
+                            saveURLs()
+                        }
+                    }) {
+                        Label("Delete", systemImage: "trash")
+                    }
+                }
         }
-        .onDelete(perform: deleteItems)
-    }
-
-    private func deleteURL(at index: Int) {
-        urls.remove(at: index)
-        saveURLs()
-    }
-
-    private func deleteItems(at offsets: IndexSet) {
-        urls.remove(atOffsets: offsets)
-        saveURLs()
     }
 
     private func loadURLs() {
-        urls = UserDefaultsManager.shared.loadURLs()
+        urls = UserDefaultsManager.shared.loadURLs().map { WebViewItem(id: UUID(), url: URL(string: $0)!) }
     }
 
     private func saveURLs() {
-        UserDefaultsManager.shared.saveURLs(urls)
+        UserDefaultsManager.shared.saveURLs(urls.map { $0.url.absoluteString })
     }
 
     private func validateURL() {
@@ -101,6 +107,28 @@ struct ContentView: View {
         isEditing = false
         selectedURLIndex = nil
         isURLValid = true
+    }
+}
+
+struct DropViewDelegate: DropDelegate {
+    let item: WebViewItem
+    @Binding var viewModel: [WebViewItem]
+    @Binding var draggedItem: WebViewItem?
+
+    func dropEntered(info: DropInfo) {
+        guard let draggedItem = draggedItem, draggedItem.id != item.id else { return }
+
+        if let fromIndex = viewModel.firstIndex(where: { $0.id == draggedItem.id }),
+           let toIndex = viewModel.firstIndex(where: { $0.id == item.id }) {
+            withAnimation {
+                viewModel.move(fromOffsets: IndexSet(integer: fromIndex), toOffset: toIndex > fromIndex ? toIndex + 1 : toIndex)
+            }
+        }
+    }
+
+    func performDrop(info: DropInfo) -> Bool {
+        self.draggedItem = nil
+        return true
     }
 }
 

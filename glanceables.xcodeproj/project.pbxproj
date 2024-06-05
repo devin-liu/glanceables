@@ -14,6 +14,7 @@
 		030062A32C0EAE8900B0242D /* WebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 030062A22C0EAE8900B0242D /* WebView.swift */; };
 		030062A72C0FE8A100B0242D /* URLModalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 030062A62C0FE8A100B0242D /* URLModalView.swift */; };
 		030062A92C0FEC4100B0242D /* URLAutocompleteViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 030062A82C0FEC4100B0242D /* URLAutocompleteViewModel.swift */; };
+		030062B42C112BD100B0242D /* WebViewItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 030062B32C112BD100B0242D /* WebViewItem.swift */; };
 		0378B8672C096D850005BAE5 /* glanceablesApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0378B8662C096D850005BAE5 /* glanceablesApp.swift */; };
 		0378B8692C096D850005BAE5 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0378B8682C096D850005BAE5 /* ContentView.swift */; };
 		0378B86D2C096D860005BAE5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0378B86C2C096D860005BAE5 /* Assets.xcassets */; };
@@ -29,6 +30,7 @@
 		030062A22C0EAE8900B0242D /* WebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebView.swift; sourceTree = "<group>"; };
 		030062A62C0FE8A100B0242D /* URLModalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = URLModalView.swift; path = ../URLModalView.swift; sourceTree = "<group>"; };
 		030062A82C0FEC4100B0242D /* URLAutocompleteViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLAutocompleteViewModel.swift; sourceTree = "<group>"; };
+		030062B32C112BD100B0242D /* WebViewItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewItem.swift; sourceTree = SOURCE_ROOT; };
 		0378B8632C096D850005BAE5 /* glanceables.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = glanceables.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0378B8662C096D850005BAE5 /* glanceablesApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = glanceablesApp.swift; sourceTree = "<group>"; };
 		0378B8682C096D850005BAE5 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -67,6 +69,7 @@
 		0378B8652C096D850005BAE5 /* glanceables */ = {
 			isa = PBXGroup;
 			children = (
+				030062B32C112BD100B0242D /* WebViewItem.swift */,
 				030062A22C0EAE8900B0242D /* WebView.swift */,
 				0300629C2C0D229800B0242D /* BlackMenuBarView.swift */,
 				0300629A2C0D209400B0242D /* UserDefaults.swift */,
@@ -171,6 +174,7 @@
 				0300629B2C0D209400B0242D /* UserDefaults.swift in Sources */,
 				030062A72C0FE8A100B0242D /* URLModalView.swift in Sources */,
 				0378B8672C096D850005BAE5 /* glanceablesApp.swift in Sources */,
+				030062B42C112BD100B0242D /* WebViewItem.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
