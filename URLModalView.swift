@@ -22,29 +22,50 @@ struct URLModalView: View {
                         Text("Invalid URL").foregroundColor(.red)
                     }
                     Button("Save") {
-                        validateURL()
-                        if isURLValid && !urlString.isEmpty {
-                            if isEditing, let index = selectedURLIndex {
-                                urls[index] = urlString
-                            } else {
-                                urls.append(urlString)
-                            }
-                            resetModalState()
-                        }
+                        handleSaveURL()
                     }
                 }
             }
             .navigationBarTitle(isEditing ? "Edit URL" : "New URL", displayMode: .inline)
             .navigationBarItems(trailing: Button("Cancel") {
-                resetModalState()
+                resetModalState() // Reset modal state on cancel
             })
         }
     }
     
-    private func validateURL() {
-        isURLValid = URL(string: urlString) != nil
+    private func handleSaveURL(){
+        validateURL()
+        if isURLValid {
+            if !urlString.isEmpty {
+                if isEditing, let index = selectedURLIndex {
+                    urls[index] = urlString
+                } else {
+                    urls.append(urlString)
+                }
+                resetModalState() // Reset modal only on successful save
+            }
+        }
     }
     
+    private func validateURL() {
+       if !urlString.hasPrefix("http://") && !urlString.hasPrefix("https://") {
+           urlString = "https://" + urlString
+       }
+       isURLValid = canOpenURL(urlString) && isValidURLFormat(urlString)
+   }
+   
+   func canOpenURL(_ string: String?) -> Bool {
+       guard let urlString = string, let url = URL(string: urlString) else {
+           return false
+       }
+       return UIApplication.shared.canOpenURL(url)
+   }
+   
+   func isValidURLFormat(_ string: String) -> Bool {
+       let regex = "^(https?://)?([\\w\\d-]+\\.)+[\\w\\d-]+/?([\\w\\d-._\\?,'+/&%$#=~]*)*[^.]$"
+       return NSPredicate(format: "SELF MATCHES %@", regex).evaluate(with: string)
+   }
+
     private func resetModalState() {
         showingURLModal = false
         urlString = ""
