@@ -2,8 +2,9 @@ import SwiftUI
 import WebKit
 
 struct ContentView: View {
+    @EnvironmentObject var positionManager: ViewPositionManager
     @State private var showingURLModal = false
-    @State private var urls: [String] = []
+    @State private var urls: [String] = []  // This stores the URLs as strings
     @State private var urlString = ""
     @State private var isEditing = false
     @State private var selectedURLIndex: Int? = nil
@@ -29,12 +30,12 @@ struct ContentView: View {
         .padding()
         .background(Color.gray.opacity(0.1))
         .sheet(isPresented: $showingURLModal) {
-              URLModalView(showingURLModal: $showingURLModal, urlString: $urlString, isURLValid: $isURLValid, urls: $urls, selectedURLIndex: $selectedURLIndex, isEditing: $isEditing)
-          }
+            URLModalView(showingURLModal: $showingURLModal, urlString: $urlString, isURLValid: $isURLValid, urls: $urls, selectedURLIndex: $selectedURLIndex, isEditing: $isEditing)
+        }
         .onAppear {
             loadURLs()
         }
-        .onChange(of: urls) { _ in
+        .onChange(of: urls) {
             saveURLs()
         }
     }
@@ -50,22 +51,22 @@ struct ContentView: View {
     }
 
     var urlGrid: some View {
-        ForEach(urls, id: \.self) { urlString in
-            if let url = URL(string: urlString) {
-                WebBrowserView(url: url)
+        ForEach(urls.indices, id: \.self) { index in
+            if let url = URL(string: urls[index]) {
+                let viewID = UUID(uuidString: urls[index].hashValue.description) ?? UUID()
+                WebBrowserView(url: url, id: viewID)
+                    .environmentObject(positionManager)
                     .contextMenu {
                         Button(action: {
-                            if let index = urls.firstIndex(of: urlString) {
-                                selectedURLIndex = index
-                                self.urlString = urlString
-                                isEditing = true
-                                showingURLModal = true
-                            }
+                            selectedURLIndex = index
+                            urlString = urls[index]
+                            isEditing = true
+                            showingURLModal = true
                         }) {
                             Label("Edit", systemImage: "pencil")
                         }
                         Button(action: {
-                            deleteURL(urlString)
+                            deleteURL(at: index)
                         }) {
                             Label("Delete", systemImage: "trash")
                         }
@@ -75,9 +76,9 @@ struct ContentView: View {
         .onDelete(perform: deleteItems)
     }
 
-    private func deleteURL(_ urlString: String) {
-        urls = urls.filter { $0 != urlString }
-        saveURLs()  // Save the modified list to UserDefaults
+    private func deleteURL(at index: Int) {
+        urls.remove(at: index)
+        saveURLs()
     }
 
     private func deleteItems(at offsets: IndexSet) {
@@ -109,5 +110,6 @@ struct ContentView: View {
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
+            .environmentObject(ViewPositionManager())
     }
 }
