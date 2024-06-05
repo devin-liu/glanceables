@@ -7,6 +7,8 @@ struct WebBrowserView: View {
     @State private var pageTitle: String = "Loading..."
     @State private var timer: Timer?
     @State private var lastRefreshDate: Date = Date()
+    @GestureState private var dragState = CGSize.zero
+    @State private var position = CGSize.zero
 
     init(url: URL) {
         self._url = State(initialValue: url)
@@ -14,36 +16,52 @@ struct WebBrowserView: View {
     }
 
     var body: some View {
-        VStack {
-            ZStack(alignment: .top) {
-                WebView(url: $url, pageTitle: $pageTitle, refreshAction: {
-                    self.reloadWebView()
-                })
-                    .frame(height: 300)
-                    .edgesIgnoringSafeArea(.all)
-            }
-            .cornerRadius(16.0)
-            .padding(10)
+        GeometryReader { geometry in
+            VStack {
+                ZStack(alignment: .top) {
+                    WebView(url: $url, pageTitle: $pageTitle, refreshAction: {
+                        self.reloadWebView()
+                    })
+                        .frame(height: 300)
+                        .edgesIgnoringSafeArea(.all)
+                }
+                .cornerRadius(16.0)
+                .padding(10)
 
-            Text(pageTitle)
-                .font(.headline)
-                .lineLimit(1) // Ensure the title is limited to one line
-                .truncationMode(.tail) // Use truncation mode for overflow
-                .padding()
-            
-            HStack {
-                Image(systemName: "arrow.clockwise.circle.fill")
-                    .foregroundColor(.gray)
+                Text(pageTitle)
+                    .font(.headline)
+                    .lineLimit(1)
+                    .truncationMode(.tail)
+                    .padding()
+                
+                HStack {
+                    Image(systemName: "arrow.clockwise.circle.fill")
+                        .foregroundColor(.gray)
                    
-                Text(timeAgoSinceDate(lastRefreshDate))
-                    .font(.subheadline)
-                    .foregroundColor(.gray)
+                    Text(timeAgoSinceDate(lastRefreshDate))
+                        .font(.subheadline)
+                        .foregroundColor(.gray)
+                }
+                .padding()
+                .contentShape(Rectangle())
+                .onTapGesture {
+                    reloadWebView()
+                }
             }
-            .padding()
-            .contentShape(Rectangle())  // Makes the entire HStack tappable
-            .onTapGesture {
-                reloadWebView()  // Reload WebView when the HStack is tapped
-            }
+            .offset(x: position.width + dragState.width, y: position.height + dragState.height)
+            .gesture(
+                DragGesture()
+                    .updating($dragState) { value, state, _ in
+                        state = value.translation
+                    }
+                    .onEnded { value in
+                        let gridWidth = geometry.size.width / 300  // Dynamically set grid width
+                        let gridHeight = geometry.size.height / 300  // Dynamically set grid height
+                        let newWidth = (round((position.width + value.translation.width) / gridWidth)) * gridWidth
+                        let newHeight = (round((position.height + value.translation.height) / gridHeight)) * gridHeight
+                        self.position = CGSize(width: newWidth, height: newHeight)
+                    }
+            )
         }
         .onAppear {
             startTimer()
