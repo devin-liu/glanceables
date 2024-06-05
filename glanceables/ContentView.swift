@@ -2,7 +2,6 @@ import SwiftUI
 import WebKit
 
 struct ContentView: View {
-    @EnvironmentObject var positionManager: ViewPositionManager
     @State private var showingURLModal = false
     @State private var urls: [String] = []  // This stores the URLs as strings
     @State private var urlString = ""
@@ -53,9 +52,7 @@ struct ContentView: View {
     var urlGrid: some View {
         ForEach(urls.indices, id: \.self) { index in
             if let url = URL(string: urls[index]) {
-                let viewID = UUID(uuidString: urls[index].hashValue.description) ?? UUID()
-                WebBrowserView(url: url, id: viewID)
-                    .environmentObject(positionManager)
+                WebBrowserView(url: url, id: UUID())
                     .contextMenu {
                         Button(action: {
                             selectedURLIndex = index
@@ -110,6 +107,5 @@ struct ContentView: View {
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
-            .environmentObject(ViewPositionManager())
     }
 }
