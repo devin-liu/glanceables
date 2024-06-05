@@ -2,20 +2,21 @@ import SwiftUI
 import WebKit
 
 struct ContentView: View {
-    @State private var showingURLModal = false // State to manage modal visibility
+    @State private var showingURLModal = false
     @State private var urls: [String] = []
-    @State private var urlString = "" // State to capture the URL input
-    @State private var isEditing = false // State to determine if editing or adding a URL
-    @State private var selectedURLIndex: Int? = nil // State to capture the index of the URL being edited
+    @State private var urlString = ""
+    @State private var isEditing = false
+    @State private var selectedURLIndex: Int? = nil
+    @State private var isURLValid = true
 
     var body: some View {
         BlackMenuBarView(isShowingModal: $showingURLModal)
         ScrollView {
             LazyVGrid(columns: [GridItem(.adaptive(minimum: 300))]) {
                 Text("Glanceables")
-                    .font(.system(.largeTitle, design: .rounded)) // Use dynamic type with style
-                    .fontWeight(.medium) // Medium font weight
-                    .foregroundColor(Color.black) // Text color set to gray
+                    .font(.system(.largeTitle, design: .rounded))
+                    .fontWeight(.medium)
+                    .foregroundColor(Color.black)
             }
             LazyVGrid(columns: [GridItem(.adaptive(minimum: 300))]) {
                 if urls.isEmpty {
@@ -28,8 +29,8 @@ struct ContentView: View {
         .padding()
         .background(Color.gray.opacity(0.1))
         .sheet(isPresented: $showingURLModal) {
-            urlModal
-        }
+              URLModalView(showingURLModal: $showingURLModal, urlString: $urlString, isURLValid: $isURLValid, urls: $urls, selectedURLIndex: $selectedURLIndex, isEditing: $isEditing)
+          }
         .onAppear {
             loadURLs()
         }
@@ -68,20 +69,17 @@ struct ContentView: View {
                         }) {
                             Label("Delete", systemImage: "trash")
                         }
-                     
                     }
             }
         }
         .onDelete(perform: deleteItems)
     }
 
-    // Function to delete a URL from the array
     private func deleteURL(_ urlString: String) {
         urls = urls.filter { $0 != urlString }
         saveURLs()  // Save the modified list to UserDefaults
     }
 
-    // Function to handle swipe to delete
     private func deleteItems(at offsets: IndexSet) {
         urls.remove(atOffsets: offsets)
         saveURLs()
@@ -95,37 +93,16 @@ struct ContentView: View {
         UserDefaultsManager.shared.saveURLs(urls)
     }
 
-    var urlModal: some View {
-        NavigationView {
-            Form {
-                Section(header: Text(isEditing ? "Edit URL" : "Add a new URL")) {
-                    TextField("Enter URL here", text: $urlString)
-                }
-                Section {
-                    Button("Save") {
-                        if !urlString.isEmpty {
-                            if isEditing, let index = selectedURLIndex {
-                                urls[index] = urlString
-                            } else {
-                                urls.append(urlString)
-                            }
-                            resetModalState()
-                        }
-                    }
-                }
-            }
-            .navigationBarTitle(isEditing ? "Edit URL" : "New URL", displayMode: .inline)
-            .navigationBarItems(trailing: Button("Cancel") {
-                resetModalState()
-            })
-        }
+    private func validateURL() {
+        isURLValid = URL(string: urlString) != nil
     }
 
     private func resetModalState() {
         showingURLModal = false
-        urlString = "" // Reset the text field
+        urlString = ""
         isEditing = false
-        selectedURLIndex = nil // Reset the selected index
+        selectedURLIndex = nil
+        isURLValid = true
     }
 }
 

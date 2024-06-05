@@ -1,18 +1,27 @@
-//
-//  UrlModalView.swift
-//  glanceables
-//
-//  Created by Devin Liu on 6/4/24.
-//
-
 import SwiftUI
 
-struct UrlModalView: View {
-    var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+var urlModal: some View {
+    NavigationView {
+        Form {
+            Section(header: Text(isEditing ? "Edit URL" : "Add a new URL")) {
+                TextField("Enter URL here", text: $urlString)
+            }
+            Section {
+                Button("Save") {
+                    if !urlString.isEmpty {
+                        if isEditing, let index = selectedURLIndex {
+                            urls[index] = urlString
+                        } else {
+                            urls.append(urlString)
+                        }
+                        resetModalState()
+                    }
+                }
+            }
+        }
+        .navigationBarTitle(isEditing ? "Edit URL" : "New URL", displayMode: .inline)
+        .navigationBarItems(trailing: Button("Cancel") {
+            resetModalState()
+        })
     }
-}
-
-#Preview {
-    UrlModalView()
 }
