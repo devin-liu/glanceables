@@ -28,7 +28,7 @@ struct WebBrowserView: View {
             .cornerRadius(16.0)
             .padding(10)
 
-            Text(item.url.absoluteString)
+            Text(pageTitle)
                 .font(.headline)
                 .lineLimit(1)
                 .truncationMode(.tail)

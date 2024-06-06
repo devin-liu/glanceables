@@ -18,7 +18,7 @@ struct WebView: UIViewRepresentable {
         webView.navigationDelegate = context.coordinator
         webView.allowsBackForwardNavigationGestures = true
         webView.scrollView.isScrollEnabled = true
-        webView.scrollView.minimumZoomScale = 3.0
+        webView.scrollView.minimumZoomScale = 1.0
         webView.scrollView.maximumZoomScale = 3.0
         
         return webView
@@ -44,7 +44,14 @@ class WebViewCoordinator: NSObject, WKNavigationDelegate {
     }
     
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        self.parent.pageTitle = webView.title ?? "No Title"
+        // Delay accessing webView.title to ensure it's updated
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            if let title = webView.title, !title.isEmpty  {
+                self.parent.pageTitle = title
+            } else {
+                self.parent.pageTitle = "No Title"
+            }
+        }
     }
     
     func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
@@ -53,27 +60,5 @@ class WebViewCoordinator: NSObject, WKNavigationDelegate {
     
     func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
         print("WebView provisional load failed: \(error.localizedDescription)")
-    }
-}
-
-struct WebViewPreview: View {
-    @State private var url = URL(string: "https://www.apple.com")!
-    @State private var pageTitle: String = "Loading..."
-    
-    var body: some View {
-        VStack {
-            WebView(url: $url, pageTitle: $pageTitle, refreshAction: nil) // No custom action provided; uses default
-            .edgesIgnoringSafeArea(.all)
-            
-            Text(pageTitle)
-                .font(.headline)
-                .padding()
-        }
-    }
-}
-
-struct WebViewPreview_Previews: PreviewProvider {
-    static var previews: some View {
-        WebViewPreview()
     }
 }
