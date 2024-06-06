@@ -5,27 +5,18 @@ struct BlackMenuBarView: View {
     @Binding var isShowingModal: Bool  // Use this Binding to control modal visibility from outside
 
     var body: some View {
-        
-            HStack {
-                Spacer()
-
-                
-
-                Button(action: {
-                    self.isShowingModal.toggle()  // Toggle the modal visibilityÏÏ
-                }) {
-                    Image(systemName: "plus")
-                        .font(.system(size: 40))
-                        .foregroundColor(.white)
-                }
-                
-                
-                
+        HStack {
+            Spacer()
+            Button(action: {
+                self.isShowingModal.toggle()  // Toggle the modal visibilityÏÏ
+            }) {
+                Image(systemName: "plus")
+                    .font(.system(size: 40))
+                    .foregroundColor(.white)
             }
-            .padding()
-            .background(Color.black) // Black background for the menu bar
-            
-        
+        }
+        .padding()
+        .background(Color.black) // Black background for the menu bar
     }
 }
 

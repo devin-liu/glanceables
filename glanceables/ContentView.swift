@@ -1,13 +1,9 @@
 import SwiftUI
 import UniformTypeIdentifiers
 
-
 struct ContentView: View {
     @State private var showingURLModal = false
-    @State private var urls: [WebViewItem] = [
-        WebViewItem(id: UUID(), url: URL(string: "https://example.com")!),
-        WebViewItem(id: UUID(), url: URL(string: "https://example.org")!)
-    ]
+    @State private var urls: [WebViewItem] = []
     @State private var draggedItem: WebViewItem?
     @State private var urlString = ""
     @State private var isEditing = false
@@ -34,16 +30,17 @@ struct ContentView: View {
             }
             .padding()
             .background(Color.gray.opacity(0.1))
-            .sheet(isPresented: $showingURLModal) {
-                URLModalView(showingURLModal: $showingURLModal, urlString: $urlString, isURLValid: $isURLValid, urls: Binding(get: { urls.map { $0.url.absoluteString } }, set: { newUrls in
-                    urls = newUrls.map { WebViewItem(id: UUID(), url: URL(string: $0)!) }
-                }), selectedURLIndex: $selectedURLIndex, isEditing: $isEditing)
-            }
             .onAppear {
                 loadURLs()
             }
             .onChange(of: urls) {
                 saveURLs()
+            }
+            .sheet(isPresented: $showingURLModal) {
+                URLModalView(showingURLModal: $showingURLModal, urlString: $urlString, isURLValid: $isURLValid, urls: Binding(get: { urls.map { $0.url.absoluteString } }, set: { newUrls in
+                    urls = newUrls.map { WebViewItem(id: UUID(), url: URL(string: $0)!) }
+                }), selectedURLIndex: $selectedURLIndex, isEditing: $isEditing)
+                .edgesIgnoringSafeArea(.all) // To make the modal fullscreen
             }
         }
     }
@@ -73,6 +70,7 @@ struct ContentView: View {
                             urlString = urls[index].url.absoluteString
                             isEditing = true
                             showingURLModal = true
+                            print("Editing URL: \(urlString)")
                         }
                     }) {
                         Label("Edit", systemImage: "pencil")

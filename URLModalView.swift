@@ -11,11 +11,12 @@ struct URLModalView: View {
     var body: some View {
         NavigationView {
             Form {
-                Section(header: Text(isEditing ? "Edit URL" : "Add a new URL")) {
+                Section(header: Text(isEditing ? "Edit URL" : "Add a new URL").padding(.top, 20)) {
                     TextField("Enter URL here", text: $urlString)
                         .autocapitalization(.none)
                         .disableAutocorrection(true)
                         .textInputAutocapitalization(.never)
+                        .padding(.vertical, 20)
                 }
                 Section {
                     if !isURLValid && !urlString.isEmpty {
@@ -24,12 +25,14 @@ struct URLModalView: View {
                     Button("Save") {
                         handleSaveURL()
                     }
+                    .padding(.vertical, 20)
                 }
             }
             .navigationBarTitle(isEditing ? "Edit URL" : "New URL", displayMode: .inline)
             .navigationBarItems(trailing: Button("Cancel") {
                 resetModalState() // Reset modal state on cancel
             })
+            .edgesIgnoringSafeArea(.all) // Ignoring safe area to maximize space usage
         }
     }
     
@@ -77,6 +80,6 @@ struct URLModalView: View {
 
 struct URLModalView_Previews: PreviewProvider {
     static var previews: some View {
-        URLModalView(showingURLModal: .constant(true), urlString: .constant(""), isURLValid: .constant(true), urls: .constant([]), selectedURLIndex: .constant(nil), isEditing: .constant(false))
+        URLModalView(showingURLModal: .constant(false), urlString: .constant(""), isURLValid: .constant(true), urls: .constant([]), selectedURLIndex: .constant(nil), isEditing: .constant(false))
     }
 }
