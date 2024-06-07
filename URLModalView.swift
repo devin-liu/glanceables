@@ -5,7 +5,7 @@ struct URLModalView: View {
     @Binding var showingURLModal: Bool
     @Binding var urlString: String
     @Binding var isURLValid: Bool
-    @Binding var urlClips: [WebViewItem]
+    @Binding var urls: [WebViewItem]
     @Binding var selectedURLIndex: Int?
     @Binding var isEditing: Bool
     
@@ -48,7 +48,7 @@ struct URLModalView: View {
                     .frame(height: geometry.size.height * 0.3)
                     Spacer()
                     if isURLValid, let url = validURL {
-                        WebView(url: .constant(url), pageTitle: $pageTitle, selectionRectangle: $currentClipRect)
+                        WebView(url: .constant(url), pageTitle: $pageTitle, clipRect: $currentClipRect)
                             .frame(height: geometry.size.height * 0.7)
                     }
                 }
@@ -64,17 +64,19 @@ struct URLModalView: View {
     private func handleSaveURL() {
         validateURL()
         if isURLValid {
-            if !urlString.isEmpty {
-                let newClip = WebViewItem(id: UUID(), url: URL(string: urlString)!)
+            if !urlString.isEmpty {                
+                let newUrlItem = WebViewItem(id: UUID(), url: URL(string: urlString)!, clipRect: currentClipRect)
                 if isEditing, let index = selectedURLIndex {
-                    urlClips[index] = newClip
+                    urls[index] = newUrlItem
                 } else {
-                    urlClips.append(newClip)
+                    urls.append(newUrlItem)
                 }
                 resetModalState() // Reset modal only on successful save
             }
         }
     }
+    
+    
     
     private func debounceValidation() {
         debounceWorkItem?.cancel()

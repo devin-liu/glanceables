@@ -37,7 +37,7 @@ struct ContentView: View {
                 saveURLs()
             }
             .fullScreenCover(isPresented: $showingURLModal) {
-                URLModalView(showingURLModal: $showingURLModal, urlString: $urlString, isURLValid: $isURLValid, urlClips: $urls, selectedURLIndex: $selectedURLIndex, isEditing: $isEditing)
+                URLModalView(showingURLModal: $showingURLModal, urlString: $urlString, isURLValid: $isURLValid, urls: $urls, selectedURLIndex: $selectedURLIndex, isEditing: $isEditing)
             }
         }
     }
@@ -83,12 +83,12 @@ struct ContentView: View {
         }
     }
 
-    private func loadURLs() {
-        urls = UserDefaultsManager.shared.loadURLs().map { WebViewItem(id: UUID(), url: URL(string: $0)!) }
+    private func saveURLs() {        
+        UserDefaultsManager.shared.saveWebViewItems(urls)
     }
 
-    private func saveURLs() {
-        UserDefaultsManager.shared.saveURLs(urls.map { $0.url.absoluteString })
+    private func loadURLs() {
+        urls = UserDefaultsManager.shared.loadWebViewItems()
     }
 
     private func validateURL() {

@@ -4,7 +4,7 @@ import WebKit
 struct WebView: UIViewRepresentable {
     @Binding var url: URL
     @Binding var pageTitle: String
-    @Binding var selectionRectangle: CGRect?
+    @Binding var clipRect: CGRect?
 
     func makeUIView(context: Context) -> WKWebView {
         let webView = WKWebView()
@@ -46,19 +46,30 @@ struct WebView: UIViewRepresentable {
         }
         
         func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-            // Capture the title
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                self.parent.pageTitle = webView.title ?? "No Title"
-            }
-        }
+               // Delay capturing the title to ensure it's updated after page load
+               DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                   self.parent.pageTitle = webView.title ?? "No Title"                   
+                   
+                   if let clipRect = self.parent.clipRect {
+                       self.scrollToClippedArea(webView: webView, clipRect: clipRect)
+                   }
+               }
+           }
 
         func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
             if message.name == "selectionHandler", let messageBody = message.body as? String {
                 let data = parseMessage(messageBody)
                 DispatchQueue.main.async {
-                    self.parent.selectionRectangle = data
+                    self.parent.clipRect = data
                 }
             }
+        }
+        
+        private func scrollToClippedArea(webView: WKWebView, clipRect: CGRect) {
+            let jsString = """
+                window.scrollTo(\(clipRect.origin.x), \(clipRect.origin.y));
+            """
+            webView.evaluateJavaScript(jsString, completionHandler: nil)
         }
 
         private func parseMessage(_ message: String) -> CGRect {
