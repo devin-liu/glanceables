@@ -7,7 +7,8 @@ struct WebBrowserView: View {
     @State private var pageTitle: String = "Loading..."
     @State private var lastRefreshDate: Date = Date()
     @State private var timer: Timer?
-    
+    @State private var selectionRectangle: CGRect?  // To store the coordinates of the selected area
+
     var item: WebViewItem
 
     init(item: WebViewItem) {
@@ -19,11 +20,18 @@ struct WebBrowserView: View {
     var body: some View {
         VStack {
             ZStack(alignment: .top) {
-                WebView(url: $url, pageTitle: $pageTitle, refreshAction: {
-                    self.reloadWebView()
-                })
+                WebView(url: $url, pageTitle: $pageTitle, selectionRectangle: $selectionRectangle)
                 .frame(height: 300)
                 .edgesIgnoringSafeArea(.all)
+
+                if let selection = selectionRectangle {
+                    // Optional: Visual overlay showing the selected area
+                    Rectangle()
+                        .frame(width: selection.width, height: selection.height)
+                        .offset(x: selection.minX, y: selection.minY)
+                        .border(Color.red, width: 2)
+                        .opacity(0.5)
+                }
             }
             .cornerRadius(16.0)
             .padding(10)
@@ -47,7 +55,7 @@ struct WebBrowserView: View {
                 reloadWebView()
             }
         }
-        .cornerRadius(8)        
+        .cornerRadius(8)
         .padding()
         .onAppear {
             startTimer()

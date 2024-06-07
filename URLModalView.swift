@@ -12,6 +12,7 @@ struct URLModalView: View {
     @State private var debounceWorkItem: DispatchWorkItem?
     @State private var validURL: URL?
     @State private var pageTitle: String = "Loading..."
+    @State private var selectionRectangle: CGRect? // Added this line
 
     var body: some View {
         NavigationView {
@@ -38,18 +39,18 @@ struct URLModalView: View {
                             .padding(.vertical, 20)
                         }
                     }
-                    .frame(height: geometry.size.height * 0.3) // Use 30% of the height for the form
+                    .frame(height: geometry.size.height * 0.3)
                     Spacer()
                     if isURLValid, let url = validURL {
-                        WebView(url: .constant(url), pageTitle: $pageTitle)
-                            .frame(height: geometry.size.height * 0.7) // Take up the remaining space
+                        WebView(url: .constant(url), pageTitle: $pageTitle, selectionRectangle: $selectionRectangle)
+                            .frame(height: geometry.size.height * 0.7)
                     }
                 }
                 .navigationBarTitle(isEditing ? "Edit URL" : "New URL", displayMode: .inline)
                 .navigationBarItems(trailing: Button("Cancel") {
-                    resetModalState() // Reset modal state on cancel
+                    resetModalState()
                 })
-                .edgesIgnoringSafeArea(.all) // Ignoring safe area to maximize space usage
+                .edgesIgnoringSafeArea(.all)
             }
         }
     }

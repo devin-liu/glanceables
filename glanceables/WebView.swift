@@ -1,11 +1,11 @@
 import SwiftUI
 import WebKit
 
-// WebView wrapper for displaying web content with zoom, scroll, and refresh capabilities
+// WebView wrapper for displaying web content with zoom, scroll, refresh capabilities, and selection support
 struct WebView: UIViewRepresentable {
     @Binding var url: URL
     @Binding var pageTitle: String
-    var refreshAction: (() -> Void)?  // Optional closure for custom refresh action
+    @Binding var selectionRectangle: CGRect?  // Optional: Stores the coordinates of the selected area
 
     func makeUIView(context: Context) -> WKWebView {
         let preferences = WKWebpagePreferences()
@@ -21,6 +21,7 @@ struct WebView: UIViewRepresentable {
         webView.scrollView.minimumZoomScale = 1.0
         webView.scrollView.maximumZoomScale = 3.0
         
+        injectSelectionJavaScript(webView)  // Inject JavaScript for selection handling
         return webView
     }
     
@@ -30,35 +31,46 @@ struct WebView: UIViewRepresentable {
     }
     
     func makeCoordinator() -> WebViewCoordinator {
-        WebViewCoordinator(self, refreshAction: refreshAction)
+        WebViewCoordinator(self)
+    }
+
+    private func injectSelectionJavaScript(_ webView: WKWebView) {
+        // JavaScript code to allow user to select a rectangle and capture its coordinates
+        let jsCode = """
+        document.addEventListener('mouseup', function(e) {
+            var rect = e.target.getBoundingClientRect();
+            window.webkit.messageHandlers.selectionHandler.postMessage({
+                x: rect.left,
+                y: rect.top,
+                width: rect.width,
+                height: rect.height
+            });
+        });
+        """
+        webView.configuration.userContentController.addUserScript(WKUserScript(source: jsCode, injectionTime: .atDocumentEnd, forMainFrameOnly: false))
     }
 }
 
-class WebViewCoordinator: NSObject, WKNavigationDelegate {
+class WebViewCoordinator: NSObject, WKNavigationDelegate, WKScriptMessageHandler {
     var parent: WebView
-    var refreshAction: (() -> Void)?
-    
-    init(_ parent: WebView, refreshAction: (() -> Void)?) {
+
+    init(_ parent: WebView) {
         self.parent = parent
-        self.refreshAction = refreshAction
     }
     
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        // Delay accessing webView.title to ensure it's updated
+        // Capture the title
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            if let title = webView.title, !title.isEmpty  {
-                self.parent.pageTitle = title
-            } else {
-                self.parent.pageTitle = "No Title"
-            }
+            self.parent.pageTitle = webView.title ?? "No Title"
         }
     }
     
-    func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
-        print("WebView load failed: \(error.localizedDescription)")
-    }
-    
-    func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
-        print("WebView provisional load failed: \(error.localizedDescription)")
+    func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
+        if message.name == "selectionHandler", let dict = message.body as? [String: CGFloat] {
+            let rect = CGRect(x: dict["x"]!, y: dict["y"]!, width: dict["width"]!, height: dict["height"]!)
+            DispatchQueue.main.async {
+                self.parent.selectionRectangle = rect  // Update the selection rectangle binding
+            }
+        }
     }
 }
