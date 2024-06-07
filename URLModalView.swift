@@ -5,15 +5,15 @@ struct URLModalView: View {
     @Binding var showingURLModal: Bool
     @Binding var urlString: String
     @Binding var isURLValid: Bool
-    @Binding var urls: [String]
+    @Binding var urlClips: [WebViewItem]
     @Binding var selectedURLIndex: Int?
     @Binding var isEditing: Bool
     
     @State private var debounceWorkItem: DispatchWorkItem?
     @State private var validURL: URL?
     @State private var pageTitle: String = "Loading..."
-    @State private var selectionRectangle: CGRect? // Added this line
-
+    @State private var currentClipRect: CGRect?  // Rectangle for clipping
+    
     var body: some View {
         NavigationView {
             GeometryReader { geometry in
@@ -30,6 +30,12 @@ struct URLModalView: View {
                                 })
                         }
                         Section {
+                            if let clipRect = currentClipRect {
+                                Text("Clipping Rectangle: \(clipRect.debugDescription)").padding()
+                                Button("Clear Clipping") {
+                                    currentClipRect = nil
+                                }
+                            }
                             if !isURLValid && !urlString.isEmpty {
                                 Text("Invalid URL").foregroundColor(.red)
                             }
@@ -42,7 +48,7 @@ struct URLModalView: View {
                     .frame(height: geometry.size.height * 0.3)
                     Spacer()
                     if isURLValid, let url = validURL {
-                        WebView(url: .constant(url), pageTitle: $pageTitle, selectionRectangle: $selectionRectangle)
+                        WebView(url: .constant(url), pageTitle: $pageTitle, selectionRectangle: $currentClipRect)
                             .frame(height: geometry.size.height * 0.7)
                     }
                 }
@@ -54,15 +60,16 @@ struct URLModalView: View {
             }
         }
     }
-    
+
     private func handleSaveURL() {
         validateURL()
         if isURLValid {
             if !urlString.isEmpty {
+                let newClip = WebViewItem(id: UUID(), url: URL(string: urlString)!)
                 if isEditing, let index = selectedURLIndex {
-                    urls[index] = urlString
+                    urlClips[index] = newClip
                 } else {
-                    urls.append(urlString)
+                    urlClips.append(newClip)
                 }
                 resetModalState() // Reset modal only on successful save
             }

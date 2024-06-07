@@ -19,6 +19,7 @@
 		0378B86D2C096D860005BAE5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0378B86C2C096D860005BAE5 /* Assets.xcassets */; };
 		0378B8702C096D860005BAE5 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0378B86F2C096D860005BAE5 /* Preview Assets.xcassets */; };
 		0378B8772C096DB00005BAE5 /* WebBrowserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0378B8762C096DB00005BAE5 /* WebBrowserView.swift */; };
+		03FD4AD82C13B2AE00F63E1D /* URLClip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03FD4AD72C13B2AE00F63E1D /* URLClip.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -35,6 +36,7 @@
 		0378B86C2C096D860005BAE5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		0378B86F2C096D860005BAE5 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		0378B8762C096DB00005BAE5 /* WebBrowserView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebBrowserView.swift; sourceTree = "<group>"; };
+		03FD4AD72C13B2AE00F63E1D /* URLClip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLClip.swift; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -67,6 +69,7 @@
 		0378B8652C096D850005BAE5 /* glanceables */ = {
 			isa = PBXGroup;
 			children = (
+				03FD4AD72C13B2AE00F63E1D /* URLClip.swift */,
 				030062B32C112BD100B0242D /* WebViewItem.swift */,
 				030062A22C0EAE8900B0242D /* WebView.swift */,
 				0300629C2C0D229800B0242D /* BlackMenuBarView.swift */,
@@ -162,6 +165,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				030062972C0A7F2600B0242D /* HeaderView.swift in Sources */,
+				03FD4AD82C13B2AE00F63E1D /* URLClip.swift in Sources */,
 				0378B8772C096DB00005BAE5 /* WebBrowserView.swift in Sources */,
 				0378B8692C096D850005BAE5 /* ContentView.swift in Sources */,
 				0300629D2C0D229800B0242D /* BlackMenuBarView.swift in Sources */,
