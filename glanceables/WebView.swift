@@ -15,8 +15,11 @@ struct WebView: UIViewRepresentable {
     }
 
     func updateUIView(_ webView: WKWebView, context: Context) {
-        let request = URLRequest(url: url)
-        webView.load(request)
+        // Only reload the web view if the URL changes
+        if webView.url != url {
+            let request = URLRequest(url: url)
+            webView.load(request)
+        }
     }
 
     func makeCoordinator() -> Coordinator {
@@ -44,17 +47,17 @@ struct WebView: UIViewRepresentable {
         init(_ parent: WebView) {
             self.parent = parent
         }
-        
+
         func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-               // Delay capturing the title to ensure it's updated after page load
-               DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                   self.parent.pageTitle = webView.title ?? "No Title"                   
-                   
-                   if let clipRect = self.parent.clipRect {
-                       self.scrollToClippedArea(webView: webView, clipRect: clipRect)
-                   }
-               }
-           }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                self.parent.pageTitle = webView.title ?? "No Title"
+
+                // Adjust the scroll only if clipRect exists
+                if let clipRect = self.parent.clipRect {
+                    self.scrollToAdjustedClippedArea(webView: webView, clipRect: clipRect, xCorrection: 1.0, yCorrection: 1.0) // Use real correction values
+                }
+            }
+        }
 
         func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
             if message.name == "selectionHandler", let messageBody = message.body as? String {
@@ -64,21 +67,15 @@ struct WebView: UIViewRepresentable {
                 }
             }
         }
-        
-        private func scrollToClippedArea(webView: WKWebView, clipRect: CGRect) {
-//            let jsString = """
-//                window.scrollTo(\(clipRect.origin.x), \(clipRect.origin.y));
-//            """
-//            webView.evaluateJavaScript(jsString, completionHandler: nil)
-            
+
+        private func scrollToAdjustedClippedArea(webView: WKWebView, clipRect: CGRect, xCorrection: CGFloat, yCorrection: CGFloat) {
+            let adjustedX = clipRect.origin.x * xCorrection
+            let adjustedY = clipRect.origin.y * yCorrection
             let jsString = """
-                window.scrollTo({left: \(clipRect.origin.x), top: \(clipRect.origin.y), behavior: 'smooth'});
+                window.scrollTo({left: \(adjustedX), top: \(adjustedY), behavior: 'smooth'});
             """
             webView.evaluateJavaScript(jsString, completionHandler: nil)
-
         }
-        
-        
 
         private func parseMessage(_ message: String) -> CGRect {
             let data = Data(message.utf8)

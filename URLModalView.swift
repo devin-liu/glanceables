@@ -13,51 +13,47 @@ struct URLModalView: View {
     @State private var validURL: URL?
     @State private var pageTitle: String = "Loading..."
     @State private var currentClipRect: CGRect?  // Rectangle for clipping
-    
+
     var body: some View {
         NavigationView {
-            GeometryReader { geometry in
-                VStack {
-                    Form {
-                        Section(header: Text(isEditing ? "Edit URL" : "Add a new URL").padding(.top, 20)) {
-                            TextField("Enter URL here", text: $urlString)
-                                .autocapitalization(.none)
-                                .disableAutocorrection(true)
-                                .textInputAutocapitalization(.never)
-                                .padding(.vertical, 20)
-                                .onChange(of: urlString, perform: { newValue in
-                                    debounceValidation()
-                                })
-                        }
-                        Section {
-                            if let clipRect = currentClipRect {
-                                Text("Clipping Rectangle: \(clipRect.debugDescription)").padding()
-                                Button("Clear Clipping") {
-                                    currentClipRect = nil
-                                }
-                            }
-                            if !isURLValid && !urlString.isEmpty {
-                                Text("Invalid URL").foregroundColor(.red)
-                            }
-                            Button("Save") {
-                                handleSaveURL()
-                            }
+            VStack {
+                Form {
+                    Section(header: Text(isEditing ? "Edit URL" : "Add a new URL").padding(.top, 20)) {
+                        TextField("Enter URL here", text: $urlString)
+                            .autocapitalization(.none)
+                            .disableAutocorrection(true)
+                            .textInputAutocapitalization(.never)
                             .padding(.vertical, 20)
-                        }
+                            .onChange(of: urlString, perform: { newValue in
+                                debounceValidation()
+                            })
                     }
-                    .frame(height: geometry.size.height * 0.3)
-                    Spacer()
-                    if isURLValid, let url = validURL {
-                        WebView(url: .constant(url), pageTitle: $pageTitle, clipRect: $currentClipRect)
-                            .frame(height: geometry.size.height * 0.7)
+                    Section {
+                        if let clipRect = currentClipRect {
+                            Text("Clipping Rectangle: \(clipRect.debugDescription)").padding()
+                            Button("Clear Clipping") {
+                                currentClipRect = nil
+                            }
+                        }
+                        if !isURLValid && !urlString.isEmpty {
+                            Text("Invalid URL").foregroundColor(.red)
+                        }
+                        Button("Save") {
+                            handleSaveURL()
+                        }
+                        .padding(.vertical, 20)
                     }
                 }
-                .navigationBarTitle(isEditing ? "Edit URL" : "New URL", displayMode: .inline)
-                .navigationBarItems(trailing: Button("Cancel") {
-                    resetModalState()
-                })
-                .edgesIgnoringSafeArea(.all)
+                if isURLValid, let url = validURL {
+                    WebView(url: .constant(url), pageTitle: $pageTitle, clipRect: $currentClipRect)
+                        .frame(maxHeight: .infinity)
+                }
             }
+            .navigationBarTitle(isEditing ? "Edit URL" : "New URL", displayMode: .inline)
+            .navigationBarItems(trailing: Button("Cancel") {
+                resetModalState()
+            })
+            .edgesIgnoringSafeArea(.all)
         }
     }
 
