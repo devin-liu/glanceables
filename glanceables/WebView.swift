@@ -66,11 +66,19 @@ struct WebView: UIViewRepresentable {
         }
         
         private func scrollToClippedArea(webView: WKWebView, clipRect: CGRect) {
+//            let jsString = """
+//                window.scrollTo(\(clipRect.origin.x), \(clipRect.origin.y));
+//            """
+//            webView.evaluateJavaScript(jsString, completionHandler: nil)
+            
             let jsString = """
-                window.scrollTo(\(clipRect.origin.x), \(clipRect.origin.y));
+                window.scrollTo({left: \(clipRect.origin.x), top: \(clipRect.origin.y), behavior: 'smooth'});
             """
             webView.evaluateJavaScript(jsString, completionHandler: nil)
+
         }
+        
+        
 
         private func parseMessage(_ message: String) -> CGRect {
             let data = Data(message.utf8)
