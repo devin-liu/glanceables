@@ -6,19 +6,38 @@ struct WebView: UIViewRepresentable {
     @Binding var pageTitle: String
     @Binding var clipRect: CGRect?
 
-    func makeUIView(context: Context) -> WKWebView {
+    func makeUIView(context: Context) -> UIScrollView {
+        let scrollView = UIScrollView()
         let webView = WKWebView()
         webView.navigationDelegate = context.coordinator
         configureMessageHandler(webView: webView, contentController: webView.configuration.userContentController, context: context)
         injectSelectionScript(webView: webView)
-        return webView
+
+        scrollView.addSubview(webView)
+        scrollView.delegate = context.coordinator
+        scrollView.minimumZoomScale = 1.0
+        scrollView.maximumZoomScale = 1.0
+
+        context.coordinator.webView = webView
+
+        return scrollView
     }
 
-    func updateUIView(_ webView: WKWebView, context: Context) {
-        // Only reload the web view if the URL changes
+    func updateUIView(_ scrollView: UIScrollView, context: Context) {
+        guard let webView = context.coordinator.webView else { return }
+        
         if webView.url != url {
             let request = URLRequest(url: url)
             webView.load(request)
+        }
+
+        if let clipRect = clipRect {
+            scrollView.contentSize = CGSize(width: clipRect.width, height: clipRect.height)
+            webView.frame = CGRect(origin: .zero, size: scrollView.contentSize)
+        } else {
+            // If clipRect is not set, fit the web view to the scroll view
+            scrollView.contentSize = scrollView.bounds.size
+            webView.frame = CGRect(origin: .zero, size: scrollView.bounds.size)
         }
     }
 
@@ -41,8 +60,9 @@ struct WebView: UIViewRepresentable {
         webView.configuration.userContentController.addUserScript(WKUserScript(source: jsString, injectionTime: .atDocumentEnd, forMainFrameOnly: false))
     }
 
-    class Coordinator: NSObject, WKNavigationDelegate, WKScriptMessageHandler {
+    class Coordinator: NSObject, WKNavigationDelegate, UIScrollViewDelegate, WKScriptMessageHandler {
         var parent: WebView
+        var webView: WKWebView?
 
         init(_ parent: WebView) {
             self.parent = parent
@@ -52,9 +72,9 @@ struct WebView: UIViewRepresentable {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                 self.parent.pageTitle = webView.title ?? "No Title"
 
-                // Adjust the scroll only if clipRect exists
+                // Adjust the web view frame only if clipRect exists
                 if let clipRect = self.parent.clipRect {
-                    self.scrollToAdjustedClippedArea(webView: webView, clipRect: clipRect, xCorrection: 1.0, yCorrection: 1.0) // Use real correction values
+                    self.adjustWebViewFrame(webView: webView, clipRect: clipRect)
                 }
             }
         }
@@ -68,13 +88,8 @@ struct WebView: UIViewRepresentable {
             }
         }
 
-        private func scrollToAdjustedClippedArea(webView: WKWebView, clipRect: CGRect, xCorrection: CGFloat, yCorrection: CGFloat) {
-            let adjustedX = clipRect.origin.x * xCorrection
-            let adjustedY = clipRect.origin.y * yCorrection
-            let jsString = """
-                window.scrollTo({left: \(adjustedX), top: \(adjustedY), behavior: 'smooth'});
-            """
-            webView.evaluateJavaScript(jsString, completionHandler: nil)
+        private func adjustWebViewFrame(webView: WKWebView, clipRect: CGRect) {
+            webView.frame = CGRect(origin: .zero, size: CGSize(width: clipRect.width, height: clipRect.height))
         }
 
         private func parseMessage(_ message: String) -> CGRect {
