@@ -5,6 +5,7 @@ struct WebView: UIViewRepresentable {
     @Binding var url: URL
     @Binding var pageTitle: String
     @Binding var clipRect: CGRect?
+    @Binding var originalSize: CGSize?  // Binding for the original size
 
     func makeUIView(context: Context) -> UIScrollView {
         let scrollView = UIScrollView()
@@ -19,6 +20,7 @@ struct WebView: UIViewRepresentable {
         scrollView.maximumZoomScale = 1.0
 
         context.coordinator.webView = webView
+        context.coordinator.scrollView = scrollView
 
         return scrollView
     }
@@ -34,8 +36,8 @@ struct WebView: UIViewRepresentable {
         if let clipRect = clipRect {
             scrollView.contentSize = CGSize(width: clipRect.width, height: clipRect.height)
             webView.frame = CGRect(origin: .zero, size: scrollView.contentSize)
+            context.coordinator.scrollToAdjustedClippedArea(clipRect: clipRect)
         } else {
-            // If clipRect is not set, fit the web view to the scroll view
             scrollView.contentSize = scrollView.bounds.size
             webView.frame = CGRect(origin: .zero, size: scrollView.bounds.size)
         }
@@ -63,6 +65,7 @@ struct WebView: UIViewRepresentable {
     class Coordinator: NSObject, WKNavigationDelegate, UIScrollViewDelegate, WKScriptMessageHandler {
         var parent: WebView
         var webView: WKWebView?
+        var scrollView: UIScrollView?
 
         init(_ parent: WebView) {
             self.parent = parent
@@ -72,10 +75,11 @@ struct WebView: UIViewRepresentable {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                 self.parent.pageTitle = webView.title ?? "No Title"
 
-                // Adjust the web view frame only if clipRect exists
                 if let clipRect = self.parent.clipRect {
-                    self.adjustWebViewFrame(webView: webView, clipRect: clipRect)
+                    self.scrollToAdjustedClippedArea(clipRect: clipRect)
                 }
+                // Store the original size of the web view
+                self.parent.originalSize = webView.scrollView.contentSize
             }
         }
 
@@ -88,8 +92,9 @@ struct WebView: UIViewRepresentable {
             }
         }
 
-        private func adjustWebViewFrame(webView: WKWebView, clipRect: CGRect) {
-            webView.frame = CGRect(origin: .zero, size: CGSize(width: clipRect.width, height: clipRect.height))
+        func scrollToAdjustedClippedArea(clipRect: CGRect) {
+            guard let scrollView = scrollView else { return }
+            scrollView.setContentOffset(CGPoint(x: clipRect.origin.x, y: clipRect.origin.y), animated: true)
         }
 
         private func parseMessage(_ message: String) -> CGRect {

@@ -8,6 +8,7 @@ struct WebBrowserView: View {
     @State private var lastRefreshDate: Date = Date()
     @State private var timer: Timer?
     @State private var clipRect: CGRect?  // To store the coordinates of the selected area
+    @State private var originalSize: CGSize?
 
     var item: WebViewItem
 
@@ -16,12 +17,13 @@ struct WebBrowserView: View {
         _urlString = State(initialValue: item.url.absoluteString)
         _url = State(initialValue: item.url)
         _clipRect = State(initialValue: item.clipRect)  // Initialize clipRect from the item
+        _originalSize = State(initialValue: item.originalSize)
     }
 
     var body: some View {
         VStack {
             ZStack(alignment: .top) {
-                WebView(url: $url, pageTitle: $pageTitle, clipRect: $clipRect)
+                WebView(url: $url, pageTitle: $pageTitle, clipRect: $clipRect, originalSize: $originalSize)
                 .frame(height: 300)
                 .edgesIgnoringSafeArea(.all)
             }

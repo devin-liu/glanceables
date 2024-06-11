@@ -13,6 +13,7 @@ struct URLModalView: View {
     @State private var validURL: URL?
     @State private var pageTitle: String = "Loading..."
     @State private var currentClipRect: CGRect?  // Rectangle for clipping
+    @State private var originalSize: CGSize?  // Original size of the web view
 
     var body: some View {
         NavigationView {
@@ -45,7 +46,7 @@ struct URLModalView: View {
                     }
                 }
                 if isURLValid, let url = validURL {
-                    WebView(url: .constant(url), pageTitle: $pageTitle, clipRect: $currentClipRect)
+                    WebView(url: .constant(url), pageTitle: $pageTitle, clipRect: $currentClipRect, originalSize: $originalSize)
                         .frame(maxHeight: .infinity)
                 }
             }
@@ -60,8 +61,8 @@ struct URLModalView: View {
     private func handleSaveURL() {
         validateURL()
         if isURLValid {
-            if !urlString.isEmpty {                
-                let newUrlItem = WebViewItem(id: UUID(), url: URL(string: urlString)!, clipRect: currentClipRect)
+            if !urlString.isEmpty {
+                let newUrlItem = WebViewItem(id: UUID(), url: URL(string: urlString)!, clipRect: currentClipRect, originalSize: originalSize)
                 if isEditing, let index = selectedURLIndex {
                     urls[index] = newUrlItem
                 } else {
@@ -71,9 +72,7 @@ struct URLModalView: View {
             }
         }
     }
-    
-    
-    
+
     private func debounceValidation() {
         debounceWorkItem?.cancel()
         debounceWorkItem = DispatchWorkItem {
@@ -114,5 +113,7 @@ struct URLModalView: View {
         selectedURLIndex = nil
         isURLValid = true // Reset to true so the error message won't persist across different uses of the modal
         validURL = nil
+        currentClipRect = nil
+        originalSize = nil
     }
 }
