@@ -19,9 +19,20 @@
 		0378B86D2C096D860005BAE5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0378B86C2C096D860005BAE5 /* Assets.xcassets */; };
 		0378B8702C096D860005BAE5 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0378B86F2C096D860005BAE5 /* Preview Assets.xcassets */; };
 		0378B8772C096DB00005BAE5 /* WebBrowserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0378B8762C096DB00005BAE5 /* WebBrowserView.swift */; };
+		038208D82C17DB9200606536 /* URLModalViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 038208D72C17DB9200606536 /* URLModalViewTests.swift */; };
 		03FD4AD82C13B2AE00F63E1D /* URLClip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03FD4AD72C13B2AE00F63E1D /* URLClip.swift */; };
 		03FD4ADA2C15395600F63E1D /* ViewSwiftCapture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03FD4AD92C15395600F63E1D /* ViewSwiftCapture.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		0355A0722C17DA8B005BBAF3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0378B85B2C096D850005BAE5 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 0378B8622C096D850005BAE5;
+			remoteInfo = glanceables;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		030062962C0A7F2600B0242D /* HeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderView.swift; sourceTree = "<group>"; };
@@ -31,17 +42,27 @@
 		030062A22C0EAE8900B0242D /* WebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebView.swift; sourceTree = "<group>"; };
 		030062A62C0FE8A100B0242D /* URLModalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = URLModalView.swift; path = ../URLModalView.swift; sourceTree = "<group>"; };
 		030062B32C112BD100B0242D /* WebViewItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewItem.swift; sourceTree = SOURCE_ROOT; };
+		0355A0672C17D741005BBAF3 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Platforms/iPhoneOS.platform/Developer/Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+		0355A06E2C17DA8B005BBAF3 /* glanceablesTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = glanceablesTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		0378B8632C096D850005BAE5 /* glanceables.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = glanceables.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0378B8662C096D850005BAE5 /* glanceablesApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = glanceablesApp.swift; sourceTree = "<group>"; };
 		0378B8682C096D850005BAE5 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		0378B86C2C096D860005BAE5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		0378B86F2C096D860005BAE5 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		0378B8762C096DB00005BAE5 /* WebBrowserView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebBrowserView.swift; sourceTree = "<group>"; };
+		038208D72C17DB9200606536 /* URLModalViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLModalViewTests.swift; sourceTree = "<group>"; };
 		03FD4AD72C13B2AE00F63E1D /* URLClip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLClip.swift; sourceTree = SOURCE_ROOT; };
 		03FD4AD92C15395600F63E1D /* ViewSwiftCapture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewSwiftCapture.swift; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		0355A06B2C17DA8B005BBAF3 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		0378B8602C096D850005BAE5 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -52,11 +73,29 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0355A0662C17D741005BBAF3 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				0355A0672C17D741005BBAF3 /* XCTest.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		0355A06F2C17DA8B005BBAF3 /* glanceablesTests */ = {
+			isa = PBXGroup;
+			children = (
+				038208D72C17DB9200606536 /* URLModalViewTests.swift */,
+			);
+			path = glanceablesTests;
+			sourceTree = "<group>";
+		};
 		0378B85A2C096D850005BAE5 = {
 			isa = PBXGroup;
 			children = (
 				0378B8652C096D850005BAE5 /* glanceables */,
+				0355A06F2C17DA8B005BBAF3 /* glanceablesTests */,
 				0378B8642C096D850005BAE5 /* Products */,
+				0355A0662C17D741005BBAF3 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -64,6 +103,7 @@
 			isa = PBXGroup;
 			children = (
 				0378B8632C096D850005BAE5 /* glanceables.app */,
+				0355A06E2C17DA8B005BBAF3 /* glanceablesTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -100,6 +140,24 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		0355A06D2C17DA8B005BBAF3 /* glanceablesTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0355A0742C17DA8B005BBAF3 /* Build configuration list for PBXNativeTarget "glanceablesTests" */;
+			buildPhases = (
+				0355A06A2C17DA8B005BBAF3 /* Sources */,
+				0355A06B2C17DA8B005BBAF3 /* Frameworks */,
+				0355A06C2C17DA8B005BBAF3 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				0355A0732C17DA8B005BBAF3 /* PBXTargetDependency */,
+			);
+			name = glanceablesTests;
+			productName = glanceablesTests;
+			productReference = 0355A06E2C17DA8B005BBAF3 /* glanceablesTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		0378B8622C096D850005BAE5 /* glanceables */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 0378B8732C096D860005BAE5 /* Build configuration list for PBXNativeTarget "glanceables" */;
@@ -127,6 +185,10 @@
 				LastSwiftUpdateCheck = 1540;
 				LastUpgradeCheck = 1540;
 				TargetAttributes = {
+					0355A06D2C17DA8B005BBAF3 = {
+						CreatedOnToolsVersion = 15.4;
+						TestTargetID = 0378B8622C096D850005BAE5;
+					};
 					0378B8622C096D850005BAE5 = {
 						CreatedOnToolsVersion = 15.4;
 					};
@@ -146,11 +208,19 @@
 			projectRoot = "";
 			targets = (
 				0378B8622C096D850005BAE5 /* glanceables */,
+				0355A06D2C17DA8B005BBAF3 /* glanceablesTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		0355A06C2C17DA8B005BBAF3 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		0378B8612C096D850005BAE5 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -163,6 +233,14 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		0355A06A2C17DA8B005BBAF3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				038208D82C17DB9200606536 /* URLModalViewTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		0378B85F2C096D850005BAE5 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -184,7 +262,51 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		0355A0732C17DA8B005BBAF3 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 0378B8622C096D850005BAE5 /* glanceables */;
+			targetProxy = 0355A0722C17DA8B005BBAF3 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		0355A0752C17DA8B005BBAF3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = F6425Y8M3J;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = glanceables.glanceablesTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/glanceables.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/glanceables";
+			};
+			name = Debug;
+		};
+		0355A0762C17DA8B005BBAF3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = F6425Y8M3J;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = glanceables.glanceablesTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/glanceables.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/glanceables";
+			};
+			name = Release;
+		};
 		0378B8712C096D860005BAE5 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -365,6 +487,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		0355A0742C17DA8B005BBAF3 /* Build configuration list for PBXNativeTarget "glanceablesTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0355A0752C17DA8B005BBAF3 /* Debug */,
+				0355A0762C17DA8B005BBAF3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		0378B85E2C096D850005BAE5 /* Build configuration list for PBXProject "glanceables" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
