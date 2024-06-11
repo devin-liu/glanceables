@@ -35,5 +35,5 @@ jobs:
             file_to_build="`ls -A | grep -i \\.xcodeproj\$`"
           fi
           file_to_build=`echo $file_to_build | awk '{$1=$1;print}'`
-          destination='platform=macOS,arch=arm64,variant="Designed for [iPad,iPhone]"'
+          destination="platform=macOS,arch=arm64,variant='Designed for [iPad,iPhone]'"
           xcodebuild clean build analyze -scheme "$scheme" -"$filetype_parameter" "$file_to_build" -destination "$destination" | xcpretty && exit ${PIPESTATUS[0]}
