@@ -19,14 +19,14 @@ jobs:
         run: |
           scheme_list=$(xcodebuild -list -json | tr -d "\n")
           default=$(echo $scheme_list | ruby -e "require 'json'; puts JSON.parse(STDIN.gets)['project']['targets'][0]")
-          echo $default | cat >default
+          echo "default=$default" >> $GITHUB_ENV
           echo Using default scheme: $default
 
       - name: Build
         env:
-          scheme: ${{ 'default' }}
+          scheme: ${{ env.default }}
         run: |
-          if [ $scheme = default ]; then scheme=$(cat default); fi
+          if [ "$scheme" = "default" ]; then scheme=$(cat default); fi
           if [ "`ls -A | grep -i \\.xcworkspace\$`" ]; then 
             filetype_parameter="workspace"
             file_to_build="`ls -A | grep -i \\.xcworkspace\$`"
@@ -35,5 +35,5 @@ jobs:
             file_to_build="`ls -A | grep -i \\.xcodeproj\$`"
           fi
           file_to_build=`echo $file_to_build | awk '{$1=$1;print}'`
-          destination=`platform=macOS,arch=arm64,variant="Designed for [iPad,iPhone]"`
+          destination="platform=macOS,arch=arm64,variant=Mac Catalyst"
           xcodebuild clean build analyze -scheme "$scheme" -"$filetype_parameter" "$file_to_build" -destination "$destination" | xcpretty && exit ${PIPESTATUS[0]}
