@@ -10,6 +10,7 @@ struct WebGridSingleSnapshotView: View {
     @State private var clipRect: CGRect?  // To store the coordinates of the selected area
     @State private var originalSize: CGSize?
     @State private var screenshot: UIImage?
+    @State private var userInteracting: Bool = false
 
     var item: WebViewItem
 
@@ -31,7 +32,7 @@ struct WebGridSingleSnapshotView: View {
                         .scaledToFit()
                         .frame(height: 300)
                 } else {
-                    WebView(url: $url, pageTitle: $pageTitle, clipRect: $clipRect, originalSize: $originalSize, screenshot: $screenshot)
+                    WebView(url: $url, pageTitle: $pageTitle, clipRect: $clipRect, originalSize: $originalSize, screenshot: $screenshot, userInteracting: $userInteracting)
                         .frame(height: 300)
                         .edgesIgnoringSafeArea(.all)
                 }
@@ -80,8 +81,10 @@ struct WebGridSingleSnapshotView: View {
     }
 
     private func reloadWebView() {
-        url = URL(string: urlString)!  // Ensure URL is valid
-        lastRefreshDate = Date()
+        if !userInteracting {
+            url = URL(string: urlString)!  // Ensure URL is valid
+            lastRefreshDate = Date()
+        }
     }
 
     private func timeAgoSinceDate(_ date: Date) -> String {

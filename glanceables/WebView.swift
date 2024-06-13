@@ -5,51 +5,32 @@ struct WebView: UIViewRepresentable {
     @Binding var url: URL
     @Binding var pageTitle: String
     @Binding var clipRect: CGRect?
-    @Binding var originalSize: CGSize?  // Binding for the original size
-    @Binding var screenshot: UIImage?  // Binding for the screenshot
+    @Binding var originalSize: CGSize?
+    @Binding var screenshot: UIImage?
+    @Binding var userInteracting: Bool
 
-    func makeUIView(context: Context) -> UIScrollView {
-        let scrollView = UIScrollView()
+    func makeUIView(context: Context) -> WKWebView {
         let webView = WKWebView()
         webView.navigationDelegate = context.coordinator
+        webView.uiDelegate = context.coordinator
+        webView.scrollView.delegate = context.coordinator
+        
         configureMessageHandler(webView: webView, contentController: webView.configuration.userContentController, context: context)
         injectSelectionScript(webView: webView)
 
-        scrollView.addSubview(webView)
-        scrollView.delegate = context.coordinator
-        scrollView.minimumZoomScale = 1.0
-        scrollView.maximumZoomScale = 1.0
-
-        // Explicitly set frame size here
-        scrollView.frame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 300)
-        webView.frame = scrollView.frame
-
         context.coordinator.webView = webView
-        context.coordinator.scrollView = scrollView
 
-        return scrollView
+        return webView
     }
 
-    func updateUIView(_ scrollView: UIScrollView, context: Context) {
-        guard let webView = context.coordinator.webView else { return }
-        
-        if webView.url != url {
+    func updateUIView(_ webView: WKWebView, context: Context) {
+        if webView.url != url && !userInteracting {
             let request = URLRequest(url: url)
             webView.load(request)
         }
 
-        if let clipRect = clipRect {
-            scrollView.contentSize = CGSize(width: clipRect.width, height: 300)
-            webView.frame = CGRect(origin: .zero, size: scrollView.contentSize)
-            context.coordinator.scrollToAdjustedClippedArea(clipRect: clipRect)
-        } else {
-            scrollView.contentSize = CGSize(width: scrollView.frame.width, height: 300)
-            webView.frame = CGRect(origin: .zero, size: CGSize(width: scrollView.frame.width, height: 300))
-        }
-        
         // Debugging Layout
         print("WebView Frame: \(webView.frame)")
-        print("ScrollView Content Size: \(scrollView.contentSize)")
         
         // Update layout immediately
         webView.setNeedsLayout()
@@ -75,10 +56,9 @@ struct WebView: UIViewRepresentable {
         webView.configuration.userContentController.addUserScript(WKUserScript(source: jsString, injectionTime: .atDocumentEnd, forMainFrameOnly: false))
     }
 
-    class Coordinator: NSObject, WKNavigationDelegate, UIScrollViewDelegate, WKScriptMessageHandler {
+    class Coordinator: NSObject, WKNavigationDelegate, WKUIDelegate, UIScrollViewDelegate, WKScriptMessageHandler {
         var parent: WebView
         var webView: WKWebView?
-        var scrollView: UIScrollView?
 
         init(_ parent: WebView) {
             self.parent = parent
@@ -87,12 +67,6 @@ struct WebView: UIViewRepresentable {
         func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                 self.parent.pageTitle = webView.title ?? "No Title"
-
-                if let clipRect = self.parent.clipRect {
-                    self.scrollToAdjustedClippedArea(clipRect: clipRect)
-                }
-                // Store the original size of the web view
-//                self.parent.originalSize = webView.scrollView.contentSize
 
                 // Capture a screenshot
                 self.captureScreenshot()
@@ -108,9 +82,18 @@ struct WebView: UIViewRepresentable {
             }
         }
 
-        func scrollToAdjustedClippedArea(clipRect: CGRect) {
-            guard let scrollView = scrollView else { return }
-            scrollView.setContentOffset(CGPoint(x: clipRect.origin.x, y: clipRect.origin.y), animated: true)
+        func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+            self.parent.userInteracting = true
+        }
+
+        func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
+            if !decelerate {
+                self.parent.userInteracting = false
+            }
+        }
+
+        func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+            self.parent.userInteracting = false
         }
 
         private func parseMessage(_ message: String) -> CGRect {
