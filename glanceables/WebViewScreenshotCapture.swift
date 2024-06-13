@@ -16,7 +16,6 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
         webView.scrollView.delegate = context.coordinator
         
         configureMessageHandler(webView: webView, contentController: webView.configuration.userContentController, context: context)
-        injectSelectionScript(webView: webView)
 
         context.coordinator.webView = webView
 
@@ -25,9 +24,9 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
 
     func updateUIView(_ webView: WKWebView, context: Context) {
         if webView.url == nil {
-               let request = URLRequest(url: url)
-               webView.load(request)
-           }
+            let request = URLRequest(url: url)
+            webView.load(request)
+        }
     }
 
     func makeCoordinator() -> Coordinator {
@@ -36,17 +35,6 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
 
     private func configureMessageHandler(webView: WKWebView, contentController: WKUserContentController, context: Context) {
         contentController.add(context.coordinator, name: "selectionHandler")
-    }
-
-    private func injectSelectionScript(webView: WKWebView) {
-        let jsString = """
-            document.addEventListener('mouseup', function(e) {
-                const rect = e.target.getBoundingClientRect();
-                const data = { x: rect.left, y: rect.top, width: rect.width, height: rect.height };
-                window.webkit.messageHandlers.selectionHandler.postMessage(JSON.stringify(data));
-            });
-        """
-        webView.configuration.userContentController.addUserScript(WKUserScript(source: jsString, injectionTime: .atDocumentEnd, forMainFrameOnly: false))
     }
 
     class Coordinator: NSObject, WKNavigationDelegate, WKUIDelegate, UIScrollViewDelegate, WKScriptMessageHandler {
@@ -60,19 +48,11 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
         func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                 self.parent.pageTitle = webView.title ?? "No Title"
-
-                // Capture a screenshot
-                self.captureScreenshot()
             }
         }
 
         func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
-            if message.name == "selectionHandler", let messageBody = message.body as? String {
-                let data = parseMessage(messageBody)
-                DispatchQueue.main.async {
-                    self.parent.clipRect = data
-                }
-            }
+            // Process message for updated selection
         }
 
         func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
@@ -89,18 +69,12 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
             self.parent.userInteracting = false
         }
 
-        private func parseMessage(_ message: String) -> CGRect {
-            let data = Data(message.utf8)
-            if let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: CGFloat],
-               let x = json["x"], let y = json["y"], let width = json["width"], let height = json["height"] {
-                return CGRect(x: x, y: y, width: width, height: height)
-            }
-            return .zero
-        }
+        func captureScreenshot() {
+            guard let webView = webView, let clipRect = parent.clipRect else { return }
+            let snapshotConfig = WKSnapshotConfiguration()
+            snapshotConfig.rect = clipRect // Using the clipRect to define the snapshot area
 
-        private func captureScreenshot() {
-            guard let webView = webView else { return }
-            webView.takeSnapshot(with: nil) { image, error in
+            webView.takeSnapshot(with: snapshotConfig) { image, error in
                 if let image = image {
                     DispatchQueue.main.async {
                         self.parent.screenshot = image
