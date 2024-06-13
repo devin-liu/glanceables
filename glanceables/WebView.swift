@@ -6,6 +6,7 @@ struct WebView: UIViewRepresentable {
     @Binding var pageTitle: String
     @Binding var clipRect: CGRect?
     @Binding var originalSize: CGSize?  // Binding for the original size
+    @Binding var screenshot: UIImage?  // Binding for the screenshot
 
     func makeUIView(context: Context) -> UIScrollView {
         let scrollView = UIScrollView()
@@ -92,6 +93,9 @@ struct WebView: UIViewRepresentable {
                 }
                 // Store the original size of the web view
 //                self.parent.originalSize = webView.scrollView.contentSize
+
+                // Capture a screenshot
+                self.captureScreenshot()
             }
         }
 
@@ -116,6 +120,19 @@ struct WebView: UIViewRepresentable {
                 return CGRect(x: x, y: y, width: width, height: height)
             }
             return .zero
+        }
+
+        private func captureScreenshot() {
+            guard let webView = webView else { return }
+            webView.takeSnapshot(with: nil) { image, error in
+                if let image = image {
+                    DispatchQueue.main.async {
+                        self.parent.screenshot = image
+                    }
+                } else if let error = error {
+                    print("Screenshot error: \(error.localizedDescription)")
+                }
+            }
         }
     }
 }

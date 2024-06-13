@@ -9,6 +9,7 @@ struct WebGridSingleSnapshotView: View {
     @State private var timer: Timer?
     @State private var clipRect: CGRect?  // To store the coordinates of the selected area
     @State private var originalSize: CGSize?
+    @State private var screenshot: UIImage?
 
     var item: WebViewItem
 
@@ -18,19 +19,26 @@ struct WebGridSingleSnapshotView: View {
         _url = State(initialValue: item.url)
         _clipRect = State(initialValue: item.clipRect)  // Initialize clipRect from the item
         _originalSize = State(initialValue: item.originalSize)
+        _screenshot = State(initialValue: WebGridSingleSnapshotView.loadImage(from: item.screenshotPath))
     }
 
     var body: some View {
         VStack {
             ZStack(alignment: .top) {
-                WebView(url: $url, pageTitle: $pageTitle, clipRect: $clipRect, originalSize: $originalSize)
-                    .frame(height: 300)
-                    .edgesIgnoringSafeArea(.all)
+                if let screenshot = screenshot {
+                    Image(uiImage: screenshot)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(height: 300)
+                } else {
+                    WebView(url: $url, pageTitle: $pageTitle, clipRect: $clipRect, originalSize: $originalSize, screenshot: $screenshot)
+                        .frame(height: 300)
+                        .edgesIgnoringSafeArea(.all)
+                }
             }
             .cornerRadius(16.0)
             .padding(10)
 
-            
             Text(pageTitle)
                 .font(.headline)
                 .lineLimit(1)
@@ -86,5 +94,12 @@ struct WebGridSingleSnapshotView: View {
         formatter.maximumUnitCount = 1
         formatter.unitsStyle = .full
         return formatter.string(from: interval) ?? "Just now"
+    }
+
+    private static func loadImage(from path: String?) -> UIImage? {
+        guard let path = path else { return nil }
+        let url = URL(fileURLWithPath: path)
+        guard let data = try? Data(contentsOf: url) else { return nil }
+        return UIImage(data: data)
     }
 }

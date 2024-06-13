@@ -14,6 +14,7 @@ struct WebPreviewCaptureView: View {
     @State private var pageTitle: String = "Loading..."
     @State private var currentClipRect: CGRect?  // Rectangle for clipping
     @State private var originalSize: CGSize?  // Original size of the web view
+    @State private var screenshot: UIImage?  // Screenshot of the webpage
 
     var body: some View {
         NavigationView {
@@ -43,10 +44,17 @@ struct WebPreviewCaptureView: View {
                             handleSaveURL()
                         }
                         .padding(.vertical, 20)
+                        if let screenshot = screenshot {
+                            Image(uiImage: screenshot)
+                                .resizable()
+                                .scaledToFit()
+                                .frame(height: 200)
+                                .padding()
+                        }
                     }
                 }
                 if isURLValid, let url = validURL {
-                    WebView(url: .constant(url), pageTitle: $pageTitle, clipRect: $currentClipRect, originalSize: $originalSize)
+                    WebView(url: .constant(url), pageTitle: $pageTitle, clipRect: $currentClipRect, originalSize: $originalSize, screenshot: $screenshot)
                         .frame(maxHeight: .infinity)
                         .frame(height: 600)
                     
@@ -64,7 +72,11 @@ struct WebPreviewCaptureView: View {
         validateURL()
         if isURLValid {
             if !urlString.isEmpty {
-                let newUrlItem = WebViewItem(id: UUID(), url: URL(string: urlString)!, clipRect: currentClipRect, originalSize: originalSize)
+                var screenshotPath: String? = nil
+                if let screenshot = screenshot {
+                    screenshotPath = saveScreenshotToLocalDirectory(screenshot: screenshot)
+                }
+                let newUrlItem = WebViewItem(id: UUID(), url: URL(string: urlString)!, clipRect: currentClipRect, originalSize: originalSize, screenshotPath: screenshotPath)
                 if isEditing, let index = selectedURLIndex {
                     urls[index] = newUrlItem
                 } else {
@@ -117,5 +129,24 @@ struct WebPreviewCaptureView: View {
         validURL = nil
         currentClipRect = nil
         originalSize = nil
+        screenshot = nil
+    }
+
+    private func saveScreenshotToLocalDirectory(screenshot: UIImage) -> String? {
+        guard let data = screenshot.jpegData(compressionQuality: 1.0) else { return nil }
+        let filename = UUID().uuidString + ".jpg"
+        let url = getDocumentsDirectory().appendingPathComponent(filename)
+
+        do {
+            try data.write(to: url)
+            return url.path
+        } catch {
+            print("Error saving screenshot: \(error)")
+            return nil
+        }
+    }
+
+    private func getDocumentsDirectory() -> URL {
+        return FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
     }
 }
