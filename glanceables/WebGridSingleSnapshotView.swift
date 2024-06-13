@@ -32,7 +32,7 @@ struct WebGridSingleSnapshotView: View {
                         .scaledToFit()
                         .frame(height: 300)
                 } else {
-                    WebView(url: $url, pageTitle: $pageTitle, clipRect: $clipRect, originalSize: $originalSize, screenshot: $screenshot, userInteracting: $userInteracting)
+                    WebViewSnapshotRefresher(url: $url, pageTitle: $pageTitle, clipRect: $clipRect, originalSize: $originalSize, screenshot: $screenshot)
                         .frame(height: 300)
                         .edgesIgnoringSafeArea(.all)
                 }
