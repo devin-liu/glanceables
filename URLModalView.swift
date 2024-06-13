@@ -48,6 +48,8 @@ struct URLModalView: View {
                 if isURLValid, let url = validURL {
                     WebView(url: .constant(url), pageTitle: $pageTitle, clipRect: $currentClipRect, originalSize: $originalSize)
                         .frame(maxHeight: .infinity)
+                        .frame(height: 600)
+                    
                 }
             }
             .navigationBarTitle(isEditing ? "Edit URL" : "New URL", displayMode: .inline)

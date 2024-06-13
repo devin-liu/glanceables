@@ -24,11 +24,12 @@ struct WebBrowserView: View {
         VStack {
             ZStack(alignment: .top) {
                 WebView(url: $url, pageTitle: $pageTitle, clipRect: $clipRect, originalSize: $originalSize)
-                .frame(height: 300)
-                .edgesIgnoringSafeArea(.all)
+                    .frame(height: 300)
+                    .edgesIgnoringSafeArea(.all)
             }
             .cornerRadius(16.0)
             .padding(10)
+
             
             Text(pageTitle)
                 .font(.headline)

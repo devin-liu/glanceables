@@ -19,6 +19,10 @@ struct WebView: UIViewRepresentable {
         scrollView.minimumZoomScale = 1.0
         scrollView.maximumZoomScale = 1.0
 
+        // Explicitly set frame size here
+        scrollView.frame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: 300)
+        webView.frame = scrollView.frame
+
         context.coordinator.webView = webView
         context.coordinator.scrollView = scrollView
 
@@ -34,13 +38,21 @@ struct WebView: UIViewRepresentable {
         }
 
         if let clipRect = clipRect {
-            scrollView.contentSize = CGSize(width: clipRect.width, height: clipRect.height)
+            scrollView.contentSize = CGSize(width: clipRect.width, height: 300)
             webView.frame = CGRect(origin: .zero, size: scrollView.contentSize)
             context.coordinator.scrollToAdjustedClippedArea(clipRect: clipRect)
         } else {
-            scrollView.contentSize = scrollView.bounds.size
-            webView.frame = CGRect(origin: .zero, size: scrollView.bounds.size)
+            scrollView.contentSize = CGSize(width: scrollView.frame.width, height: 300)
+            webView.frame = CGRect(origin: .zero, size: CGSize(width: scrollView.frame.width, height: 300))
         }
+        
+        // Debugging Layout
+        print("WebView Frame: \(webView.frame)")
+        print("ScrollView Content Size: \(scrollView.contentSize)")
+        
+        // Update layout immediately
+        webView.setNeedsLayout()
+        webView.layoutIfNeeded()
     }
 
     func makeCoordinator() -> Coordinator {
@@ -79,7 +91,7 @@ struct WebView: UIViewRepresentable {
                     self.scrollToAdjustedClippedArea(clipRect: clipRect)
                 }
                 // Store the original size of the web view
-                self.parent.originalSize = webView.scrollView.contentSize
+//                self.parent.originalSize = webView.scrollView.contentSize
             }
         }
 
