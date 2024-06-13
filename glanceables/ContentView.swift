@@ -37,7 +37,7 @@ struct ContentView: View {
                 saveURLs()
             }
             .fullScreenCover(isPresented: $showingURLModal) {
-                WebPreviewCaptureView(showingURLModal: $showingURLModal, urlString: $urlString, isURLValid: $isURLValid, urls: $urls, selectedURLIndex: $selectedURLIndex, isEditing: $isEditing)
+                WebPreviewCaptureMenuView(showingURLModal: $showingURLModal, urlString: $urlString, isURLValid: $isURLValid, urls: $urls, selectedURLIndex: $selectedURLIndex, isEditing: $isEditing)
             }
         }
     }
