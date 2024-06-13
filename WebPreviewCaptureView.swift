@@ -1,7 +1,7 @@
 import SwiftUI
 import Combine
 
-struct URLModalView: View {
+struct WebPreviewCaptureView: View {
     @Binding var showingURLModal: Bool
     @Binding var urlString: String
     @Binding var isURLValid: Bool

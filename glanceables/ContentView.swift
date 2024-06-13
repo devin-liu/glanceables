@@ -37,7 +37,7 @@ struct ContentView: View {
                 saveURLs()
             }
             .fullScreenCover(isPresented: $showingURLModal) {
-                URLModalView(showingURLModal: $showingURLModal, urlString: $urlString, isURLValid: $isURLValid, urls: $urls, selectedURLIndex: $selectedURLIndex, isEditing: $isEditing)
+                WebPreviewCaptureView(showingURLModal: $showingURLModal, urlString: $urlString, isURLValid: $isURLValid, urls: $urls, selectedURLIndex: $selectedURLIndex, isEditing: $isEditing)
             }
         }
     }
@@ -54,7 +54,7 @@ struct ContentView: View {
 
     var urlGrid: some View {
         ForEach(urls) { item in
-            WebBrowserView(item: item)
+            WebGridSingleSnapshotView(item: item)
                 .onDrag {
                     self.draggedItem = item
                     return NSItemProvider(object: item.url.absoluteString as NSString)

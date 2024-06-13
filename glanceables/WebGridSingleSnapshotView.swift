@@ -1,7 +1,7 @@
 import SwiftUI
 import WebKit
 
-struct WebBrowserView: View {
+struct WebGridSingleSnapshotView: View {
     @State private var urlString: String
     @State private var url: URL
     @State private var pageTitle: String = "Loading..."
