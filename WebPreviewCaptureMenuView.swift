@@ -126,20 +126,7 @@ struct WebPreviewCaptureMenuView: View {
     private func validateURL() {
         let resultURL = urlValidator.completeURL(urlString)
         isURLValid = resultURL != nil && urlValidator.canOpenURL(resultURL?.absoluteString) && urlValidator.isValidURLFormat(urlString)
-        print("validateURL", resultURL)
         validURL = resultURL
-    }
-   
-    func canOpenURL(_ string: String?) -> Bool {
-        guard let urlString = string, let url = URL(string: urlString) else {
-            return false
-        }
-        return UIApplication.shared.canOpenURL(url)
-    }
-   
-    func isValidURLFormat(_ string: String) -> Bool {
-        let regex = "^(https?://)?([\\w\\d-]+\\.)+[\\w\\d-]+/?([\\w\\d-._\\?,'+/&%$#=~]*)*[^.]$"
-        return NSPredicate(format: "SELF MATCHES %@", regex).evaluate(with: string)
     }
 
     private func resetModalState() {
@@ -155,20 +142,6 @@ struct WebPreviewCaptureMenuView: View {
         startLocation = nil
         endLocation = nil
         showPreview = false
-    }
-
-    private func saveScreenshotToLocalDirectory(screenshot: UIImage) -> String? {
-        guard let data = screenshot.jpegData(compressionQuality: 1.0) else { return nil }
-        let filename = UUID().uuidString + ".jpg"
-        let url = getDocumentsDirectory().appendingPathComponent(filename)
-
-        do {
-            try data.write(to: url)
-            return url.path
-        } catch {
-            print("Error saving screenshot: \(error)")
-            return nil
-        }
     }
 
     private func getDocumentsDirectory() -> URL {

@@ -16,5 +16,5 @@ struct URLValidator {
     func completeURL(_ string: String) -> URL? {
         let urlString = string.hasPrefix("http://") || string.hasPrefix("https://") ? string : "https://" + string
         return URL(string: urlString)
-    }
+    }    
 }
