@@ -16,12 +16,12 @@ struct WebPreviewCaptureMenuView: View {
     @State private var originalSize: CGSize?
     @State private var screenshot: UIImage?
     @State private var userInteracting: Bool = false
+    @State private var currentScrollOffset: CGPoint = .zero
 
     @State private var startLocation: CGPoint? = nil
     @State private var endLocation: CGPoint? = nil
     @State private var dragging: Bool = false
     @State private var showPreview: Bool = false
-    
     
     var urlValidator = URLValidator()
     var screenshotService = ScreenshotService()
@@ -66,7 +66,7 @@ struct WebPreviewCaptureMenuView: View {
                 }
                 if isURLValid, let url = validURL {
                     ZStack {
-                        WebViewScreenshotCapture(url: .constant(url), pageTitle: $pageTitle, clipRect: $currentClipRect, originalSize: $originalSize, screenshot: $screenshot, userInteracting: $userInteracting)
+                        WebViewScreenshotCapture(url: .constant(url), pageTitle: $pageTitle, clipRect: $currentClipRect, originalSize: $originalSize, screenshot: $screenshot, userInteracting: $userInteracting, currentScrollOffset: $currentScrollOffset)
                             .frame(maxHeight: .infinity)
                             .gesture(
                                 DragGesture(minimumDistance: 0)
@@ -150,11 +150,13 @@ struct WebPreviewCaptureMenuView: View {
 
     private func updateClipRect() {
         guard let start = startLocation, let end = endLocation else { return }
+
         let minX = min(start.x, end.x)
         let minY = min(start.y, end.y)
         let maxX = max(start.x, end.x)
         let maxY = max(start.y, end.y)
-        currentClipRect = CGRect(x: minX, y: minY, width: maxX - minX, height: maxY - minY)
+
+        print("currentScrollOffset", currentScrollOffset)
+        currentClipRect = CGRect(x: minX + currentScrollOffset.x, y: minY + currentScrollOffset.y, width: maxX - minX, height: maxY - minY)
     }
 }
- 

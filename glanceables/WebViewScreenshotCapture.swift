@@ -8,6 +8,7 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
     @Binding var originalSize: CGSize?
     @Binding var screenshot: UIImage?
     @Binding var userInteracting: Bool
+    @Binding var currentScrollOffset: CGPoint
 
     func makeUIView(context: Context) -> WKWebView {
         let webView = WKWebView()
@@ -62,11 +63,17 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
         func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
             if !decelerate {
                 self.parent.userInteracting = false
+                self.parent.currentScrollOffset = scrollView.contentOffset
             }
         }
 
         func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
             self.parent.userInteracting = false
+            self.parent.currentScrollOffset = scrollView.contentOffset
+        }
+
+        func scrollViewDidScroll(_ scrollView: UIScrollView) {
+            self.parent.currentScrollOffset = scrollView.contentOffset
         }
 
         func captureScreenshot() {
