@@ -21,6 +21,7 @@ struct WebGridSingleSnapshotView: View {
         _clipRect = State(initialValue: item.clipRect)  // Initialize clipRect from the item
         _originalSize = State(initialValue: item.originalSize)
         _screenshot = State(initialValue: WebGridSingleSnapshotView.loadImage(from: item.screenshotPath))
+        print(item)
     }
 
     var body: some View {

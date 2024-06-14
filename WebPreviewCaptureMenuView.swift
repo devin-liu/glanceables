@@ -22,6 +22,10 @@ struct WebPreviewCaptureMenuView: View {
     @State private var dragging: Bool = false
     @State private var showPreview: Bool = false
     
+    
+    var urlValidator = URLValidator()
+    var screenshotService = ScreenshotService()
+    
     var body: some View {
         NavigationView {
             VStack {
@@ -97,23 +101,19 @@ struct WebPreviewCaptureMenuView: View {
     }
 
     private func handleSaveURL() {
-        validateURL()
-        if isURLValid {
-            if !urlString.isEmpty {
-                var screenshotPath: String? = nil
-                if let screenshot = screenshot {
-                    screenshotPath = saveScreenshotToLocalDirectory(screenshot: screenshot)
-                }
-                let newUrlItem = WebViewItem(id: UUID(), url: URL(string: urlString)!, clipRect: currentClipRect, originalSize: originalSize, screenshotPath: screenshotPath)
-                if isEditing, let index = selectedURLIndex {
-                    urls[index] = newUrlItem
-                } else {
-                    urls.append(newUrlItem)
-                }
-                resetModalState() // Reset modal only on successful save
-            }
-        }
-    }
+      if isURLValid {
+          if !urlString.isEmpty {
+              let screenshotPath = screenshot.flatMap(screenshotService.saveScreenshotToLocalDirectory)
+              let newUrlItem = WebViewItem(id: UUID(), url: validURL!, clipRect: currentClipRect, originalSize: originalSize, screenshotPath: screenshotPath)
+              if isEditing, let index = selectedURLIndex {
+                  urls[index] = newUrlItem
+              } else {
+                  urls.append(newUrlItem)
+              }
+              resetModalState() // Reset modal only on successful save
+          }
+      }
+  }
 
     private func debounceValidation() {
         debounceWorkItem?.cancel()
@@ -124,16 +124,10 @@ struct WebPreviewCaptureMenuView: View {
     }
 
     private func validateURL() {
-        if !urlString.hasPrefix("http://") && !urlString.hasPrefix("https://") {
-            urlString = "https://" + urlString
-        }
-        if let url = URL(string: urlString), canOpenURL(urlString) && isValidURLFormat(urlString) {
-            isURLValid = true
-            validURL = url
-        } else {
-            isURLValid = false
-            validURL = nil
-        }
+        let resultURL = urlValidator.completeURL(urlString)
+        isURLValid = resultURL != nil && urlValidator.canOpenURL(resultURL?.absoluteString) && urlValidator.isValidURLFormat(urlString)
+        print("validateURL", resultURL)
+        validURL = resultURL
     }
    
     func canOpenURL(_ string: String?) -> Bool {
@@ -190,3 +184,4 @@ struct WebPreviewCaptureMenuView: View {
         currentClipRect = CGRect(x: minX, y: minY, width: maxX - minX, height: maxY - minY)
     }
 }
+ 
