@@ -7,10 +7,12 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
     @Binding var clipRect: CGRect?
     @Binding var originalSize: CGSize?
     @Binding var screenshot: UIImage?
+    @Binding var scrollPosition: CGPoint?
 
     func makeUIView(context: Context) -> WKWebView {
         let webView = WKWebView()
         webView.navigationDelegate = context.coordinator
+        webView.scrollView.delegate = context.coordinator
         
         context.coordinator.webView = webView
 
@@ -35,7 +37,7 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
         Coordinator(self)
     }
 
-    class Coordinator: NSObject, WKNavigationDelegate {
+    class Coordinator: NSObject, WKNavigationDelegate, UIScrollViewDelegate {
         var parent: WebViewSnapshotRefresher
         var webView: WKWebView?
 
@@ -44,17 +46,48 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
         }
 
         func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                 self.parent.pageTitle = webView.title ?? "No Title"
+                self.checkContentLoaded(webView: webView)
+            }
+        }
 
-                // Capture a screenshot
+        private func checkContentLoaded(webView: WKWebView) {
+            webView.evaluateJavaScript("document.readyState") { result, error in
+                if let readyState = result as? String, readyState == "complete" {
+                    print("Content fully loaded")
+                    self.scrollToSavedPosition()
+                } else {
+                    print("Content not fully loaded, retrying...")
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                        self.checkContentLoaded(webView: webView)
+                    }
+                }
+            }
+        }
+
+        private func scrollToSavedPosition() {
+            guard let webView = webView, let scrollPosition = parent.scrollPosition else { return }
+            
+            // Scroll to the saved scroll position
+            webView.scrollView.setContentOffset(scrollPosition, animated: false)
+
+            // Wait for scrolling to complete
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                 self.captureScreenshot()
             }
         }
 
         private func captureScreenshot() {
-            guard let webView = webView else { return }
-            webView.takeSnapshot(with: nil) { image, error in
+            guard let webView = webView, let clipRect = parent.clipRect else { return }
+
+            // Debugging
+            print("Taking snapshot with clipRect: \(clipRect)")
+
+            let snapshotConfig = WKSnapshotConfiguration()
+            snapshotConfig.rect = clipRect // Using the clipRect to define the snapshot area
+
+            webView.takeSnapshot(with: snapshotConfig) { image, error in
                 if let image = image {
                     DispatchQueue.main.async {
                         self.parent.screenshot = image

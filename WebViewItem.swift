@@ -6,6 +6,7 @@ struct WebViewItem: Identifiable, Equatable {
     var clipRect: CGRect?
     var originalSize: CGSize?
     var screenshotPath: String?  // Add screenshot path property
+    var scrollPosition: CGPoint?  // Add scroll position property
 
     static func ==(lhs: WebViewItem, rhs: WebViewItem) -> Bool {
         return lhs.id == rhs.id && lhs.url == rhs.url

@@ -10,6 +10,7 @@ struct WebGridSingleSnapshotView: View {
     @State private var clipRect: CGRect?  // To store the coordinates of the selected area
     @State private var originalSize: CGSize?
     @State private var screenshot: UIImage?
+    @State private var scrollPosition: CGPoint?
     @State private var userInteracting: Bool = false
 
     var item: WebViewItem
@@ -22,6 +23,7 @@ struct WebGridSingleSnapshotView: View {
         _originalSize = State(initialValue: item.originalSize)
         _screenshot = State(initialValue: WebGridSingleSnapshotView.loadImage(from: item.screenshotPath))
         print(item)
+        _scrollPosition = State(initialValue: item.scrollPosition)
     }
 
     var body: some View {
@@ -33,7 +35,7 @@ struct WebGridSingleSnapshotView: View {
                         .scaledToFit()
                         .frame(height: 300)
                 } else {
-                    WebViewSnapshotRefresher(url: $url, pageTitle: $pageTitle, clipRect: $clipRect, originalSize: $originalSize, screenshot: $screenshot)
+                    WebViewSnapshotRefresher(url: $url, pageTitle: $pageTitle, clipRect: $clipRect, originalSize: $originalSize, screenshot: $screenshot, scrollPosition: $scrollPosition)
                         .frame(height: 300)
                         .edgesIgnoringSafeArea(.all)
                 }

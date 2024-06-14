@@ -101,19 +101,19 @@ struct WebPreviewCaptureMenuView: View {
     }
 
     private func handleSaveURL() {
-      if isURLValid {
-          if !urlString.isEmpty {
-              let screenshotPath = screenshot.flatMap(screenshotService.saveScreenshotToLocalDirectory)
-              let newUrlItem = WebViewItem(id: UUID(), url: validURL!, clipRect: currentClipRect, originalSize: originalSize, screenshotPath: screenshotPath)
-              if isEditing, let index = selectedURLIndex {
-                  urls[index] = newUrlItem
-              } else {
-                  urls.append(newUrlItem)
-              }
-              resetModalState() // Reset modal only on successful save
-          }
-      }
-  }
+        if isURLValid {
+            if !urlString.isEmpty {
+                let screenshotPath = screenshot.flatMap(screenshotService.saveScreenshotToLocalDirectory)
+                let newUrlItem = WebViewItem(id: UUID(), url: validURL!, clipRect: currentClipRect, originalSize: originalSize, screenshotPath: screenshotPath)
+                if isEditing, let index = selectedURLIndex {
+                    urls[index] = newUrlItem
+                } else {
+                    urls.append(newUrlItem)
+                }
+                resetModalState() // Reset modal only on successful save
+            }
+        }
+    }
 
     private func debounceValidation() {
         debounceWorkItem?.cancel()
@@ -156,7 +156,6 @@ struct WebPreviewCaptureMenuView: View {
         let maxX = max(start.x, end.x)
         let maxY = max(start.y, end.y)
 
-        print("currentScrollOffset", currentScrollOffset)
         currentClipRect = CGRect(x: minX + currentScrollOffset.x, y: minY + currentScrollOffset.y, width: maxX - minX, height: maxY - minY)
     }
 }
