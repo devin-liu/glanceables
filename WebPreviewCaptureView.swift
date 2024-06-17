@@ -62,28 +62,29 @@ struct WebPreviewCaptureView: View {
                 }
                 if isURLValid, let url = validURL {
                     ZStack {
-                        WebViewScreenshotCapture(url: .constant(url), pageTitle: $pageTitle, clipRect: $currentClipRect, originalSize: $originalSize, screenshot: $screenshot, userInteracting: $userInteracting)
-                            .frame(maxHeight: .infinity)
-                            .gesture(
-                                DragGesture(minimumDistance: 0)
-                                    .onChanged { value in
-                                        if startLocation == nil {
-                                            startLocation = value.location
-                                        }
-                                        endLocation = value.location
-                                        dragging = true
-                                        updateClipRect()
-                                    }
-                                    .onEnded { _ in
-                                        dragging = false
-                                        showPreview = true
-                                    }
-                            )
-                        if let clipRect = currentClipRect, dragging {
-                            Rectangle()
-                                .path(in: clipRect)
-                                .stroke(Color.blue, lineWidth: 2)
-                                .background(Color.blue.opacity(0.2))
+                        GeometryReader { geometry in
+                            
+                            WebViewScreenshotCapture(url: .constant(url), pageTitle: $pageTitle, clipRect: $currentClipRect, originalSize: $originalSize, screenshot: $screenshot, userInteracting: $userInteracting)
+                                .frame(maxHeight: .infinity)
+                                .gesture(
+                                    DragGesture(minimumDistance: 0)
+                                                                           .onChanged { value in
+                                                                               startLocation = startLocation ?? value.location
+                                                                               endLocation = value.location
+                                                                               dragging = true
+                                                                               updateClipRect(endLocation: value.location, bounds: geometry.size)
+                                                                           }
+                                                                           .onEnded { _ in
+                                                                               dragging = false
+                                                                               showPreview = true
+                                                                           }
+                                                                   )
+                            if let clipRect = currentClipRect, dragging {
+                                Rectangle()
+                                    .path(in: clipRect)
+                                    .stroke(Color.blue, lineWidth: 2)
+                                    .background(Color.blue.opacity(0.2))
+                            }
                         }
                     }
                 }
@@ -181,12 +182,34 @@ struct WebPreviewCaptureView: View {
         return FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
     }
 
-    private func updateClipRect() {
-        guard let start = startLocation, let end = endLocation else { return }
-        let minX = min(start.x, end.x)
-        let minY = min(start.y, end.y)
-        let maxX = max(start.x, end.x)
-        let maxY = max(start.y, end.y)
-        currentClipRect = CGRect(x: minX, y: minY, width: maxX - minX, height: maxY - minY)
-    }
+//    private func updateClipRect() {
+//        guard let start = startLocation, let end = endLocation else { return }
+//        let minX = min(start.x, end.x)
+//        let minY = min(start.y, end.y)
+//        
+//        // Calculate width and height as fixed values
+//        let width = 300.0
+//        let height = 300.0
+//
+//        // Adjust the minX and minY if dragging out of the initial start location's bounds to keep the size within 300x300
+//        let adjustedMinX = start.x < end.x ? minX : minX - width
+//        let adjustedMinY = start.y < end.y ? minY : minY - height
+//
+//        currentClipRect = CGRect(x: adjustedMinX, y: adjustedMinY, width: width, height: height)
+//    }
+    
+    private func updateClipRect(endLocation: CGPoint, bounds: CGSize) {
+           let width = 300.0
+           let height = 300.0
+
+           let centerX = endLocation.x
+           let centerY = endLocation.y
+
+           let minX = max(0, min(centerX - width / 2, bounds.width - width))
+           let minY = max(0, min(centerY - height / 2, bounds.height - height))
+
+           currentClipRect = CGRect(x: minX, y: minY, width: width, height: height)
+       }
+
+
 }
