@@ -16,7 +16,7 @@ struct WebPreviewCaptureView: View {
     @State private var originalSize: CGSize?
     @State private var screenshot: UIImage?
     @State private var userInteracting: Bool = false
-
+    
     @State private var startLocation: CGPoint? = nil
     @State private var endLocation: CGPoint? = nil
     @State private var dragging: Bool = false
@@ -53,39 +53,43 @@ struct WebPreviewCaptureView: View {
                         .padding(.vertical, 20)
                         if let screenshot = screenshot, showPreview {
                             Image(uiImage: screenshot)
-                                .resizable()
-                                .scaledToFit()
-                                .frame(height: 200)
+                                .frame(width: 300, height: 300)
                                 .padding()
                         }
                     }
                 }
                 if isURLValid, let url = validURL {
-                    ZStack {
-                        GeometryReader { geometry in
-                            
-                            WebViewScreenshotCapture(url: .constant(url), pageTitle: $pageTitle, clipRect: $currentClipRect, originalSize: $originalSize, screenshot: $screenshot, userInteracting: $userInteracting)
+                    GeometryReader { geometry in
+                        ZStack {
+                            WebPreviewCaptureMenuView(url: .constant(url), pageTitle: $pageTitle, clipRect: $currentClipRect, originalSize: $originalSize, screenshot: $screenshot, userInteracting: $userInteracting)
                                 .frame(maxHeight: .infinity)
-                                .gesture(
-                                    DragGesture(minimumDistance: 0)
-                                                                           .onChanged { value in
-                                                                               startLocation = startLocation ?? value.location
-                                                                               endLocation = value.location
-                                                                               dragging = true
-                                                                               updateClipRect(endLocation: value.location, bounds: geometry.size)
-                                                                           }
-                                                                           .onEnded { _ in
-                                                                               dragging = false
-                                                                               showPreview = true
-                                                                           }
-                                                                   )
-                            if let clipRect = currentClipRect, dragging {
+                               
+                            if let clipRect = currentClipRect {
+                                if dragging {
+                                    Rectangle()
+                                        .stroke(style: StrokeStyle(lineWidth: 2, lineCap: .round, lineJoin: .round, dash: [10, 5]))
+                                        .path(in: clipRect)
+                                        .background(Color.black.opacity(0.1))
+                                }
                                 Rectangle()
+                                    .stroke(style: StrokeStyle(lineWidth: 1, lineCap: .round, lineJoin: .round, dash: [10, 5]))
                                     .path(in: clipRect)
-                                    .stroke(Color.blue, lineWidth: 2)
-                                    .background(Color.blue.opacity(0.2))
                             }
-                        }
+                            
+                            
+                        } .gesture(
+                            DragGesture(minimumDistance: 0)
+                                .onChanged { value in
+                                    startLocation = startLocation ?? value.location
+                                    endLocation = value.location
+                                    dragging = true
+                                    updateClipRect(endLocation: value.location, bounds: geometry.size)
+                                }
+                                .onEnded { _ in
+                                    dragging = false
+                                    showPreview = true
+                                }
+                        )
                     }
                 }
             }
@@ -96,7 +100,7 @@ struct WebPreviewCaptureView: View {
             .edgesIgnoringSafeArea(.all)
         }
     }
-
+    
     private func handleSaveURL() {
         validateURL()
         if isURLValid {
@@ -115,7 +119,7 @@ struct WebPreviewCaptureView: View {
             }
         }
     }
-
+    
     private func debounceValidation() {
         debounceWorkItem?.cancel()
         debounceWorkItem = DispatchWorkItem {
@@ -123,7 +127,7 @@ struct WebPreviewCaptureView: View {
         }
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.15, execute: debounceWorkItem!)
     }
-
+    
     private func validateURL() {
         if !urlString.hasPrefix("http://") && !urlString.hasPrefix("https://") {
             urlString = "https://" + urlString
@@ -136,19 +140,19 @@ struct WebPreviewCaptureView: View {
             validURL = nil
         }
     }
-   
+    
     func canOpenURL(_ string: String?) -> Bool {
         guard let urlString = string, let url = URL(string: urlString) else {
             return false
         }
         return UIApplication.shared.canOpenURL(url)
     }
-   
+    
     func isValidURLFormat(_ string: String) -> Bool {
         let regex = "^(https?://)?([\\w\\d-]+\\.)+[\\w\\d-]+/?([\\w\\d-._\\?,'+/&%$#=~]*)*[^.]$"
         return NSPredicate(format: "SELF MATCHES %@", regex).evaluate(with: string)
     }
-
+    
     private func resetModalState() {
         showingURLModal = false
         urlString = ""
@@ -163,12 +167,12 @@ struct WebPreviewCaptureView: View {
         endLocation = nil
         showPreview = false
     }
-
+    
     private func saveScreenshotToLocalDirectory(screenshot: UIImage) -> String? {
         guard let data = screenshot.jpegData(compressionQuality: 1.0) else { return nil }
         let filename = UUID().uuidString + ".jpg"
         let url = getDocumentsDirectory().appendingPathComponent(filename)
-
+        
         do {
             try data.write(to: url)
             return url.path
@@ -177,39 +181,24 @@ struct WebPreviewCaptureView: View {
             return nil
         }
     }
-
+    
     private func getDocumentsDirectory() -> URL {
         return FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
     }
-
-//    private func updateClipRect() {
-//        guard let start = startLocation, let end = endLocation else { return }
-//        let minX = min(start.x, end.x)
-//        let minY = min(start.y, end.y)
-//        
-//        // Calculate width and height as fixed values
-//        let width = 300.0
-//        let height = 300.0
-//
-//        // Adjust the minX and minY if dragging out of the initial start location's bounds to keep the size within 300x300
-//        let adjustedMinX = start.x < end.x ? minX : minX - width
-//        let adjustedMinY = start.y < end.y ? minY : minY - height
-//
-//        currentClipRect = CGRect(x: adjustedMinX, y: adjustedMinY, width: width, height: height)
-//    }
     
     private func updateClipRect(endLocation: CGPoint, bounds: CGSize) {
-           let width = 300.0
-           let height = 300.0
-
-           let centerX = endLocation.x
-           let centerY = endLocation.y
-
-           let minX = max(0, min(centerX - width / 2, bounds.width - width))
-           let minY = max(0, min(centerY - height / 2, bounds.height - height))
-
-           currentClipRect = CGRect(x: minX, y: minY, width: width, height: height)
-       }
-
-
+        let width = 300.0
+        let height = 300.0
+        
+        let centerX = endLocation.x
+        let centerY = endLocation.y
+        
+        let minX = max(0, min(centerX - width / 2, bounds.width - width))
+        let minY = max(0, min(centerY - height / 2, bounds.height - height))
+        
+        currentClipRect = CGRect(x: minX, y: minY, width: width, height: height)
+        print(currentClipRect)
+    }
+    
+    
 }
