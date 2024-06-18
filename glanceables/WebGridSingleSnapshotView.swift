@@ -11,10 +11,10 @@ struct WebGridSingleSnapshotView: View {
     @State private var originalSize: CGSize?
     @State private var screenshot: UIImage?
     @State private var userInteracting: Bool = false
-
+    
     var item: WebViewItem
-
-    init(item: WebViewItem) {
+    
+    init(item: WebViewItem) {        
         self.item = item
         _urlString = State(initialValue: item.url.absoluteString)
         _url = State(initialValue: item.url)
@@ -22,7 +22,7 @@ struct WebGridSingleSnapshotView: View {
         _originalSize = State(initialValue: item.originalSize)
         _screenshot = State(initialValue: WebGridSingleSnapshotView.loadImage(from: item.screenshotPath))
     }
-
+    
     var body: some View {
         VStack {
             ZStack(alignment: .top) {
@@ -39,13 +39,13 @@ struct WebGridSingleSnapshotView: View {
             }
             .cornerRadius(16.0)
             .padding(10)
-
+            
             Text(pageTitle)
                 .font(.headline)
                 .lineLimit(1)
                 .truncationMode(.tail)
                 .padding()
-
+            
             HStack {
                 Image(systemName: "arrow.clockwise.circle.fill")
                     .foregroundColor(.gray)
@@ -68,25 +68,25 @@ struct WebGridSingleSnapshotView: View {
             stopTimer()
         }
     }
-
+    
     private func startTimer() {
         timer = Timer.scheduledTimer(withTimeInterval: 300, repeats: true) { _ in
             reloadWebView()
         }
     }
-
+    
     private func stopTimer() {
         timer?.invalidate()
         timer = nil
     }
-
+    
     private func reloadWebView() {
         if !userInteracting {
             url = URL(string: urlString)!  // Ensure URL is valid
             lastRefreshDate = Date()
         }
     }
-
+    
     private func timeAgoSinceDate(_ date: Date) -> String {
         let interval = Date().timeIntervalSince(date)
         if interval < 60 {
@@ -98,7 +98,7 @@ struct WebGridSingleSnapshotView: View {
         formatter.unitsStyle = .full
         return formatter.string(from: interval) ?? "Just now"
     }
-
+    
     private static func loadImage(from path: String?) -> UIImage? {
         guard let path = path else { return nil }
         let url = URL(fileURLWithPath: path)

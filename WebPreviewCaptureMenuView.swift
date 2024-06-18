@@ -63,7 +63,7 @@ struct WebPreviewCaptureMenuView: View {
                         ZStack {
                             WebViewScreenshotCapture(url: .constant(url), pageTitle: $pageTitle, clipRect: $currentClipRect, originalSize: $originalSize, screenshot: $screenshot, userInteracting: $userInteracting)
                                 .frame(maxHeight: .infinity)
-                               
+                            
                             if let clipRect = currentClipRect {
                                 if dragging {
                                     Rectangle()
@@ -108,7 +108,7 @@ struct WebPreviewCaptureMenuView: View {
                 var screenshotPath: String? = nil
                 if let screenshot = screenshot {
                     screenshotPath = saveScreenshotToLocalDirectory(screenshot: screenshot)
-                }
+                }                
                 let newUrlItem = WebViewItem(id: UUID(), url: URL(string: urlString)!, clipRect: currentClipRect, originalSize: originalSize, screenshotPath: screenshotPath)
                 if isEditing, let index = selectedURLIndex {
                     urls[index] = newUrlItem
