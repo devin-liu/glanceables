@@ -197,8 +197,5 @@ struct WebPreviewCaptureView: View {
         let minY = max(0, min(centerY - height / 2, bounds.height - height))
         
         currentClipRect = CGRect(x: minX, y: minY, width: width, height: height)
-        print(currentClipRect)
     }
-    
-    
 }

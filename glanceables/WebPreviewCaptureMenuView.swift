@@ -16,11 +16,11 @@ struct WebPreviewCaptureMenuView: UIViewRepresentable {
         webView.scrollView.delegate = context.coordinator
         
         // Enable zoom
-        webView.scrollView.isScrollEnabled = true
-        webView.scrollView.minimumZoomScale = 0.5
-        webView.scrollView.maximumZoomScale = 3.0
-        webView.scrollView.zoomScale = 1.0
-        webView.scrollView.bouncesZoom = true
+//        webView.scrollView.isScrollEnabled = true
+//        webView.scrollView.minimumZoomScale = 0.5
+//        webView.scrollView.maximumZoomScale = 3.0
+//        webView.scrollView.zoomScale = 1.0
+//        webView.scrollView.bouncesZoom = true
         
         configureMessageHandler(webView: webView, contentController: webView.configuration.userContentController, context: context)
 //        injectSelectionScript(webView: webView)
@@ -35,6 +35,7 @@ struct WebPreviewCaptureMenuView: UIViewRepresentable {
                let request = URLRequest(url: url)
                webView.load(request)
            }
+        context.coordinator.debouncedCaptureScreenshot()
     }
 
     func makeCoordinator() -> Coordinator {
@@ -59,6 +60,8 @@ struct WebPreviewCaptureMenuView: UIViewRepresentable {
     class Coordinator: NSObject, WKNavigationDelegate, WKUIDelegate, UIScrollViewDelegate, WKScriptMessageHandler {
         var parent: WebPreviewCaptureMenuView
         var webView: WKWebView?
+        private var screenshotCaptureWorkItem: DispatchWorkItem?
+
 
         init(_ parent: WebPreviewCaptureMenuView) {
             self.parent = parent
@@ -89,6 +92,22 @@ struct WebPreviewCaptureMenuView: UIViewRepresentable {
                 }
             }
         }
+        
+        func debouncedCaptureScreenshot() {
+            // Cancel the previous work item if it was scheduled
+            screenshotCaptureWorkItem?.cancel()
+
+            // Create a new work item to capture the screenshot
+            screenshotCaptureWorkItem = DispatchWorkItem { [weak self] in
+                self?.captureScreenshot()
+            }
+
+            // Schedule the new work item after 0.2 seconds
+            if let workItem = screenshotCaptureWorkItem {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.2, execute: workItem)
+            }
+        }
+
 
         func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
             self.parent.userInteracting = true
@@ -103,6 +122,7 @@ struct WebPreviewCaptureMenuView: UIViewRepresentable {
         func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
             self.parent.userInteracting = false
         }
+        
 
         private func parseMessage(_ message: String) -> CGRect {
             let data = Data(message.utf8)
@@ -135,13 +155,8 @@ struct WebPreviewCaptureMenuView: UIViewRepresentable {
 
             webView.takeSnapshot(with: configuration) { image, error in
                 if let image = image {
-                    DispatchQueue.main.async {
-                        // Crop the image to the clipRect
-                        if let clipRect = self.parent.clipRect, let croppedImage = image.cgImage?.cropping(to: clipRect) {
-                            self.parent.screenshot = UIImage(cgImage: croppedImage)
-                        } else {
-                            self.parent.screenshot = image
-                        }
+                    DispatchQueue.main.async {                        
+                        self.parent.screenshot = image
                     }
                 } else if let error = error {
                     print("Screenshot error: \(error.localizedDescription)")
