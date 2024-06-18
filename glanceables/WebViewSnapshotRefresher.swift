@@ -19,18 +19,10 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
     
     func updateUIView(_ webView: WKWebView, context: Context) {
         if webView.url != url {
+            print("NEW URL")
             let request = URLRequest(url: url)
             webView.load(request)
         }
-        
-        // Update the frame of the webView if originalSize changes
-        if let originalSize = originalSize, webView.frame.size != originalSize {
-            webView.frame.size = originalSize
-        }
-        
-        // Update layout immediately
-        webView.setNeedsLayout()
-        webView.layoutIfNeeded()
     }
     
     func makeCoordinator() -> Coordinator {
@@ -48,14 +40,17 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
         func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                 self.parent.pageTitle = webView.title ?? "No Title"
-                
+            }
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.1) {
                 // Capture a screenshot
                 self.captureScreenshot()
             }
         }
         
         private func captureScreenshot() {
-            guard let webView = webView else { return }
+            
+            guard let webView = webView else { return }                        
             
             let configuration = WKSnapshotConfiguration()
             if let clipRect = parent.clipRect {

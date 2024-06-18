@@ -14,7 +14,7 @@ struct WebGridSingleSnapshotView: View {
     
     var item: WebViewItem
     
-    init(item: WebViewItem) {        
+    init(item: WebViewItem) {
         self.item = item
         _urlString = State(initialValue: item.url.absoluteString)
         _url = State(initialValue: item.url)
@@ -26,16 +26,32 @@ struct WebGridSingleSnapshotView: View {
     var body: some View {
         VStack {
             ZStack(alignment: .top) {
+                //                if let screenshot = screenshot {
+                //                    Image(uiImage: screenshot)
+                //                        .resizable()
+                //                        .scaledToFit()
+                //                        .frame(height: 300)
+                //                } else {
+                //                    WebViewSnapshotRefresher(url: $url, pageTitle: $pageTitle, clipRect: $clipRect, originalSize: $originalSize, screenshot: $screenshot)
+                //                        .frame(height: 300)
+                //                        .edgesIgnoringSafeArea(.all)
+                //                }
+                
+                
+                
                 if let screenshot = screenshot {
                     Image(uiImage: screenshot)
                         .resizable()
                         .scaledToFit()
                         .frame(height: 300)
-                } else {
-                    WebViewSnapshotRefresher(url: $url, pageTitle: $pageTitle, clipRect: $clipRect, originalSize: $originalSize, screenshot: $screenshot)
-                        .frame(height: 300)
-                        .edgesIgnoringSafeArea(.all)
                 }
+                
+                WebViewSnapshotRefresher(url: $url, pageTitle: $pageTitle, clipRect: $clipRect, originalSize: $originalSize, screenshot: $screenshot)
+                    .frame(width: originalSize?.width, height: 0)                    
+                    .edgesIgnoringSafeArea(.all)
+                
+                
+                
             }
             .cornerRadius(16.0)
             .padding(10)
