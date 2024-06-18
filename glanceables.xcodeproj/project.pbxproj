@@ -21,7 +21,7 @@
 		0378B8772C096DB00005BAE5 /* WebGridSingleSnapshotView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0378B8762C096DB00005BAE5 /* WebGridSingleSnapshotView.swift */; };
 		038208D82C17DB9200606536 /* URLModalViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 038208D72C17DB9200606536 /* URLModalViewTests.swift */; };
 		038208DA2C18CAFB00606536 /* WebViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 038208D92C18CAFB00606536 /* WebViewTests.swift */; };
-		038208E02C1BB3F400606536 /* WebPreviewCaptureMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 038208DF2C1BB3F400606536 /* WebPreviewCaptureMenuView.swift */; };
+		038208E02C1BB3F400606536 /* WebViewScreenshotCapture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 038208DF2C1BB3F400606536 /* WebViewScreenshotCapture.swift */; };
 		038208E22C1BB40400606536 /* WebViewSnapshotRefresher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 038208E12C1BB40400606536 /* WebViewSnapshotRefresher.swift */; };
 		03FD4AD82C13B2AE00F63E1D /* URLClip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03FD4AD72C13B2AE00F63E1D /* URLClip.swift */; };
 /* End PBXBuildFile section */
@@ -54,7 +54,7 @@
 		0378B8762C096DB00005BAE5 /* WebGridSingleSnapshotView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebGridSingleSnapshotView.swift; sourceTree = "<group>"; };
 		038208D72C17DB9200606536 /* URLModalViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLModalViewTests.swift; sourceTree = "<group>"; };
 		038208D92C18CAFB00606536 /* WebViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewTests.swift; sourceTree = "<group>"; };
-		038208DF2C1BB3F400606536 /* WebPreviewCaptureMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebPreviewCaptureMenuView.swift; sourceTree = "<group>"; };
+		038208DF2C1BB3F400606536 /* WebViewScreenshotCapture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewScreenshotCapture.swift; sourceTree = "<group>"; };
 		038208E12C1BB40400606536 /* WebViewSnapshotRefresher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewSnapshotRefresher.swift; sourceTree = "<group>"; };
 		03FD4AD72C13B2AE00F63E1D /* URLClip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLClip.swift; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
@@ -117,7 +117,7 @@
 			isa = PBXGroup;
 			children = (
 				038208E12C1BB40400606536 /* WebViewSnapshotRefresher.swift */,
-				038208DF2C1BB3F400606536 /* WebPreviewCaptureMenuView.swift */,
+				038208DF2C1BB3F400606536 /* WebViewScreenshotCapture.swift */,
 				03FD4AD72C13B2AE00F63E1D /* URLClip.swift */,
 				030062B32C112BD100B0242D /* WebViewItem.swift */,
 				030062A22C0EAE8900B0242D /* WebView.swift */,
@@ -256,7 +256,7 @@
 				03FD4AD82C13B2AE00F63E1D /* URLClip.swift in Sources */,
 				0378B8772C096DB00005BAE5 /* WebGridSingleSnapshotView.swift in Sources */,
 				0378B8692C096D850005BAE5 /* ContentView.swift in Sources */,
-				038208E02C1BB3F400606536 /* WebPreviewCaptureMenuView.swift in Sources */,
+				038208E02C1BB3F400606536 /* WebViewScreenshotCapture.swift in Sources */,
 				0300629D2C0D229800B0242D /* BlackMenuBarView.swift in Sources */,
 				030062992C0A833200B0242D /* CreateButtonView.swift in Sources */,
 				030062A32C0EAE8900B0242D /* WebView.swift in Sources */,

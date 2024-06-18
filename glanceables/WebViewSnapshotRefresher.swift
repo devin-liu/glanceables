@@ -52,9 +52,39 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
             }
         }
 
+//        private func captureScreenshot() {
+//            guard let webView = webView else { return }
+//            webView.takeSnapshot(with: nil) { image, error in
+//                if let image = image {
+//                    DispatchQueue.main.async {
+//                        self.parent.screenshot = image
+//                    }
+//                } else if let error = error {
+//                    print("Screenshot error: \(error.localizedDescription)")
+//                }
+//            }
+//        }
         private func captureScreenshot() {
             guard let webView = webView else { return }
-            webView.takeSnapshot(with: nil) { image, error in
+
+            let configuration = WKSnapshotConfiguration()
+            if let clipRect = parent.clipRect {
+                // Adjust clipRect based on the current zoom scale and content offset
+                let zoomScale = webView.scrollView.zoomScale
+                let offsetX = webView.scrollView.contentOffset.x
+                let offsetY = webView.scrollView.contentOffset.y
+
+                // Apply the zoom and offset to the clipRect
+                let adjustedClipRect = CGRect(
+                    x: (clipRect.origin.x + offsetX) / zoomScale,
+                    y: (clipRect.origin.y + offsetY) / zoomScale,
+                    width: clipRect.size.width / zoomScale,
+                    height: clipRect.size.height / zoomScale
+                )
+                configuration.rect = adjustedClipRect
+            }
+
+            webView.takeSnapshot(with: configuration) { image, error in
                 if let image = image {
                     DispatchQueue.main.async {
                         self.parent.screenshot = image

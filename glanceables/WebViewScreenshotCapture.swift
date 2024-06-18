@@ -1,7 +1,7 @@
 import SwiftUI
 import WebKit
 
-struct WebPreviewCaptureMenuView: UIViewRepresentable {
+struct WebViewScreenshotCapture: UIViewRepresentable {
     @Binding var url: URL
     @Binding var pageTitle: String
     @Binding var clipRect: CGRect?
@@ -58,12 +58,12 @@ struct WebPreviewCaptureMenuView: UIViewRepresentable {
 //    }
 
     class Coordinator: NSObject, WKNavigationDelegate, WKUIDelegate, UIScrollViewDelegate, WKScriptMessageHandler {
-        var parent: WebPreviewCaptureMenuView
+        var parent: WebViewScreenshotCapture
         var webView: WKWebView?
         private var screenshotCaptureWorkItem: DispatchWorkItem?
 
 
-        init(_ parent: WebPreviewCaptureMenuView) {
+        init(_ parent: WebViewScreenshotCapture) {
             self.parent = parent
         }
 
@@ -155,7 +155,7 @@ struct WebPreviewCaptureMenuView: UIViewRepresentable {
 
             webView.takeSnapshot(with: configuration) { image, error in
                 if let image = image {
-                    DispatchQueue.main.async {                        
+                    DispatchQueue.main.async {
                         self.parent.screenshot = image
                     }
                 } else if let error = error {
@@ -163,6 +163,5 @@ struct WebPreviewCaptureMenuView: UIViewRepresentable {
                 }
             }
         }
-
     }
 }

@@ -61,7 +61,7 @@ struct WebPreviewCaptureView: View {
                 if isURLValid, let url = validURL {
                     GeometryReader { geometry in
                         ZStack {
-                            WebPreviewCaptureMenuView(url: .constant(url), pageTitle: $pageTitle, clipRect: $currentClipRect, originalSize: $originalSize, screenshot: $screenshot, userInteracting: $userInteracting)
+                            WebViewScreenshotCapture(url: .constant(url), pageTitle: $pageTitle, clipRect: $currentClipRect, originalSize: $originalSize, screenshot: $screenshot, userInteracting: $userInteracting)
                                 .frame(maxHeight: .infinity)
                                
                             if let clipRect = currentClipRect {
