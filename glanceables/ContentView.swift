@@ -9,7 +9,7 @@ struct ContentView: View {
     @State private var isEditing = false
     @State private var selectedURLIndex: Int? = nil
     @State private var isURLValid = true
-
+    
     var body: some View {
         VStack {
             BlackMenuBarView(isShowingModal: $showingURLModal)
@@ -41,7 +41,7 @@ struct ContentView: View {
             }
         }
     }
-
+    
     var emptyStateView: some View {
         VStack {
             Spacer()
@@ -51,7 +51,7 @@ struct ContentView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
-
+    
     var urlGrid: some View {
         ForEach(urls) { item in
             WebGridSingleSnapshotView(item: item)
@@ -82,19 +82,19 @@ struct ContentView: View {
                 }
         }
     }
-
+    
     private func saveURLs() {        
         UserDefaultsManager.shared.saveWebViewItems(urls)
     }
-
+    
     private func loadURLs() {
         urls = UserDefaultsManager.shared.loadWebViewItems()
     }
-
+    
     private func validateURL() {
         isURLValid = URL(string: urlString) != nil
     }
-
+    
     private func resetModalState() {
         showingURLModal = false
         urlString = ""
@@ -108,10 +108,10 @@ struct DropViewDelegate: DropDelegate {
     let item: WebViewItem
     @Binding var viewModel: [WebViewItem]
     @Binding var draggedItem: WebViewItem?
-
+    
     func dropEntered(info: DropInfo) {
         guard let draggedItem = draggedItem, draggedItem.id != item.id else { return }
-
+        
         if let fromIndex = viewModel.firstIndex(where: { $0.id == draggedItem.id }),
            let toIndex = viewModel.firstIndex(where: { $0.id == item.id }) {
             withAnimation {
@@ -119,7 +119,7 @@ struct DropViewDelegate: DropDelegate {
             }
         }
     }
-
+    
     func performDrop(info: DropInfo) -> Bool {
         self.draggedItem = nil
         return true
