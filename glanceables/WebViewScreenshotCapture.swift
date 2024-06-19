@@ -2,7 +2,7 @@ import SwiftUI
 import WebKit
 
 struct WebViewScreenshotCapture: UIViewRepresentable {
-    @Binding var url: URL
+    @Binding var url: URL?
     @Binding var pageTitle: String
     @Binding var clipRect: CGRect?
     @Binding var originalSize: CGSize?
@@ -31,10 +31,16 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
     }
     
     func updateUIView(_ webView: WKWebView, context: Context) {
+        // First, check if webView.url is nil
         if webView.url == nil {
-            let request = URLRequest(url: url)
-            webView.load(request)
+            // Safely unwrap the optional url
+            if let validURL = url {
+                // Now you have a non-nil URL, create a URLRequest
+                let request = URLRequest(url: validURL)
+                webView.load(request)
+            }
         }
+        // Call the screenshot capturing method on the coordinator
         context.coordinator.debouncedCaptureScreenshot()
     }
     
@@ -90,6 +96,17 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
                 
             }
         }
+        
+        func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
+                // Update the current URL
+                if let url = navigationAction.request.url {
+                    print("NEW URL", url)
+                    DispatchQueue.main.async {
+                        self.parent.url = url
+                    }
+                }
+                decisionHandler(.allow)
+            }
         
         func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
             if message.name == "selectionHandler", let messageBody = message.body as? String {

@@ -58,10 +58,10 @@ struct WebPreviewCaptureMenuView: View {
                         }
                     }
                 }
-                if isURLValid, let url = validURL {
+                if isURLValid {
                     GeometryReader { geometry in
                         ZStack {
-                            WebViewScreenshotCapture(url: .constant(url), pageTitle: $pageTitle, clipRect: $currentClipRect, originalSize: $originalSize, screenshot: $screenshot, userInteracting: $userInteracting)
+                            WebViewScreenshotCapture(url: $validURL, pageTitle: $pageTitle, clipRect: $currentClipRect, originalSize: $originalSize, screenshot: $screenshot, userInteracting: $userInteracting)
                                 .frame(maxHeight: .infinity)
                             
                             if let clipRect = currentClipRect {
@@ -104,12 +104,12 @@ struct WebPreviewCaptureMenuView: View {
     private func handleSaveURL() {
         validateURL()
         if isURLValid {
-            if !urlString.isEmpty {
+            if !urlString.isEmpty && validURL?.absoluteString != nil {
                 var screenshotPath: String? = nil
                 if let screenshot = screenshot {
                     screenshotPath = saveScreenshotToLocalDirectory(screenshot: screenshot)
                 }                
-                let newUrlItem = WebViewItem(id: UUID(), url: URL(string: urlString)!, clipRect: currentClipRect, originalSize: originalSize, screenshotPath: screenshotPath)
+                let newUrlItem = WebViewItem(id: UUID(), url: validURL!, clipRect: currentClipRect, originalSize: originalSize, screenshotPath: screenshotPath)
                 if isEditing, let index = selectedURLIndex {
                     urls[index] = newUrlItem
                 } else {
