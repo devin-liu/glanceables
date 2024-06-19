@@ -17,9 +17,41 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
         return webView
     }
     
+    func normalizeURL(_ urlString: String?) -> String? {
+        guard let urlString = urlString, var components = URLComponents(string: urlString) else {
+            return nil
+        }
+        
+        // Remove the "www." prefix if it exists
+        if components.host?.hasPrefix("www.") == true {
+            components.host = String(components.host!.dropFirst(4))
+        }
+        
+        // Force the scheme to https
+        components.scheme = "https"
+        
+        // Remove any trailing slash
+        if components.path.hasSuffix("/") {
+            components.path = String(components.path.dropLast())
+        }
+        
+        return components.string
+    }
+
+    func urlsAreEqual(_ urlString1: String, _ urlString2: String) -> Bool {
+        guard let normalizedURL1 = normalizeURL(urlString1),
+              let normalizedURL2 = normalizeURL(urlString2) else {
+            return false
+        }
+        
+        return normalizedURL1 == normalizedURL2
+    }
+    
     func updateUIView(_ webView: WKWebView, context: Context) {
-        if webView.url != url {
-            print("NEW URL")
+        let currentURLString = webView.url?.absoluteString
+        let newURLString = url.absoluteString
+        
+        if normalizeURL(currentURLString) != normalizeURL(newURLString) {            
             let request = URLRequest(url: url)
             webView.load(request)
         }
@@ -42,7 +74,7 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
                 self.parent.pageTitle = webView.title ?? "No Title"
             }
             
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.1) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 5.1) {
                 // Capture a screenshot
                 self.captureScreenshot()
             }
