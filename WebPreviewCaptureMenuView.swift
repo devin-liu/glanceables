@@ -107,7 +107,8 @@ struct WebPreviewCaptureMenuView: View {
             if !urlString.isEmpty && validURL?.absoluteString != nil {
                 var screenshotPath: String? = nil
                 if let screenshot = screenshot {
-                    screenshotPath = saveScreenshotToLocalDirectory(screenshot: screenshot)
+                    screenshotPath = ScreenshotUtils.saveScreenshotToLocalDirectory(screenshot: screenshot)
+
                 }                
                 let newUrlItem = WebViewItem(id: UUID(), url: validURL!, clipRect: currentClipRect, originalSize: originalSize, screenshotPath: screenshotPath)
                 if isEditing, let index = selectedURLIndex {
@@ -166,24 +167,6 @@ struct WebPreviewCaptureMenuView: View {
         startLocation = nil
         endLocation = nil
         showPreview = false
-    }
-    
-    private func saveScreenshotToLocalDirectory(screenshot: UIImage) -> String? {
-        guard let data = screenshot.jpegData(compressionQuality: 1.0) else { return nil }
-        let filename = UUID().uuidString + ".jpg"
-        let url = getDocumentsDirectory().appendingPathComponent(filename)
-        
-        do {
-            try data.write(to: url)
-            return url.path
-        } catch {
-            print("Error saving screenshot: \(error)")
-            return nil
-        }
-    }
-    
-    private func getDocumentsDirectory() -> URL {
-        return FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
     }
     
     private func updateClipRect(endLocation: CGPoint, bounds: CGSize) {

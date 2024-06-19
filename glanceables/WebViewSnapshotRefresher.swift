@@ -37,7 +37,7 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
         
         return components.string
     }
-
+    
     func urlsAreEqual(_ urlString1: String, _ urlString2: String) -> Bool {
         guard let normalizedURL1 = normalizeURL(urlString1),
               let normalizedURL2 = normalizeURL(urlString2) else {
@@ -101,10 +101,13 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
                 configuration.rect = adjustedClipRect
             }
             
+            
+            
             webView.takeSnapshot(with: configuration) { image, error in
                 if let image = image {
                     DispatchQueue.main.async {
                         self.parent.screenshot = image
+                        _ = ScreenshotUtils.saveScreenshotToLocalDirectory(screenshot: image)
                     }
                 } else if let error = error {
                     print("Screenshot error: \(error.localizedDescription)")
