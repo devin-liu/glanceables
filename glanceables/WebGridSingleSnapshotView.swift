@@ -11,6 +11,8 @@ struct WebGridSingleSnapshotView: View {
     @State private var originalSize: CGSize?
     @State private var screenshot: UIImage?
     @State private var userInteracting: Bool = false
+    @State private var rotationAngle: Double = 0  // State variable for rotation angle
+    
     
     var item: WebViewItem
     
@@ -48,6 +50,8 @@ struct WebGridSingleSnapshotView: View {
             HStack {
                 Image(systemName: "arrow.clockwise.circle.fill")
                     .foregroundColor(.gray)
+                    .rotationEffect(.degrees(rotationAngle))  // Apply rotation effect
+                    .animation(.easeInOut(duration: 0.5))  // Add animation
                 Text(timeAgoSinceDate(lastRefreshDate))
                     .font(.subheadline)
                     .foregroundColor(.gray)
@@ -55,6 +59,9 @@ struct WebGridSingleSnapshotView: View {
             .padding()
             .contentShape(Rectangle())
             .onTapGesture {
+                withAnimation {
+                    rotationAngle += 360  // Rotate by 360 degrees
+                }
                 reloadWebView()
             }
         }
