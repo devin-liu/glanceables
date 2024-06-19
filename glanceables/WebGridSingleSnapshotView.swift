@@ -26,32 +26,15 @@ struct WebGridSingleSnapshotView: View {
     var body: some View {
         VStack {
             ZStack(alignment: .top) {
-                //                if let screenshot = screenshot {
-                //                    Image(uiImage: screenshot)
-                //                        .resizable()
-                //                        .scaledToFit()
-                //                        .frame(height: 300)
-                //                } else {
-                //                    WebViewSnapshotRefresher(url: $url, pageTitle: $pageTitle, clipRect: $clipRect, originalSize: $originalSize, screenshot: $screenshot)
-                //                        .frame(height: 300)
-                //                        .edgesIgnoringSafeArea(.all)
-                //                }
-                
-                
-                
                 if let screenshot = screenshot {
                     Image(uiImage: screenshot)
                         .resizable()
                         .scaledToFit()
                         .frame(height: 300)
                 }
-                
                 WebViewSnapshotRefresher(url: $url, pageTitle: $pageTitle, clipRect: $clipRect, originalSize: $originalSize, screenshot: $screenshot)
-                    .frame(width: originalSize?.width, height: 0)                    
+                    .frame(width: originalSize?.width, height: 0)
                     .edgesIgnoringSafeArea(.all)
-                
-                
-                
             }
             .cornerRadius(16.0)
             .padding(10)
@@ -86,7 +69,7 @@ struct WebGridSingleSnapshotView: View {
     }
     
     private func startTimer() {
-        timer = Timer.scheduledTimer(withTimeInterval: 300, repeats: true) { _ in
+        timer = Timer.scheduledTimer(withTimeInterval: 60, repeats: true) { _ in
             reloadWebView()
         }
     }
