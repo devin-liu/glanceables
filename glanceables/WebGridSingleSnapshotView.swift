@@ -38,8 +38,8 @@ struct WebGridSingleSnapshotView: View {
                 WebViewSnapshotRefresher(url: $url, pageTitle: $pageTitle, clipRect: $clipRect, originalSize: $originalSize, screenshot: $screenshot, reloadTrigger: reloadTrigger, onScreenshotTaken: { newPath in
                     updateScreenshotPath(newPath)
                 })
-                    .frame(width: originalSize?.width, height: 0)
-                    .edgesIgnoringSafeArea(.all)
+                .frame(width: originalSize?.width, height: 0)
+                .edgesIgnoringSafeArea(.all)
             }
             .cornerRadius(16.0)
             .padding(10)
@@ -55,9 +55,9 @@ struct WebGridSingleSnapshotView: View {
                     .foregroundColor(.gray)
                     .rotationEffect(.degrees(rotationAngle))  // Apply rotation effect
                     .animation(Animation.easeInOut(duration: 0.5), value: rotationAngle)
-
-
-                    
+                
+                
+                
                 Text(timeAgoSinceDate(lastRefreshDate))
                     .font(.subheadline)
                     .foregroundColor(.gray)
@@ -111,11 +111,22 @@ struct WebGridSingleSnapshotView: View {
         return formatter.string(from: interval) ?? "Just now"
     }
     
+    
     private func updateScreenshotPath(_ newPath: String) {
-        print("updateScreenshotPath", url, item.id, newPath)
-        item.screenshotPath = newPath
+        // Update the screenshotPath property of the item
+        var updatedItem = item
+        updatedItem.screenshotPath = newPath
+        
+        // Update the image displayed in the view
         screenshot = WebGridSingleSnapshotView.loadImage(from: newPath)
+        
+        // Save the updated item using your user defaults manager
+        UserDefaultsManager.shared.updateWebViewItem(updatedItem)
+        
+        // Update the bound item to trigger UI updates if needed
+        item = updatedItem
     }
+    
     
     private static func loadImage(from path: String?) -> UIImage? {
         guard let path = path else { return nil }

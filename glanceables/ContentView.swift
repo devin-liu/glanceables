@@ -33,7 +33,7 @@ struct ContentView: View {
             .onAppear {
                 loadURLs()
             }
-            .onChange(of: urls) {
+            .onChange(of: urls, initial: true) {
                 saveURLs()
             }
             .fullScreenCover(isPresented: $showingURLModal) {
