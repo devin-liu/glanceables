@@ -24,7 +24,7 @@
 		038208E02C1BB3F400606536 /* WebViewScreenshotCapture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 038208DF2C1BB3F400606536 /* WebViewScreenshotCapture.swift */; };
 		038208E22C1BB40400606536 /* WebViewSnapshotRefresher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 038208E12C1BB40400606536 /* WebViewSnapshotRefresher.swift */; };
 		03C5DAD12C23A76B0061FA25 /* ScreenshotUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03C5DAD02C23A76B0061FA25 /* ScreenshotUtils.swift */; };
-		03FD4AD82C13B2AE00F63E1D /* URLClip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03FD4AD72C13B2AE00F63E1D /* URLClip.swift */; };
+		03C5DAD32C24F0CF0061FA25 /* URLUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03C5DAD22C24F0CF0061FA25 /* URLUtilities.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -58,7 +58,7 @@
 		038208DF2C1BB3F400606536 /* WebViewScreenshotCapture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewScreenshotCapture.swift; sourceTree = "<group>"; };
 		038208E12C1BB40400606536 /* WebViewSnapshotRefresher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewSnapshotRefresher.swift; sourceTree = "<group>"; };
 		03C5DAD02C23A76B0061FA25 /* ScreenshotUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenshotUtils.swift; sourceTree = SOURCE_ROOT; };
-		03FD4AD72C13B2AE00F63E1D /* URLClip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLClip.swift; sourceTree = SOURCE_ROOT; };
+		03C5DAD22C24F0CF0061FA25 /* URLUtilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLUtilities.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -121,7 +121,7 @@
 				03C5DAD02C23A76B0061FA25 /* ScreenshotUtils.swift */,
 				038208E12C1BB40400606536 /* WebViewSnapshotRefresher.swift */,
 				038208DF2C1BB3F400606536 /* WebViewScreenshotCapture.swift */,
-				03FD4AD72C13B2AE00F63E1D /* URLClip.swift */,
+				03C5DAD22C24F0CF0061FA25 /* URLUtilities.swift */,
 				030062B32C112BD100B0242D /* WebViewItem.swift */,
 				030062A22C0EAE8900B0242D /* WebView.swift */,
 				0300629C2C0D229800B0242D /* BlackMenuBarView.swift */,
@@ -256,10 +256,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				030062972C0A7F2600B0242D /* HeaderView.swift in Sources */,
-				03FD4AD82C13B2AE00F63E1D /* URLClip.swift in Sources */,
 				0378B8772C096DB00005BAE5 /* WebGridSingleSnapshotView.swift in Sources */,
 				0378B8692C096D850005BAE5 /* ContentView.swift in Sources */,
 				038208E02C1BB3F400606536 /* WebViewScreenshotCapture.swift in Sources */,
+				03C5DAD32C24F0CF0061FA25 /* URLUtilities.swift in Sources */,
 				0300629D2C0D229800B0242D /* BlackMenuBarView.swift in Sources */,
 				030062992C0A833200B0242D /* CreateButtonView.swift in Sources */,
 				030062A32C0EAE8900B0242D /* WebView.swift in Sources */,

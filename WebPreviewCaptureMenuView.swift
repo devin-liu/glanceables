@@ -108,8 +108,8 @@ struct WebPreviewCaptureMenuView: View {
                 var screenshotPath: String? = nil
                 if let screenshot = screenshot {
                     screenshotPath = ScreenshotUtils.saveScreenshotToLocalDirectory(screenshot: screenshot)
-
-                }                
+                    
+                }
                 let newUrlItem = WebViewItem(id: UUID(), url: validURL!, clipRect: currentClipRect, originalSize: originalSize, screenshotPath: screenshotPath)
                 if isEditing, let index = selectedURLIndex {
                     urls[index] = newUrlItem
@@ -130,24 +130,10 @@ struct WebPreviewCaptureMenuView: View {
     }
     
     private func validateURL() {
-        if !urlString.hasPrefix("http://") && !urlString.hasPrefix("https://") {
-            urlString = "https://" + urlString
-        }
-        if let url = URL(string: urlString), canOpenURL(urlString) && isValidURLFormat(urlString) {
-            isURLValid = true
-            validURL = url
-        } else {
-            isURLValid = false
-            validURL = nil
-        }
-    }
-    
-    func canOpenURL(_ string: String?) -> Bool {
-        guard let urlString = string, let url = URL(string: urlString) else {
-            return false
-        }
-        return UIApplication.shared.canOpenURL(url)
-    }
+        let validation = URLUtilities.validateURL(from: urlString)
+        isURLValid = validation.isValid
+        validURL = validation.url
+    }    
     
     func isValidURLFormat(_ string: String) -> Bool {
         let regex = "^(https?://)?([\\w\\d-]+\\.)+[\\w\\d-]+/?([\\w\\d-._\\?,'+/&%$#=~]*)*[^.]$"
