@@ -53,8 +53,8 @@ struct ContentView: View {
     }
     
     var urlGrid: some View {
-        ForEach(urls) { item in
-            WebGridSingleSnapshotView(item: item)
+        ForEach($urls) { $item in
+                    WebGridSingleSnapshotView(item: $item)
                 .onDrag {
                     self.draggedItem = item
                     return NSItemProvider(object: item.url.absoluteString as NSString)
@@ -83,7 +83,7 @@ struct ContentView: View {
         }
     }
     
-    private func saveURLs() {        
+    private func saveURLs() {
         UserDefaultsManager.shared.saveWebViewItems(urls)
     }
     

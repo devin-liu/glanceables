@@ -1,5 +1,6 @@
 import SwiftUI
 import WebKit
+import Combine
 
 struct WebViewSnapshotRefresher: UIViewRepresentable {
     @Binding var url: URL
@@ -7,12 +8,19 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
     @Binding var clipRect: CGRect?
     @Binding var originalSize: CGSize?
     @Binding var screenshot: UIImage?
+    var reloadTrigger: PassthroughSubject<Void, Never> // Add a reload trigger
+    var onScreenshotTaken: ((String) -> Void)?
     
     func makeUIView(context: Context) -> WKWebView {
         let webView = WKWebView()
         webView.navigationDelegate = context.coordinator
         
         context.coordinator.webView = webView
+        
+        // Subscribe to the reload trigger
+        context.coordinator.reloadSubscription = reloadTrigger.sink {            
+            webView.reload()
+        }
         
         return webView
     }
@@ -37,7 +45,7 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
         
         return components.string
     }
-    
+
     func urlsAreEqual(_ urlString1: String, _ urlString2: String) -> Bool {
         guard let normalizedURL1 = normalizeURL(urlString1),
               let normalizedURL2 = normalizeURL(urlString2) else {
@@ -51,7 +59,7 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
         let currentURLString = webView.url?.absoluteString
         let newURLString = url.absoluteString
         
-        if normalizeURL(currentURLString) != normalizeURL(newURLString) {            
+        if normalizeURL(currentURLString) != normalizeURL(newURLString) {
             let request = URLRequest(url: url)
             webView.load(request)
         }
@@ -64,9 +72,14 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
     class Coordinator: NSObject, WKNavigationDelegate {
         var parent: WebViewSnapshotRefresher
         var webView: WKWebView?
+        var reloadSubscription: AnyCancellable?
         
         init(_ parent: WebViewSnapshotRefresher) {
             self.parent = parent
+        }
+        
+        deinit {
+            reloadSubscription?.cancel()
         }
         
         func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
@@ -81,8 +94,7 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
         }
         
         private func captureScreenshot() {
-            
-            guard let webView = webView else { return }                        
+            guard let webView = webView else { return }
             
             let configuration = WKSnapshotConfiguration()
             if let clipRect = parent.clipRect {
@@ -101,13 +113,13 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
                 configuration.rect = adjustedClipRect
             }
             
-            
-            
             webView.takeSnapshot(with: configuration) { image, error in
                 if let image = image {
                     DispatchQueue.main.async {
                         self.parent.screenshot = image
-                        _ = ScreenshotUtils.saveScreenshotToLocalDirectory(screenshot: image)
+                        if let screenshotPath = ScreenshotUtils.saveScreenshotToLocalDirectory(screenshot: image) {
+                            self.parent.onScreenshotTaken?(screenshotPath)
+                        }
                     }
                 } else if let error = error {
                     print("Screenshot error: \(error.localizedDescription)")

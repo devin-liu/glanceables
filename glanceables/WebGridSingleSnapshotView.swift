@@ -1,5 +1,6 @@
 import SwiftUI
 import WebKit
+import Combine
 
 struct WebGridSingleSnapshotView: View {
     @State private var urlString: String
@@ -12,17 +13,17 @@ struct WebGridSingleSnapshotView: View {
     @State private var screenshot: UIImage?
     @State private var userInteracting: Bool = false
     @State private var rotationAngle: Double = 0  // State variable for rotation angle
+    @State private var reloadTrigger = PassthroughSubject<Void, Never>() // Local reload trigger
     
+    @Binding var item: WebViewItem
     
-    var item: WebViewItem
-    
-    init(item: WebViewItem) {
-        self.item = item
-        _urlString = State(initialValue: item.url.absoluteString)
-        _url = State(initialValue: item.url)
-        _clipRect = State(initialValue: item.clipRect)  // Initialize clipRect from the item
-        _originalSize = State(initialValue: item.originalSize)
-        _screenshot = State(initialValue: WebGridSingleSnapshotView.loadImage(from: item.screenshotPath))
+    init(item: Binding<WebViewItem>) {
+        _item = item
+        _urlString = State(initialValue: item.wrappedValue.url.absoluteString)
+        _url = State(initialValue: item.wrappedValue.url)
+        _clipRect = State(initialValue: item.wrappedValue.clipRect)  // Initialize clipRect from the item
+        _originalSize = State(initialValue: item.wrappedValue.originalSize)
+        _screenshot = State(initialValue: WebGridSingleSnapshotView.loadImage(from: item.wrappedValue.screenshotPath))
     }
     
     var body: some View {
@@ -34,7 +35,9 @@ struct WebGridSingleSnapshotView: View {
                         .scaledToFit()
                         .frame(height: 300)
                 }
-                WebViewSnapshotRefresher(url: $url, pageTitle: $pageTitle, clipRect: $clipRect, originalSize: $originalSize, screenshot: $screenshot)
+                WebViewSnapshotRefresher(url: $url, pageTitle: $pageTitle, clipRect: $clipRect, originalSize: $originalSize, screenshot: $screenshot, reloadTrigger: reloadTrigger, onScreenshotTaken: { newPath in
+                    updateScreenshotPath(newPath)
+                })
                     .frame(width: originalSize?.width, height: 0)
                     .edgesIgnoringSafeArea(.all)
             }
@@ -88,8 +91,8 @@ struct WebGridSingleSnapshotView: View {
     
     private func reloadWebView() {
         if !userInteracting {
-            url = URL(string: urlString)!  // Ensure URL is valid
             lastRefreshDate = Date()
+            reloadTrigger.send() // Trigger the reload for this instance
         }
     }
     
@@ -103,6 +106,12 @@ struct WebGridSingleSnapshotView: View {
         formatter.maximumUnitCount = 1
         formatter.unitsStyle = .full
         return formatter.string(from: interval) ?? "Just now"
+    }
+    
+    private func updateScreenshotPath(_ newPath: String) {
+        print("updateScreenshotPath", url, item.id, newPath)
+        item.screenshotPath = newPath
+        screenshot = WebGridSingleSnapshotView.loadImage(from: newPath)
     }
     
     private static func loadImage(from path: String?) -> UIImage? {
