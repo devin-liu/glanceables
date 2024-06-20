@@ -54,7 +54,10 @@ struct WebGridSingleSnapshotView: View {
                 Image(systemName: "arrow.clockwise.circle.fill")
                     .foregroundColor(.gray)
                     .rotationEffect(.degrees(rotationAngle))  // Apply rotation effect
-                    .animation(.easeInOut(duration: 0.5))  // Add animation
+                    .animation(Animation.easeInOut(duration: 0.5), value: rotationAngle)
+
+
+                    
                 Text(timeAgoSinceDate(lastRefreshDate))
                     .font(.subheadline)
                     .foregroundColor(.gray)
