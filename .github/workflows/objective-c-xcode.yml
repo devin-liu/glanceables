@@ -16,6 +16,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Set Default Scheme
+        id: set_scheme
         run: |
           scheme_list=$(xcodebuild -list -json | tr -d "\n")
           default=$(echo $scheme_list | ruby -e "require 'json'; puts JSON.parse(STDIN.gets)['project']['targets'][0]")
@@ -25,15 +26,21 @@ jobs:
       - name: Build
         run: |
           scheme="${{ env.default }}"
-          if [ "$scheme" = "default" ]; then
-            scheme=$(cat default)
+          if [ -z "$scheme" ]; then
+            echo "Default scheme is not set"
+            exit 1
           fi
+          filetype_parameter=""
+          file_to_build=""
           if [ "$(ls -A | grep -i \\.xcworkspace\$)" ]; then 
             filetype_parameter="workspace"
-            file_to_build="$(ls -A | grep -i \\.xcworkspace\$)"
-          else
+            file_to_build=$(ls -A | grep -i \\.xcworkspace\$)
+          elif [ "$(ls -A | grep -i \\.xcodeproj\$)" ]; then
             filetype_parameter="project"
-            file_to_build="$(ls -A | grep -i \\.xcodeproj\$)"
+            file_to_build=$(ls -A | grep -i \\.xcodeproj\$)
+          else
+            echo "No Xcode workspace or project file found"
+            exit 1
           fi
           file_to_build=$(echo $file_to_build | awk '{$1=$1;print}')
           destination="platform=macOS,arch=arm64,variant=Designed for iPad"
