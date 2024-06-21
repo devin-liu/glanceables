@@ -8,6 +8,7 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
     @Binding var clipRect: CGRect?
     @Binding var originalSize: CGSize?
     @Binding var screenshot: UIImage?
+    @Binding var item: WebViewItem
     var reloadTrigger: PassthroughSubject<Void, Never> // Add a reload trigger
     var onScreenshotTaken: ((String) -> Void)?
     
@@ -45,7 +46,7 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
         
         return components.string
     }
-
+    
     func urlsAreEqual(_ urlString1: String, _ urlString2: String) -> Bool {
         guard let normalizedURL1 = normalizeURL(urlString1),
               let normalizedURL2 = normalizeURL(urlString2) else {
@@ -78,7 +79,7 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
             self.parent = parent
         }
         
-        deinit {
+        deinit {            
             reloadSubscription?.cancel()
         }
         

@@ -33,7 +33,7 @@ struct ContentView: View {
             .onAppear {
                 loadURLs()
             }
-            .onChange(of: urls, initial: true) {
+            .onChange(of: urls, initial: false) {
                 saveURLs()
             }
             .fullScreenCover(isPresented: $showingURLModal) {
@@ -54,7 +54,7 @@ struct ContentView: View {
     
     var urlGrid: some View {
         ForEach($urls) { $item in
-                    WebGridSingleSnapshotView(item: $item)
+            WebGridSingleSnapshotView(item: $item)
                 .onDrag {
                     self.draggedItem = item
                     return NSItemProvider(object: item.url.absoluteString as NSString)
@@ -72,10 +72,8 @@ struct ContentView: View {
                         Label("Edit", systemImage: "pencil")
                     }
                     Button(action: {
-                        if let index = urls.firstIndex(where: { $0.id == item.id }) {
-                            urls.remove(at: index)
-                            saveURLs()
-                        }
+                        UserDefaultsManager.shared.deleteWebViewItem(item)
+                        loadURLs()
                     }) {
                         Label("Delete", systemImage: "trash")
                     }

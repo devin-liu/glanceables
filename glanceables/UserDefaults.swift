@@ -12,6 +12,19 @@ class UserDefaultsManager {
         UserDefaults.standard.set(itemsData, forKey: urlsKey)
     }
     
+    func webViewItemIDExists(_ id: UUID) -> Bool {
+        var items = loadWebViewItems()
+        return items.firstIndex(where: { $0.id == id }) != nil
+    }
+    
+    func deleteWebViewItem(_ item: WebViewItem) {
+        var items = loadWebViewItems()
+        if let index = items.firstIndex(where: { $0.id == item.id }) {
+            items.remove(at: index)
+        }
+        saveWebViewItems(items)
+    }
+    
     func loadWebViewItems() -> [WebViewItem] {
         guard let dataArray = UserDefaults.standard.array(forKey: urlsKey) as? [[String: Any]] else {
             return []

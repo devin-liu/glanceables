@@ -98,15 +98,14 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
         }
         
         func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
-                // Update the current URL
-                if let url = navigationAction.request.url {
-                    print("NEW URL", url)
-                    DispatchQueue.main.async {
-                        self.parent.url = url
-                    }
+            // Update the current URL
+            if let url = navigationAction.request.url {
+                DispatchQueue.main.async {
+                    self.parent.url = url
                 }
-                decisionHandler(.allow)
             }
+            decisionHandler(.allow)
+        }
         
         func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
             if message.name == "selectionHandler", let messageBody = message.body as? String {

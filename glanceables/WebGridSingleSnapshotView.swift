@@ -3,6 +3,7 @@ import WebKit
 import Combine
 
 struct WebGridSingleSnapshotView: View {
+    private var id: UUID
     @State private var urlString: String
     @State private var url: URL
     @State private var pageTitle: String = "Loading..."
@@ -19,6 +20,7 @@ struct WebGridSingleSnapshotView: View {
     
     init(item: Binding<WebViewItem>) {
         _item = item
+        id = item.id
         _urlString = State(initialValue: item.wrappedValue.url.absoluteString)
         _url = State(initialValue: item.wrappedValue.url)
         _clipRect = State(initialValue: item.wrappedValue.clipRect)  // Initialize clipRect from the item
@@ -35,11 +37,11 @@ struct WebGridSingleSnapshotView: View {
                         .scaledToFit()
                         .frame(height: 300)
                 }
-                WebViewSnapshotRefresher(url: $url, pageTitle: $pageTitle, clipRect: $clipRect, originalSize: $originalSize, screenshot: $screenshot, reloadTrigger: reloadTrigger, onScreenshotTaken: { newPath in
-                    updateScreenshotPath(newPath)
+                WebViewSnapshotRefresher(url: $url, pageTitle: $pageTitle, clipRect: $clipRect, originalSize: $originalSize, screenshot: $screenshot, item: $item, reloadTrigger: reloadTrigger, onScreenshotTaken: { newPath in
+                    updateScreenshotPath(id, newPath)
                 })
-                    .frame(width: originalSize?.width, height: 0)
-                    .edgesIgnoringSafeArea(.all)
+                .frame(width: originalSize?.width, height: 0)
+                .edgesIgnoringSafeArea(.all)
             }
             .cornerRadius(16.0)
             .padding(10)
@@ -55,9 +57,9 @@ struct WebGridSingleSnapshotView: View {
                     .foregroundColor(.gray)
                     .rotationEffect(.degrees(rotationAngle))  // Apply rotation effect
                     .animation(Animation.easeInOut(duration: 0.5), value: rotationAngle)
-
-
-                    
+                
+                
+                
                 Text(timeAgoSinceDate(lastRefreshDate))
                     .font(.subheadline)
                     .foregroundColor(.gray)
@@ -111,22 +113,25 @@ struct WebGridSingleSnapshotView: View {
         return formatter.string(from: interval) ?? "Just now"
     }
     
-
-    private func updateScreenshotPath(_ newPath: String) {
+    
+    private func updateScreenshotPath(_ id: UUID, _ newPath: String) {
         // Update the screenshotPath property of the item
-        var updatedItem = item
-        updatedItem.screenshotPath = newPath
-
-        // Update the image displayed in the view
-        screenshot = WebGridSingleSnapshotView.loadImage(from: newPath)
-
-        // Save the updated item using your user defaults manager
-        UserDefaultsManager.shared.updateWebViewItem(updatedItem)
+        if(UserDefaultsManager.shared.webViewItemIDExists(id)){
+            var updatedItem = item
+            updatedItem.screenshotPath = newPath
+            
+            // Update the image displayed in the view
+            screenshot = WebGridSingleSnapshotView.loadImage(from: newPath)
+            
+            // Save the updated item using your user defaults manager
+            UserDefaultsManager.shared.updateWebViewItem(updatedItem)
+            
+            // Update the bound item to trigger UI updates if needed
+            item = updatedItem
+        }
         
-        // Update the bound item to trigger UI updates if needed
-        item = updatedItem
     }
-
+    
     
     private static func loadImage(from path: String?) -> UIImage? {
         guard let path = path else { return nil }
