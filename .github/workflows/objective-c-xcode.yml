@@ -37,4 +37,4 @@ jobs:
           fi
           file_to_build=$(echo $file_to_build | awk '{$1=$1;print}')
           destination="platform=macOS,arch=arm64,variant=Designed for iPad"
-          xcodebuild clean build analyze -scheme "$scheme" -"$filetype_parameter" "$file_to_build" -destination "$destination" | xcpretty && exit ${PIPESTATUS[0]}
+          xcodebuild clean build analyze -scheme "$scheme" -destination "$destination" | xcpretty && exit ${PIPESTATUS[0]}
