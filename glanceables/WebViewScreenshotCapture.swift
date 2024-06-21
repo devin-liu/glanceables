@@ -75,7 +75,9 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
         
         func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                self.parent.pageTitle = webView.title ?? "No Title"
+                let simplifiedPageTitle = URLUtilities.simplifyPageTitle(webView.title ?? "No Title")
+
+                self.parent.pageTitle = simplifiedPageTitle
                 
                 self.captureScreenshot()
                 

@@ -19,7 +19,7 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
         context.coordinator.webView = webView
         
         // Subscribe to the reload trigger
-        context.coordinator.reloadSubscription = reloadTrigger.sink {            
+        context.coordinator.reloadSubscription = reloadTrigger.sink {
             webView.reload()
         }
         
@@ -79,13 +79,15 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
             self.parent = parent
         }
         
-        deinit {            
+        deinit {
             reloadSubscription?.cancel()
         }
         
         func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                self.parent.pageTitle = webView.title ?? "No Title"
+                let simplifiedPageTitle = URLUtilities.simplifyPageTitle(webView.title ?? "No Title")
+
+                self.parent.pageTitle = simplifiedPageTitle
             }
             
             DispatchQueue.main.asyncAfter(deadline: .now() + 5.1) {
