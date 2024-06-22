@@ -9,6 +9,7 @@ struct WebPreviewCaptureMenuView: View {
     @Binding var selectedURLIndex: Int?
     @Binding var isEditing: Bool
     
+    
     @State private var debounceWorkItem: DispatchWorkItem?
     @State private var validURL: URL?
     @State private var pageTitle: String = "Loading..."
@@ -21,12 +22,13 @@ struct WebPreviewCaptureMenuView: View {
     @State private var endLocation: CGPoint? = nil
     @State private var dragging: Bool = false
     @State private var showPreview: Bool = false
+    @State private var captureModeOn: Bool = true
     
     var body: some View {
         NavigationView {
             VStack {
                 Form {
-                    Section(header: Text(isEditing ? "Edit URL" : "Add a new URL").padding(.top, 20)) {
+                    Section(header: Text(isEditing ? "Edit URL" : "Add a new URL").padding(.top, 40)) {
                         TextField("Enter URL here", text: $urlString)
                             .autocapitalization(.none)
                             .disableAutocorrection(true)
@@ -63,17 +65,18 @@ struct WebPreviewCaptureMenuView: View {
                         ZStack {
                             WebViewScreenshotCapture(url: $validURL, pageTitle: $pageTitle, clipRect: $currentClipRect, originalSize: $originalSize, screenshot: $screenshot, userInteracting: $userInteracting)
                                 .frame(maxHeight: .infinity)
-                            
-                            if let clipRect = currentClipRect {
-                                if dragging {
+                            if captureModeOn {
+                                if let clipRect = currentClipRect {
+                                    if dragging {
+                                        Rectangle()
+                                            .stroke(style: StrokeStyle(lineWidth: 2, lineCap: .round, lineJoin: .round, dash: [10, 5]))
+                                            .path(in: clipRect)
+                                            .background(Color.black.opacity(0.1))
+                                    }
                                     Rectangle()
-                                        .stroke(style: StrokeStyle(lineWidth: 2, lineCap: .round, lineJoin: .round, dash: [10, 5]))
+                                        .stroke(style: StrokeStyle(lineWidth: 1, lineCap: .round, lineJoin: .round, dash: [10, 5]))
                                         .path(in: clipRect)
-                                        .background(Color.black.opacity(0.1))
                                 }
-                                Rectangle()
-                                    .stroke(style: StrokeStyle(lineWidth: 1, lineCap: .round, lineJoin: .round, dash: [10, 5]))
-                                    .path(in: clipRect)
                             }
                             
                             
@@ -93,11 +96,14 @@ struct WebPreviewCaptureMenuView: View {
                     }
                 }
             }
-            .navigationBarTitle(isEditing ? "Edit URL" : "New URL", displayMode: .inline)
-            .navigationBarItems(trailing: Button("Cancel") {
-                resetModalState()
-            })
-            .edgesIgnoringSafeArea(.all)
+            .navigationBarTitle(isEditing ? "Edit URL" : "New URL")
+            .navigationBarItems(
+                trailing: HStack {
+                    CaptureModeToggleView(captureModeOn: $captureModeOn)
+                    RedXButton(action: resetModalState)
+                }
+            )
+            
         }
     }
     
@@ -133,7 +139,7 @@ struct WebPreviewCaptureMenuView: View {
         let validation = URLUtilities.validateURL(from: urlString)
         isURLValid = validation.isValid
         validURL = validation.url
-    }    
+    }
     
     func isValidURLFormat(_ string: String) -> Bool {
         let regex = "^(https?://)?([\\w\\d-]+\\.)+[\\w\\d-]+/?([\\w\\d-._\\?,'+/&%$#=~]*)*[^.]$"
