@@ -27,6 +27,7 @@
 		03C5DAD32C24F0CF0061FA25 /* URLUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03C5DAD22C24F0CF0061FA25 /* URLUtilities.swift */; };
 		03C5DAD52C2647E20061FA25 /* CaptureModeToggleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03C5DAD42C2647E20061FA25 /* CaptureModeToggleView.swift */; };
 		03C5DAD72C264BE00061FA25 /* RedXButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03C5DAD62C264BE00061FA25 /* RedXButton.swift */; };
+		03C5DAD92C2A4DB20061FA25 /* AddURLFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03C5DAD82C2A4DB20061FA25 /* AddURLFormView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -63,6 +64,7 @@
 		03C5DAD22C24F0CF0061FA25 /* URLUtilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLUtilities.swift; sourceTree = "<group>"; };
 		03C5DAD42C2647E20061FA25 /* CaptureModeToggleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureModeToggleView.swift; sourceTree = "<group>"; };
 		03C5DAD62C264BE00061FA25 /* RedXButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RedXButton.swift; sourceTree = "<group>"; };
+		03C5DAD82C2A4DB20061FA25 /* AddURLFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddURLFormView.swift; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -122,6 +124,7 @@
 		0378B8652C096D850005BAE5 /* glanceables */ = {
 			isa = PBXGroup;
 			children = (
+				03C5DAD82C2A4DB20061FA25 /* AddURLFormView.swift */,
 				03C5DAD62C264BE00061FA25 /* RedXButton.swift */,
 				03C5DAD02C23A76B0061FA25 /* ScreenshotUtils.swift */,
 				038208E12C1BB40400606536 /* WebViewSnapshotRefresher.swift */,
@@ -273,6 +276,7 @@
 				0300629B2C0D209400B0242D /* UserDefaults.swift in Sources */,
 				03C5DAD72C264BE00061FA25 /* RedXButton.swift in Sources */,
 				038208E22C1BB40400606536 /* WebViewSnapshotRefresher.swift in Sources */,
+				03C5DAD92C2A4DB20061FA25 /* AddURLFormView.swift in Sources */,
 				030062A72C0FE8A100B0242D /* WebPreviewCaptureMenuView.swift in Sources */,
 				03C5DAD12C23A76B0061FA25 /* ScreenshotUtils.swift in Sources */,
 				0378B8672C096D850005BAE5 /* glanceablesApp.swift in Sources */,
