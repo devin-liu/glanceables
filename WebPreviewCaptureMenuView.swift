@@ -34,7 +34,7 @@ struct WebPreviewCaptureMenuView: View {
                             .disableAutocorrection(true)
                             .textInputAutocapitalization(.never)
                             .padding(.vertical, 20)
-                            .onChange(of: urlString, perform: { newValue in
+                            .onChange(of: urlString, {
                                 debounceValidation()
                             })
                     }
