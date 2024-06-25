@@ -27,22 +27,8 @@ struct WebPreviewCaptureMenuView: View {
     var body: some View {
         VStack {
             NavigationView {
-                VStack {
+                HStack {
                     AddURLFormView(urlString: $urlString, validURL: $validURL, isURLValid: $isURLValid, isEditing: $isEditing)
-//                    Form {
-//                        Section(header: Text(isEditing ? "Edit URL" : "Add a new URL").padding(.top, 40)) {
-//                            TextField("Enter URL here", text: $urlString)
-//                                .autocapitalization(.none)
-//                                .disableAutocorrection(true)
-//                                .textInputAutocapitalization(.never)
-//                                .padding(.vertical, 20)
-//                                .onChange(of: urlString, {
-//                                    debounceValidation()
-//                                })
-//                        }
-                      
-//                    }
-                   
                 }
                 .navigationBarTitle(isEditing ? "Edit URL" : "New URL")
                 .navigationBarItems(
@@ -52,26 +38,22 @@ struct WebPreviewCaptureMenuView: View {
                     }
                 )
             }
-            Section {
-                if currentClipRect != nil {
-                    Button("Reset") {
-                        currentClipRect = nil
-                        showPreview = false
-                    }
-                }
+            HStack {
                 if !isURLValid && !urlString.isEmpty {
                     Text("Invalid URL").foregroundColor(.red)
                 }
                 Button("Save") {
                     handleSaveURL()
                 }
-                .padding(.vertical, 20)
-                if let screenshot = screenshot, showPreview {
-                    Image(uiImage: screenshot)
-                        .frame(width: 300, height: 300)
-                        .padding()
-                }
+                
             }
+            
+            if let screenshot = screenshot, showPreview {
+                Image(uiImage: screenshot)
+                    .frame(width: 300, height: 300)
+                    .padding()
+            }
+            
             if isURLValid {
                 GeometryReader { geometry in
                     ZStack {
@@ -110,7 +92,7 @@ struct WebPreviewCaptureMenuView: View {
         }
     }
     
-    private func handleSaveURL() {        
+    private func handleSaveURL() {
         if isURLValid {
             if !urlString.isEmpty && validURL?.absoluteString != nil {
                 var screenshotPath: String? = nil

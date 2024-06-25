@@ -16,12 +16,11 @@ struct AddURLFormView: View {
 
     var body: some View {
         Form {
-            Section(header: Text(isEditing ? "Edit URL" : "Add a new URL").padding(.top, 40)) {
+            Section(header: Text(isEditing ? "Edit URL" : "Add a new URL")) {
                 TextField("Enter URL here", text: $urlString)
                     .autocapitalization(.none)
                     .disableAutocorrection(true)
-                    .textInputAutocapitalization(.never)
-                    .padding(.vertical, 20)
+                    .textInputAutocapitalization(.never)                    
                     .onChange(of: urlString, {
                         debounceValidation()
                     })
