@@ -36,14 +36,14 @@ struct WebGridSingleSnapshotView: View {
                         .resizable()
                         .scaledToFit()
                         .frame(height: 300)
+                        .cornerRadius(16.0)
                 }
                 WebViewSnapshotRefresher(url: $url, pageTitle: $pageTitle, clipRect: $clipRect, originalSize: $originalSize, screenshot: $screenshot, item: $item, reloadTrigger: reloadTrigger, onScreenshotTaken: { newPath in
                     updateScreenshotPath(id, newPath)
                 })
                 .frame(width: originalSize?.width, height: 0)
                 .edgesIgnoringSafeArea(.all)
-            }
-            .cornerRadius(16.0)
+            }            
             .padding(10)
             
             Text(pageTitle)

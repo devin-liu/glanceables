@@ -1,10 +1,3 @@
-//
-//  AddURLFormView.swift
-//  glanceables
-//
-//  Created by Devin Liu on 6/24/24.
-//
-
 import SwiftUI
 
 struct AddURLFormView: View {
@@ -13,21 +6,21 @@ struct AddURLFormView: View {
     @Binding var isURLValid: Bool
     @Binding var isEditing: Bool
     @State private var debounceWorkItem: DispatchWorkItem?
-
+    
     var body: some View {
         Form {
             Section(header: Text(isEditing ? "Edit URL" : "Add a new URL")) {
                 TextField("Enter URL here", text: $urlString)
                     .autocapitalization(.none)
                     .disableAutocorrection(true)
-                    .textInputAutocapitalization(.never)                    
+                    .textInputAutocapitalization(.never)
                     .onChange(of: urlString, {
                         debounceValidation()
                     })
-            }           
+            }            
         }
     }
-
+    
     private func debounceValidation() {
         debounceWorkItem?.cancel()
         debounceWorkItem = DispatchWorkItem {
@@ -35,10 +28,12 @@ struct AddURLFormView: View {
         }
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.15, execute: debounceWorkItem!)
     }
-
+    
     private func validateURL() {
-        let validation = URLUtilities.validateURL(from: urlString)        
+        let validation = URLUtilities.validateURL(from: urlString)
         isURLValid = validation.isValid
-        validURL = validation.url
+        if(isURLValid){
+            validURL = validation.url
+        }
     }
 }

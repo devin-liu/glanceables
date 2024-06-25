@@ -84,10 +84,9 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
         }
         
         func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {                
                 let simplifiedPageTitle = URLUtilities.simplifyPageTitle(webView.title ?? "No Title")
-
-                self.parent.pageTitle = simplifiedPageTitle
+                self.parent.pageTitle = simplifiedPageTitle                
             }
             
             DispatchQueue.main.asyncAfter(deadline: .now() + 5.1) {

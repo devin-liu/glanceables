@@ -25,7 +25,7 @@ struct WebPreviewCaptureMenuView: View {
     @State private var captureModeOn: Bool = true
     
     var body: some View {
-        VStack {
+        VStack(alignment: .leading) {
             NavigationView {
                 HStack {
                     AddURLFormView(urlString: $urlString, validURL: $validURL, isURLValid: $isURLValid, isEditing: $isEditing)
@@ -38,15 +38,19 @@ struct WebPreviewCaptureMenuView: View {
                     }
                 )
             }
+            .frame(height: 300)
+            .fixedSize(horizontal: false, vertical: true)
+            
+            
             HStack {
                 if !isURLValid && !urlString.isEmpty {
                     Text("Invalid URL").foregroundColor(.red)
                 }
                 Button("Save") {
                     handleSaveURL()
-                }
+                }.frame(width: 80, height: 40)
                 
-            }
+            }.frame(height: 80).fixedSize(horizontal: false, vertical: true)
             
             if let screenshot = screenshot, showPreview {
                 Image(uiImage: screenshot)
@@ -89,24 +93,28 @@ struct WebPreviewCaptureMenuView: View {
                     )
                 }
             }
+            Spacer()
         }
     }
     
     private func handleSaveURL() {
         if isURLValid {
-            if !urlString.isEmpty && validURL?.absoluteString != nil {
-                var screenshotPath: String? = nil
-                if let screenshot = screenshot {
-                    screenshotPath = ScreenshotUtils.saveScreenshotToLocalDirectory(screenshot: screenshot)
-                    
+            let validation = URLUtilities.validateURL(from: urlString)
+            if validation.isValid && validation.url?.absoluteString != nil {
+                if !urlString.isEmpty && validation.url?.absoluteString != nil {
+                    var screenshotPath: String? = nil
+                    if let screenshot = screenshot {
+                        screenshotPath = ScreenshotUtils.saveScreenshotToLocalDirectory(screenshot: screenshot)
+                        
+                    }
+                    let newUrlItem = WebViewItem(id: UUID(), url: validation.url!, clipRect: currentClipRect, originalSize: originalSize, screenshotPath: screenshotPath)
+                    if isEditing, let index = selectedURLIndex {
+                        urls[index] = newUrlItem
+                    } else {
+                        urls.append(newUrlItem)
+                    }
+                    resetModalState() // Reset modal only on successful save
                 }
-                let newUrlItem = WebViewItem(id: UUID(), url: validURL!, clipRect: currentClipRect, originalSize: originalSize, screenshotPath: screenshotPath)
-                if isEditing, let index = selectedURLIndex {
-                    urls[index] = newUrlItem
-                } else {
-                    urls.append(newUrlItem)
-                }
-                resetModalState() // Reset modal only on successful save
             }
         }
     }
