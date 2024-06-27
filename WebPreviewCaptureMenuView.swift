@@ -98,7 +98,7 @@ struct WebPreviewCaptureMenuView: View {
     }
     
     private func handleSaveURL() {
-        if isURLValid {
+        if isURLValid {            
             let validation = URLUtilities.validateURL(from: urlString)
             if validation.isValid && validation.url?.absoluteString != nil {
                 if !urlString.isEmpty && validation.url?.absoluteString != nil {
@@ -107,7 +107,13 @@ struct WebPreviewCaptureMenuView: View {
                         screenshotPath = ScreenshotUtils.saveScreenshotToLocalDirectory(screenshot: screenshot)
                         
                     }
-                    let newUrlItem = WebViewItem(id: UUID(), url: validation.url!, clipRect: currentClipRect, originalSize: originalSize, screenshotPath: screenshotPath)
+                    
+                    
+                    print("save cliprect", currentClipRect)
+                    
+                    
+                    
+                    let newUrlItem = WebViewItem(id: UUID(), url: validURL!, clipRect: currentClipRect, originalSize: originalSize, screenshotPath: screenshotPath)
                     if isEditing, let index = selectedURLIndex {
                         urls[index] = newUrlItem
                     } else {

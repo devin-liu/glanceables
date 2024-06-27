@@ -34,6 +34,7 @@ struct AddURLFormView: View {
         isURLValid = validation.isValid
         if(isURLValid){
             validURL = validation.url
+            urlString = validation.url!.absoluteString
         }
     }
 }

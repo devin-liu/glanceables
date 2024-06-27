@@ -102,6 +102,7 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
         func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
             // Update the current URL
             if let url = navigationAction.request.url {
+                print("NEW URL", navigationAction.request.url)
                 DispatchQueue.main.async {
                     self.parent.url = url
                 }

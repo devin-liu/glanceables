@@ -105,6 +105,10 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
                 let offsetX = webView.scrollView.contentOffset.x
                 let offsetY = webView.scrollView.contentOffset.y
                 
+                print("zoomscale refresh", zoomScale)
+                print("offsetY refresh", offsetY)
+                print("offsetX refresh", offsetX)
+                
                 // Apply the zoom and offset to the clipRect
                 let adjustedClipRect = CGRect(
                     x: (clipRect.origin.x + offsetX) / zoomScale,
