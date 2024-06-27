@@ -17,6 +17,7 @@ struct WebPreviewCaptureMenuView: View {
     @State private var originalSize: CGSize?
     @State private var screenshot: UIImage?
     @State private var userInteracting: Bool = false
+    @State private var scrollY: Double = 0
     
     @State private var startLocation: CGPoint? = nil
     @State private var endLocation: CGPoint? = nil
@@ -61,7 +62,7 @@ struct WebPreviewCaptureMenuView: View {
             if isURLValid {
                 GeometryReader { geometry in
                     ZStack {
-                        WebViewScreenshotCapture(url: $validURL, pageTitle: $pageTitle, clipRect: $currentClipRect, originalSize: $originalSize, screenshot: $screenshot, userInteracting: $userInteracting)
+                        WebViewScreenshotCapture(url: $validURL, pageTitle: $pageTitle, clipRect: $currentClipRect, originalSize: $originalSize, screenshot: $screenshot, userInteracting: $userInteracting, scrollY: $scrollY)
                             .frame(maxHeight: .infinity)
                         if captureModeOn {
                             if let clipRect = currentClipRect {
@@ -98,7 +99,7 @@ struct WebPreviewCaptureMenuView: View {
     }
     
     private func handleSaveURL() {
-        if isURLValid {            
+        if isURLValid {
             let validation = URLUtilities.validateURL(from: urlString)
             if validation.isValid && validation.url?.absoluteString != nil {
                 if !urlString.isEmpty && validation.url?.absoluteString != nil {
@@ -110,6 +111,7 @@ struct WebPreviewCaptureMenuView: View {
                     
                     
                     print("save cliprect", currentClipRect)
+                    currentClipRect!.origin.y += CGFloat(scrollY)
                     
                     
                     

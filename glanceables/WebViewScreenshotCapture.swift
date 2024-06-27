@@ -8,6 +8,7 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
     @Binding var originalSize: CGSize?
     @Binding var screenshot: UIImage?
     @Binding var userInteracting: Bool
+    @Binding var scrollY:Double
     
     func makeUIView(context: Context) -> WKWebView {
         let webView = WKWebView()
@@ -48,6 +49,7 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
         Coordinator(self)
     }
     
+    
     private func configureMessageHandler(webView: WKWebView, contentController: WKUserContentController, context: Context) {
         contentController.add(context.coordinator, name: "selectionHandler")
     }
@@ -76,7 +78,7 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
         func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                 let simplifiedPageTitle = URLUtilities.simplifyPageTitle(webView.title ?? "No Title")
-
+                
                 self.parent.pageTitle = simplifiedPageTitle
                 
                 self.captureScreenshot()
@@ -100,15 +102,34 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
         }
         
         func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
-            // Update the current URL
-            if let url = navigationAction.request.url {
-                print("NEW URL", navigationAction.request.url)
-                DispatchQueue.main.async {
-                    self.parent.url = url
+            // Extract the host from the current URL
+            let currentHost = self.parent.url!.host
+            
+            // Extract the host from the navigation request URL
+            if let newUrl = navigationAction.request.url, let newHost = newUrl.host {
+                print("NEW URL", newUrl)
+                // Update the parent.url only if the domains match
+                if newHost == currentHost {
+                    DispatchQueue.main.async {
+                        self.parent.url = newUrl
+                    }
+                } else {
+                    print("Domain mismatch. Current domain: \(currentHost ?? "None"), New domain: \(newHost)")
                 }
+            } else {
+                print("Invalid or no host found in new URL")
             }
             decisionHandler(.allow)
         }
+        
+        
+        
+        func scrollViewDidScroll(_ scrollView: UIScrollView) {
+            DispatchQueue.main.async {
+                self.parent.scrollY = Double(scrollView.contentOffset.y)
+            }
+        }
+        
         
         func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
             if message.name == "selectionHandler", let messageBody = message.body as? String {
@@ -167,7 +188,7 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
                 // Adjust clipRect based on the current zoom scale and content offset
                 let zoomScale = webView.scrollView.zoomScale
                 let offsetX = webView.scrollView.contentOffset.x
-                let offsetY = webView.scrollView.contentOffset.y
+                let offsetY = self.parent.scrollY
                 
                 // Apply the zoom and offset to the clipRect
                 let adjustedClipRect = CGRect(
