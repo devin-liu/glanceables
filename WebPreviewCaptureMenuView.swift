@@ -91,8 +91,7 @@ struct WebPreviewCaptureMenuView: View {
                                 dragging = false
                                 showPreview = true
                             }
-                    )
-                    .frame(width: 1200)
+                    )                    
                 }
             }
             Spacer()
