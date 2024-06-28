@@ -188,14 +188,13 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
                 // Adjust clipRect based on the current zoom scale and content offset
                 let zoomScale = webView.scrollView.zoomScale
                 let offsetX = webView.scrollView.contentOffset.x
-                let offsetY = self.parent.scrollY
                 
-                // Apply the zoom and offset to the clipRect
+                // Capture the current screenshot that the user sees
                 let adjustedClipRect = CGRect(
-                    x: (clipRect.origin.x + offsetX) / zoomScale,
-                    y: (clipRect.origin.y + offsetY) / zoomScale,
-                    width: clipRect.size.width / zoomScale,
-                    height: clipRect.size.height / zoomScale
+                    x: clipRect.origin.x,
+                    y: clipRect.origin.y,
+                    width: clipRect.size.width,
+                    height: clipRect.size.height
                 )
                 configuration.rect = adjustedClipRect
             }
