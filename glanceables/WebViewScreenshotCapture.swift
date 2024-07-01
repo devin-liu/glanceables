@@ -21,10 +21,7 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
         //        webView.scrollView.minimumZoomScale = 0.5
         //        webView.scrollView.maximumZoomScale = 3.0
         //        webView.scrollView.zoomScale = 1.0
-        //        webView.scrollView.bouncesZoom = true
-        
-        configureMessageHandler(webView: webView, contentController: webView.configuration.userContentController, context: context)
-        //        injectSelectionScript(webView: webView)
+        //        webView.scrollView.bouncesZoom = true        
         
         context.coordinator.webView = webView
         
@@ -48,22 +45,6 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
     func makeCoordinator() -> Coordinator {
         Coordinator(self)
     }
-    
-    
-    private func configureMessageHandler(webView: WKWebView, contentController: WKUserContentController, context: Context) {
-        contentController.add(context.coordinator, name: "selectionHandler")
-    }
-    
-    //    private func injectSelectionScript(webView: WKWebView) {
-    //        let jsString = """
-    //            document.addEventListener('mouseup', function(e) {
-    //                const rect = e.target.getBoundingClientRect();
-    //                const data = { x: rect.left, y: rect.top, width: rect.width, height: rect.height };
-    //                window.webkit.messageHandlers.selectionHandler.postMessage(JSON.stringify(data));
-    //            });
-    //        """
-    //        webView.configuration.userContentController.addUserScript(WKUserScript(source: jsString, injectionTime: .atDocumentEnd, forMainFrameOnly: false))
-    //    }
     
     class Coordinator: NSObject, WKNavigationDelegate, WKUIDelegate, UIScrollViewDelegate, WKScriptMessageHandler {
         var parent: WebViewScreenshotCapture
@@ -132,12 +113,7 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
         
         
         func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
-            if message.name == "selectionHandler", let messageBody = message.body as? String {
-                let data = parseMessage(messageBody)
-                DispatchQueue.main.async {
-                    self.parent.clipRect = data
-                }
-            }
+            
         }
         
         func debouncedCaptureScreenshot() {
