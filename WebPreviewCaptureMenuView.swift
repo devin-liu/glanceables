@@ -7,8 +7,7 @@ struct WebPreviewCaptureMenuView: View {
     @Binding var isURLValid: Bool
     @Binding var urls: [WebViewItem]
     @Binding var selectedURLIndex: Int?
-    @Binding var isEditing: Bool
-    
+    @Binding var isEditing: Bool    
     
     @State private var debounceWorkItem: DispatchWorkItem?
     @State private var validURL: URL?
@@ -91,7 +90,7 @@ struct WebPreviewCaptureMenuView: View {
                                 dragging = false
                                 showPreview = true
                             }
-                    )                    
+                    )
                 }
             }
             Spacer()
@@ -106,16 +105,8 @@ struct WebPreviewCaptureMenuView: View {
                     var screenshotPath: String? = nil
                     if let screenshot = screenshot {
                         screenshotPath = ScreenshotUtils.saveScreenshotToLocalDirectory(screenshot: screenshot)
-                        
                     }
-                    
-                    
-                    print("save cliprect", currentClipRect)
-                    currentClipRect!.origin.y += CGFloat(scrollY)
-                    
-                    
-                    
-                    let newUrlItem = WebViewItem(id: UUID(), url: validURL!, clipRect: currentClipRect, originalSize: originalSize, screenshotPath: screenshotPath)
+                    let newUrlItem = WebViewItem(id: UUID(), url: validURL!, clipRect: currentClipRect, originalSize: originalSize, screenshotPath: screenshotPath, scrollY: CGFloat(scrollY))
                     if isEditing, let index = selectedURLIndex {
                         urls[index] = newUrlItem
                     } else {
