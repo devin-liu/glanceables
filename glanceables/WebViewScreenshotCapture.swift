@@ -21,7 +21,7 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
         //        webView.scrollView.minimumZoomScale = 0.5
         //        webView.scrollView.maximumZoomScale = 3.0
         //        webView.scrollView.zoomScale = 1.0
-        //        webView.scrollView.bouncesZoom = true        
+        //        webView.scrollView.bouncesZoom = true
         
         context.coordinator.webView = webView
         
@@ -116,7 +116,7 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
             
         }
         
-        func debouncedCaptureScreenshot() {
+        func debouncedCaptureScreenshot() {            
             // Cancel the previous work item if it was scheduled
             screenshotCaptureWorkItem?.cancel()
             
@@ -174,6 +174,8 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
                 )
                 configuration.rect = adjustedClipRect
             }
+            
+            print("webview capture width ", webView.frame.width)
             
             webView.takeSnapshot(with: configuration) { image, error in
                 if let image = image {

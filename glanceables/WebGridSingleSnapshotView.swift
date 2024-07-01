@@ -41,7 +41,8 @@ struct WebGridSingleSnapshotView: View {
                 WebViewSnapshotRefresher(url: $url, pageTitle: $pageTitle, clipRect: $clipRect, originalSize: $originalSize, screenshot: $screenshot, item: $item, reloadTrigger: reloadTrigger, onScreenshotTaken: { newPath in
                     updateScreenshotPath(id, newPath)
                 })
-                .frame(width: originalSize?.width, height: 0)
+                .frame(width: originalSize?.width, height: 257)
+                .offset(y: -10000)
                 .edgesIgnoringSafeArea(.all)
             }            
             .padding(10)

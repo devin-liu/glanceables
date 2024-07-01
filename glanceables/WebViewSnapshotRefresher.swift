@@ -13,6 +13,7 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
     var onScreenshotTaken: ((String) -> Void)?
     
     func makeUIView(context: Context) -> WKWebView {
+        print("original size", originalSize)
         let webView = WKWebView()
         webView.navigationDelegate = context.coordinator
         
@@ -89,7 +90,7 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
                 self.parent.pageTitle = simplifiedPageTitle                
             }
             
-            DispatchQueue.main.asyncAfter(deadline: .now() + 5.1) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                 // Capture a screenshot
                 self.captureScreenshot()
             }
@@ -97,6 +98,8 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
         
         private func captureScreenshot() {
             guard let webView = webView else { return }
+            
+            print("webview refresh size ", webView.frame.width, webView.frame.height)
             
             let configuration = WKSnapshotConfiguration()
             if let clipRect = parent.clipRect {
