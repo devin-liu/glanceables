@@ -73,7 +73,7 @@ struct WebPreviewCaptureMenuView: View {
                                     }
                                     .onEnded { _ in
                                         dragging = false
-                                        showPreview = true                                        
+                                        showPreview = true
                                     }
                             )
                         if captureModeOn {
@@ -140,7 +140,7 @@ struct WebPreviewCaptureMenuView: View {
         
         let centerX = endLocation.x
         let centerY = endLocation.y
-                
+        
         let minX = max(0, min(centerX - width / 2, bounds.width - width))
         let minY = max(0, min(centerY - height / 2, bounds.height - height))
         

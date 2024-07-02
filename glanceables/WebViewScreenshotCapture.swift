@@ -45,105 +45,7 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
     private func configureMessageHandler(webView: WKWebView, contentController: WKUserContentController, context: Context) {
         contentController.add(context.coordinator, name: "selectionHandler")
     }
-    
-//    private func injectSelectionScript(webView: WKWebView) {
-//        let jsString = """
-//           
-//            document.addEventListener('mousedown', function(e) {
-//                const rect = e.target.getBoundingClientRect();
-//                const data = { x: rect.left, y: rect.top, width: rect.width, height: rect.height };
-//                window.webkit.messageHandlers.selectionHandler.postMessage(JSON.stringify(data));
-//            });
-//        
-//            document.addEventListener('mouseup', function(e) {
-//                const rect = e.target.getBoundingClientRect();
-//                const data = { x: rect.left, y: rect.top, width: rect.width, height: rect.height, mouseup: true };
-//                window.webkit.messageHandlers.selectionHandler.postMessage(JSON.stringify(data));
-//            });
-//        """
-//        webView.configuration.userContentController.addUserScript(WKUserScript(source: jsString, injectionTime: .atDocumentEnd, forMainFrameOnly: false))
-//    }
-//    private func injectSelectionScript(webView: WKWebView) {
-//        let jsString = """
-//            document.addEventListener('mousedown', function(e) {
-//                const rect = e.target.getBoundingClientRect();
-//                const scrollY = window.pageYOffset || document.documentElement.scrollTop;
-//                const data = {
-//                    x: rect.left,
-//                    y: rect.top + scrollY, // Adjusting y to be absolute position on the page
-//                    width: rect.width,
-//                    height: rect.height,
-//                    scrollY: scrollY // Scroll position at the time of mousedown
-//                };
-//                window.webkit.messageHandlers.selectionHandler.postMessage(JSON.stringify(data));
-//            });
-//
-//            document.addEventListener('mouseup', function(e) {
-//                const rect = e.target.getBoundingClientRect();
-//                const scrollY = window.pageYOffset || document.documentElement.scrollTop;
-//                const data = {
-//                    x: rect.left,
-//                    y: rect.top + scrollY, // Adjusting y to be absolute position on the page
-//                    width: rect.width,
-//                    height: rect.height,
-//                    scrollY: scrollY, // Scroll position at the time of mouseup
-//                    mouseup: true
-//                };
-//                window.webkit.messageHandlers.selectionHandler.postMessage(JSON.stringify(data));
-//            });
-//        """
-//        webView.configuration.userContentController.addUserScript(WKUserScript(source: jsString, injectionTime: .atDocumentEnd, forMainFrameOnly: false))
-//    }
-    
-//    private func injectSelectionScript(webView: WKWebView) {
-//        let jsString = """
-//            function getCSSSelector(element) {
-//                let selector = element.tagName.toLowerCase();
-//                if (element.id) {
-//                    selector += '#' + element.id;
-//                } else if (element.className) {
-//                    const classes = element.className.split(' ').filter(c => c !== '').join('.');
-//                    if (classes) {
-//                        selector += '.' + classes;
-//                    }
-//                }
-//                return selector;
-//            }
-//
-//            document.addEventListener('mousedown', function(e) {
-//                const rect = e.target.getBoundingClientRect();
-//                const scrollY = window.pageYOffset || document.documentElement.scrollTop;
-//                const selector = getCSSSelector(e.target);
-//                const data = {
-//                    x: rect.left,
-//                    y: rect.top + scrollY, // Adjusting y to be absolute position on the page
-//                    width: rect.width,
-//                    height: rect.height,
-//                    scrollY: scrollY, // Scroll position at the time of mousedown
-//                    selector: selector // CSS selector of the element
-//                };
-//                window.webkit.messageHandlers.selectionHandler.postMessage(JSON.stringify(data));
-//            });
-//
-//            document.addEventListener('mouseup', function(e) {
-//                const rect = e.target.getBoundingClientRect();
-//                const scrollY = window.pageYOffset || document.documentElement.scrollTop;
-//                const selector = getCSSSelector(e.target);
-//                const data = {
-//                    x: rect.left,
-//                    y: rect.top + scrollY, // Adjusting y to be absolute position on the page
-//                    width: rect.width,
-//                    height: rect.height,
-//                    scrollY: scrollY, // Scroll position at the time of mouseup
-//                    mouseup: true,
-//                    selector: selector // CSS selector of the element
-//                };
-//                window.webkit.messageHandlers.selectionHandler.postMessage(JSON.stringify(data));
-//            });
-//        """
-//        webView.configuration.userContentController.addUserScript(WKUserScript(source: jsString, injectionTime: .atDocumentEnd, forMainFrameOnly: false))
-//    }
-    
+
     private func injectSelectionScript(webView: WKWebView) {
         let jsString = """
             function getCSSSelector(element) {
@@ -194,10 +96,8 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
                 window.webkit.messageHandlers.selectionHandler.postMessage(JSON.stringify(data));
             });
         """
-        webView.configuration.userContentController.addUserScript(WKUserScript(source: jsString, injectionTime: .atDocumentEnd, forMainFrameOnly: false))
+        webView.configuration.userContentController.addUserScript(WKUserScript(source: jsString, injectionTime: .atDocumentStart, forMainFrameOnly: false))
     }
-
-
 
     
     class Coordinator: NSObject, WKNavigationDelegate, WKUIDelegate, UIScrollViewDelegate, WKScriptMessageHandler {
@@ -259,9 +159,13 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
             if message.name == "selectionHandler", let messageBody = message.body as? String {
                 let data = parseMessage(messageBody)
                 let scrollY = parseScrollY(messageBody)
-                DispatchQueue.main.async {                    
-                    self.parent.scrollY = scrollY
+                print("javascript scrollY ", scrollY)
+                if scrollY != 0 {
+                    DispatchQueue.main.async {
+                        self.parent.scrollY = scrollY
+                    }
                 }
+                
             }
         }
         
@@ -288,6 +192,7 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
         
         
         func scrollViewDidScroll(_ scrollView: UIScrollView) {
+            print("UIKit scrolled ", scrollView.contentOffset.y)
             DispatchQueue.main.async {
                 self.parent.scrollY = Double(scrollView.contentOffset.y)
             }

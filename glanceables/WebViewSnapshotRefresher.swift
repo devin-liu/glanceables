@@ -84,15 +84,27 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
         }
         
         func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {                
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                 let simplifiedPageTitle = URLUtilities.simplifyPageTitle(webView.title ?? "No Title")
-                self.parent.pageTitle = simplifiedPageTitle                
+                self.parent.pageTitle = simplifiedPageTitle
             }
             
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                // Scroll restoration if applicable
+                if let scrollY = self.parent.item.scrollY {
+                    print("refresh scrolling to ", scrollY)
+                    let jsScrollTo = "window.scrollTo(0, \(scrollY));"
+                    webView.evaluateJavaScript(jsScrollTo, completionHandler: nil)
+                }
+                
+            }
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
                 // Capture a screenshot
                 self.captureScreenshot()
             }
+            
+            
         }
         
         private func captureScreenshot() {
@@ -103,11 +115,10 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
                 // Adjust clipRect based on the current zoom scale and content offset
                 let zoomScale = webView.scrollView.zoomScale
                 let offsetX = webView.scrollView.contentOffset.x
-                let scrollY = self.parent.item.scrollY ?? 0
                 
                 let adjustedClipRect = CGRect(
                     x: (clipRect.origin.x + offsetX) / zoomScale,
-                    y: (clipRect.origin.y + scrollY) / zoomScale,
+                    y: (clipRect.origin.y) / zoomScale,
                     width: clipRect.size.width / zoomScale,
                     height: clipRect.size.height / zoomScale
                 )
