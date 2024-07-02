@@ -16,12 +16,8 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
         webView.uiDelegate = context.coordinator
         webView.scrollView.delegate = context.coordinator
         
-        // Enable zoom
-        //        webView.scrollView.isScrollEnabled = true
-        //        webView.scrollView.minimumZoomScale = 0.5
-        //        webView.scrollView.maximumZoomScale = 3.0
-        //        webView.scrollView.zoomScale = 1.0
-        //        webView.scrollView.bouncesZoom = true
+        configureMessageHandler(webView: webView, contentController: webView.configuration.userContentController, context: context)
+        injectSelectionScript(webView: webView)
         
         context.coordinator.webView = webView
         
@@ -46,6 +42,164 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
         Coordinator(self)
     }
     
+    private func configureMessageHandler(webView: WKWebView, contentController: WKUserContentController, context: Context) {
+        contentController.add(context.coordinator, name: "selectionHandler")
+    }
+    
+//    private func injectSelectionScript(webView: WKWebView) {
+//        let jsString = """
+//           
+//            document.addEventListener('mousedown', function(e) {
+//                const rect = e.target.getBoundingClientRect();
+//                const data = { x: rect.left, y: rect.top, width: rect.width, height: rect.height };
+//                window.webkit.messageHandlers.selectionHandler.postMessage(JSON.stringify(data));
+//            });
+//        
+//            document.addEventListener('mouseup', function(e) {
+//                const rect = e.target.getBoundingClientRect();
+//                const data = { x: rect.left, y: rect.top, width: rect.width, height: rect.height, mouseup: true };
+//                window.webkit.messageHandlers.selectionHandler.postMessage(JSON.stringify(data));
+//            });
+//        """
+//        webView.configuration.userContentController.addUserScript(WKUserScript(source: jsString, injectionTime: .atDocumentEnd, forMainFrameOnly: false))
+//    }
+//    private func injectSelectionScript(webView: WKWebView) {
+//        let jsString = """
+//            document.addEventListener('mousedown', function(e) {
+//                const rect = e.target.getBoundingClientRect();
+//                const scrollY = window.pageYOffset || document.documentElement.scrollTop;
+//                const data = {
+//                    x: rect.left,
+//                    y: rect.top + scrollY, // Adjusting y to be absolute position on the page
+//                    width: rect.width,
+//                    height: rect.height,
+//                    scrollY: scrollY // Scroll position at the time of mousedown
+//                };
+//                window.webkit.messageHandlers.selectionHandler.postMessage(JSON.stringify(data));
+//            });
+//
+//            document.addEventListener('mouseup', function(e) {
+//                const rect = e.target.getBoundingClientRect();
+//                const scrollY = window.pageYOffset || document.documentElement.scrollTop;
+//                const data = {
+//                    x: rect.left,
+//                    y: rect.top + scrollY, // Adjusting y to be absolute position on the page
+//                    width: rect.width,
+//                    height: rect.height,
+//                    scrollY: scrollY, // Scroll position at the time of mouseup
+//                    mouseup: true
+//                };
+//                window.webkit.messageHandlers.selectionHandler.postMessage(JSON.stringify(data));
+//            });
+//        """
+//        webView.configuration.userContentController.addUserScript(WKUserScript(source: jsString, injectionTime: .atDocumentEnd, forMainFrameOnly: false))
+//    }
+    
+//    private func injectSelectionScript(webView: WKWebView) {
+//        let jsString = """
+//            function getCSSSelector(element) {
+//                let selector = element.tagName.toLowerCase();
+//                if (element.id) {
+//                    selector += '#' + element.id;
+//                } else if (element.className) {
+//                    const classes = element.className.split(' ').filter(c => c !== '').join('.');
+//                    if (classes) {
+//                        selector += '.' + classes;
+//                    }
+//                }
+//                return selector;
+//            }
+//
+//            document.addEventListener('mousedown', function(e) {
+//                const rect = e.target.getBoundingClientRect();
+//                const scrollY = window.pageYOffset || document.documentElement.scrollTop;
+//                const selector = getCSSSelector(e.target);
+//                const data = {
+//                    x: rect.left,
+//                    y: rect.top + scrollY, // Adjusting y to be absolute position on the page
+//                    width: rect.width,
+//                    height: rect.height,
+//                    scrollY: scrollY, // Scroll position at the time of mousedown
+//                    selector: selector // CSS selector of the element
+//                };
+//                window.webkit.messageHandlers.selectionHandler.postMessage(JSON.stringify(data));
+//            });
+//
+//            document.addEventListener('mouseup', function(e) {
+//                const rect = e.target.getBoundingClientRect();
+//                const scrollY = window.pageYOffset || document.documentElement.scrollTop;
+//                const selector = getCSSSelector(e.target);
+//                const data = {
+//                    x: rect.left,
+//                    y: rect.top + scrollY, // Adjusting y to be absolute position on the page
+//                    width: rect.width,
+//                    height: rect.height,
+//                    scrollY: scrollY, // Scroll position at the time of mouseup
+//                    mouseup: true,
+//                    selector: selector // CSS selector of the element
+//                };
+//                window.webkit.messageHandlers.selectionHandler.postMessage(JSON.stringify(data));
+//            });
+//        """
+//        webView.configuration.userContentController.addUserScript(WKUserScript(source: jsString, injectionTime: .atDocumentEnd, forMainFrameOnly: false))
+//    }
+    
+    private func injectSelectionScript(webView: WKWebView) {
+        let jsString = """
+            function getCSSSelector(element) {
+                let selector = element.tagName.toLowerCase();
+                if (element.id) {
+                    selector += '#' + element.id;
+                } else if (element.className) {
+                    const classes = element.className.split(' ').filter(c => c !== '').join('.');
+                    if (classes) {
+                        selector += '.' + classes;
+                    }
+                }
+                return selector;
+            }
+
+            document.addEventListener('mousedown', function(e) {
+                const rect = e.target.getBoundingClientRect();
+                const scrollY = window.pageYOffset || document.documentElement.scrollTop;
+                const selector = getCSSSelector(e.target);
+                const data = {
+                    viewportX: e.clientX, // X coordinate relative to the viewport
+                    viewportY: e.clientY, // Y coordinate relative to the viewport
+                    documentX: e.clientX + window.pageXOffset, // X coordinate relative to the document
+                    documentY: e.clientY + window.pageYOffset, // Y coordinate relative to the document
+                    width: rect.width,
+                    height: rect.height,
+                    scrollY: scrollY,
+                    selector: selector
+                };
+                window.webkit.messageHandlers.selectionHandler.postMessage(JSON.stringify(data));
+            });
+
+            document.addEventListener('mouseup', function(e) {
+                const rect = e.target.getBoundingClientRect();
+                const scrollY = window.pageYOffset || document.documentElement.scrollTop;
+                const selector = getCSSSelector(e.target);
+                const data = {
+                    viewportX: e.clientX, // X coordinate relative to the viewport
+                    viewportY: e.clientY, // Y coordinate relative to the viewport
+                    documentX: e.clientX + window.pageXOffset, // X coordinate relative to the document
+                    documentY: e.clientY + window.pageYOffset, // Y coordinate relative to the document
+                    width: rect.width,
+                    height: rect.height,
+                    scrollY: scrollY,
+                    mouseup: true,
+                    selector: selector
+                };
+                window.webkit.messageHandlers.selectionHandler.postMessage(JSON.stringify(data));
+            });
+        """
+        webView.configuration.userContentController.addUserScript(WKUserScript(source: jsString, injectionTime: .atDocumentEnd, forMainFrameOnly: false))
+    }
+
+
+
+    
     class Coordinator: NSObject, WKNavigationDelegate, WKUIDelegate, UIScrollViewDelegate, WKScriptMessageHandler {
         var parent: WebViewScreenshotCapture
         var webView: WKWebView?
@@ -65,8 +219,6 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
                 self.captureScreenshot()
                 
                 if self.parent.originalSize == nil {
-                    print("webView.scrollView.contentSize",webView.scrollView.contentSize)
-                    print("webView.frame.size",webView.frame.size)
                     self.parent.originalSize = webView.scrollView.contentSize
                 }
                 
@@ -103,6 +255,36 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
             decisionHandler(.allow)
         }
         
+        func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
+            if message.name == "selectionHandler", let messageBody = message.body as? String {
+                let data = parseMessage(messageBody)
+                let scrollY = parseScrollY(messageBody)
+                DispatchQueue.main.async {                    
+                    self.parent.scrollY = scrollY
+                }
+            }
+        }
+        
+        private func parseScrollY(_ message: String) -> Double {
+            let data = Data(message.utf8)
+            
+            if let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: CGFloat],
+               let scrollY = json["scrollY"] {
+                return scrollY
+            }
+            return 0.0
+        }
+        
+        private func parseMessage(_ message: String) -> CGRect {
+            let data = Data(message.utf8)
+            
+            if let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: CGFloat],
+               let x = json["x"], let y = json["y"], let width = json["width"], let height = json["height"] {
+                return CGRect(x: x, y: y, width: width, height: height)
+            }
+            return .zero
+        }
+        
         
         
         func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -112,11 +294,11 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
         }
         
         
-        func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
-            
-        }
+        //        func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
+        //
+        //        }
         
-        func debouncedCaptureScreenshot() {            
+        func debouncedCaptureScreenshot() {
             // Cancel the previous work item if it was scheduled
             screenshotCaptureWorkItem?.cancel()
             
@@ -144,26 +326,22 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
         
         func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
             self.parent.userInteracting = false
-        }                       
+        }
         
         private func captureScreenshot() {
             guard let webView = webView else { return }
             
             let configuration = WKSnapshotConfiguration()
             if let clipRect = parent.clipRect {
-                // Adjust clipRect based on the current zoom scale and content offset
-                let zoomScale = webView.scrollView.zoomScale
-                let offsetX = webView.scrollView.contentOffset.x
-                
                 // Capture the current screenshot that the user sees
                 let adjustedClipRect = CGRect(
                     x: clipRect.origin.x,
                     y: clipRect.origin.y,
                     width: clipRect.size.width,
                     height: clipRect.size.height
-                )
+                )                
                 configuration.rect = adjustedClipRect
-            }                        
+            }
             
             webView.takeSnapshot(with: configuration) { image, error in
                 if let image = image {

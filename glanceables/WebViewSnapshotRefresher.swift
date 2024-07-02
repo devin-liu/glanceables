@@ -13,7 +13,6 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
     var onScreenshotTaken: ((String) -> Void)?
     
     func makeUIView(context: Context) -> WKWebView {
-        print("original size", originalSize)
         let webView = WKWebView()
         webView.navigationDelegate = context.coordinator
         
@@ -99,26 +98,20 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
         private func captureScreenshot() {
             guard let webView = webView else { return }
             
-            print("webview refresh size ", webView.frame.width, webView.frame.height)
-            
             let configuration = WKSnapshotConfiguration()
             if let clipRect = parent.clipRect {
                 // Adjust clipRect based on the current zoom scale and content offset
                 let zoomScale = webView.scrollView.zoomScale
                 let offsetX = webView.scrollView.contentOffset.x
-                let offsetY = webView.scrollView.contentOffset.y
+                let scrollY = self.parent.item.scrollY ?? 0
                 
-                print("zoomscale refresh", zoomScale)
-                print("offsetY refresh", offsetY)
-                print("offsetX refresh", offsetX)
-                
-                // Apply the zoom and offset to the clipRect
                 let adjustedClipRect = CGRect(
                     x: (clipRect.origin.x + offsetX) / zoomScale,
-                    y: (clipRect.origin.y + offsetY) / zoomScale,
+                    y: (clipRect.origin.y + scrollY) / zoomScale,
                     width: clipRect.size.width / zoomScale,
                     height: clipRect.size.height / zoomScale
                 )
+                
                 configuration.rect = adjustedClipRect
             }
             

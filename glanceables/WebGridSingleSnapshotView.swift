@@ -38,13 +38,16 @@ struct WebGridSingleSnapshotView: View {
                         .frame(height: 300)
                         .cornerRadius(16.0)
                 }
-                WebViewSnapshotRefresher(url: $url, pageTitle: $pageTitle, clipRect: $clipRect, originalSize: $originalSize, screenshot: $screenshot, item: $item, reloadTrigger: reloadTrigger, onScreenshotTaken: { newPath in
-                    updateScreenshotPath(id, newPath)
-                })
-                .frame(width: originalSize?.width, height: 257)
-                .offset(y: -10000)
-                .edgesIgnoringSafeArea(.all)
-            }            
+                ScrollView {
+                    WebViewSnapshotRefresher(url: $url, pageTitle: $pageTitle, clipRect: $clipRect, originalSize: $originalSize, screenshot: $screenshot, item: $item, reloadTrigger: reloadTrigger, onScreenshotTaken: { newPath in
+                        updateScreenshotPath(id, newPath)
+                    })
+                    .frame(width: originalSize?.width, height: 600)
+                    .edgesIgnoringSafeArea(.all)
+                }
+                .opacity(0)  // Make the ScrollView invisible
+                     .frame(width: 0, height: 0)  // Make the ScrollView occupy no space
+            }
             .padding(10)
             
             Text(pageTitle)
@@ -82,6 +85,7 @@ struct WebGridSingleSnapshotView: View {
         .onDisappear {
             stopTimer()
         }
+      
     }
     
     private func startTimer() {

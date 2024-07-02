@@ -58,11 +58,24 @@ struct WebPreviewCaptureMenuView: View {
                     .padding()
             }
             
-            if isURLValid {
+            if isURLValid && !showPreview {
                 GeometryReader { geometry in
                     ZStack {
                         WebViewScreenshotCapture(url: $validURL, pageTitle: $pageTitle, clipRect: $currentClipRect, originalSize: $originalSize, screenshot: $screenshot, userInteracting: $userInteracting, scrollY: $scrollY)
                             .frame(maxHeight: .infinity)
+                            .gesture(
+                                DragGesture(minimumDistance: 0)
+                                    .onChanged { value in
+                                        startLocation = startLocation ?? value.location
+                                        endLocation = value.location
+                                        dragging = true
+                                        updateClipRect(endLocation: value.location, bounds: geometry.size)
+                                    }
+                                    .onEnded { _ in
+                                        dragging = false
+                                        showPreview = true                                        
+                                    }
+                            )
                         if captureModeOn {
                             if let clipRect = currentClipRect {
                                 if dragging {
@@ -78,19 +91,7 @@ struct WebPreviewCaptureMenuView: View {
                         }
                         
                         
-                    } .gesture(
-                        DragGesture(minimumDistance: 0)
-                            .onChanged { value in
-                                startLocation = startLocation ?? value.location
-                                endLocation = value.location
-                                dragging = true
-                                updateClipRect(endLocation: value.location, bounds: geometry.size)
-                            }
-                            .onEnded { _ in
-                                dragging = false
-                                showPreview = true
-                            }
-                    )
+                    }
                 }
             }
             Spacer()
@@ -139,7 +140,7 @@ struct WebPreviewCaptureMenuView: View {
         
         let centerX = endLocation.x
         let centerY = endLocation.y
-        
+                
         let minX = max(0, min(centerX - width / 2, bounds.width - width))
         let minY = max(0, min(centerY - height / 2, bounds.height - height))
         

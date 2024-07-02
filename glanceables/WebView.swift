@@ -28,9 +28,6 @@ struct WebView: UIViewRepresentable {
             let request = URLRequest(url: url)
             webView.load(request)
         }
-
-        // Debugging Layout
-        print("WebView Frame: \(webView.frame)")
         
         // Update layout immediately
         webView.setNeedsLayout()
