@@ -144,17 +144,7 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
         
         func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
             self.parent.userInteracting = false
-        }
-        
-        
-        private func parseMessage(_ message: String) -> CGRect {
-            let data = Data(message.utf8)
-            if let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: CGFloat],
-               let x = json["x"], let y = json["y"], let width = json["width"], let height = json["height"] {
-                return CGRect(x: x, y: y, width: width, height: height)
-            }
-            return .zero
-        }
+        }                       
         
         private func captureScreenshot() {
             guard let webView = webView else { return }
@@ -173,9 +163,7 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
                     height: clipRect.size.height
                 )
                 configuration.rect = adjustedClipRect
-            }
-            
-            print("webview capture width ", webView.frame.width)
+            }                        
             
             webView.takeSnapshot(with: configuration) { image, error in
                 if let image = image {
