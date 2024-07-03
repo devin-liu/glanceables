@@ -73,7 +73,7 @@ struct WebPreviewCaptureMenuView: View {
                                     }
                                     .onEnded { _ in
                                         dragging = false
-                                        showPreview = true
+//                                        showPreview = true
                                     }
                             )
                         if captureModeOn {

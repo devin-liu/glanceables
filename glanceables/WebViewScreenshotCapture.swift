@@ -17,12 +17,27 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
         webView.scrollView.delegate = context.coordinator
         
         configureMessageHandler(webView: webView, contentController: webView.configuration.userContentController, context: context)
+        loadJavaScript(webView: webView)
         injectSelectionScript(webView: webView)
+        injectCaptureElementsScript(webView: webView)
+        
         
         context.coordinator.webView = webView
         
         return webView
     }
+    
+    func loadJavaScript(webView: WKWebView) {
+        guard let scriptURL = Bundle.main.url(forResource: "captureElements", withExtension: "js"),
+              let scriptContent = try? String(contentsOf: scriptURL) else {
+            print("Failed to load JavaScript file")
+            return
+        }
+        
+        let userScript = WKUserScript(source: scriptContent, injectionTime: .atDocumentStart, forMainFrameOnly: false)
+        webView.configuration.userContentController.addUserScript(userScript)
+    }
+    
     
     func updateUIView(_ webView: WKWebView, context: Context) {
         // First, check if webView.url is nil
@@ -44,8 +59,25 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
     
     private func configureMessageHandler(webView: WKWebView, contentController: WKUserContentController, context: Context) {
         contentController.add(context.coordinator, name: "selectionHandler")
+        contentController.add(context.coordinator, name: "capturedElementsHandler")
     }
+    
+    private func injectCaptureElementsScript(webView: WKWebView){
+        let jsCode = """
+        document.addEventListener('mouseup', function(e) {
+            const elements = getElementsWithinBoundary(e.clientX, e.clientY);
+            const selectors = elements.map(element => ({
+                ...getElementPosition(element),                
+                selector: getUniqueSelector(element)
+            }));
+            window.webkit.messageHandlers.capturedElementsHandler.postMessage(JSON.stringify(selectors));
+        });
+        """
 
+        
+        webView.configuration.userContentController.addUserScript(WKUserScript(source: jsCode, injectionTime: .atDocumentStart, forMainFrameOnly: false))
+    }
+    
     private func injectSelectionScript(webView: WKWebView) {
         let jsString = """
             function getCSSSelector(element) {
@@ -60,7 +92,7 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
                 }
                 return selector;
             }
-
+        
             document.addEventListener('mousedown', function(e) {
                 const rect = e.target.getBoundingClientRect();
                 const scrollY = window.pageYOffset || document.documentElement.scrollTop;
@@ -77,7 +109,7 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
                 };
                 window.webkit.messageHandlers.selectionHandler.postMessage(JSON.stringify(data));
             });
-
+        
             document.addEventListener('mouseup', function(e) {
                 const rect = e.target.getBoundingClientRect();
                 const scrollY = window.pageYOffset || document.documentElement.scrollTop;
@@ -98,7 +130,7 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
         """
         webView.configuration.userContentController.addUserScript(WKUserScript(source: jsString, injectionTime: .atDocumentStart, forMainFrameOnly: false))
     }
-
+    
     
     class Coordinator: NSObject, WKNavigationDelegate, WKUIDelegate, UIScrollViewDelegate, WKScriptMessageHandler {
         var parent: WebViewScreenshotCapture
@@ -140,17 +172,16 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
             
             // Extract the host from the navigation request URL
             if let newUrl = navigationAction.request.url, let newHost = newUrl.host {
-                print("NEW URL", newUrl)
                 // Update the parent.url only if the domains match
                 if newHost == currentHost {
                     DispatchQueue.main.async {
                         self.parent.url = newUrl
                     }
                 } else {
-                    print("Domain mismatch. Current domain: \(currentHost ?? "None"), New domain: \(newHost)")
+                    //                    print("Domain mismatch. Current domain: \(currentHost ?? "None"), New domain: \(newHost)")
                 }
             } else {
-                print("Invalid or no host found in new URL")
+                //                print("Invalid or no host found in new URL")
             }
             decisionHandler(.allow)
         }
@@ -159,7 +190,6 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
             if message.name == "selectionHandler", let messageBody = message.body as? String {
                 let data = parseMessage(messageBody)
                 let scrollY = parseScrollY(messageBody)
-                print("javascript scrollY ", scrollY)
                 if scrollY != 0 {
                     DispatchQueue.main.async {
                         self.parent.scrollY = scrollY
@@ -167,6 +197,11 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
                 }
                 
             }
+            
+            if message.name == "capturedElementsHandler", let messageBody = message.body as? String {
+                print("capturedElementsHandler ", messageBody)
+            }
+            
         }
         
         private func parseScrollY(_ message: String) -> Double {
@@ -192,16 +227,10 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
         
         
         func scrollViewDidScroll(_ scrollView: UIScrollView) {
-            print("UIKit scrolled ", scrollView.contentOffset.y)
             DispatchQueue.main.async {
                 self.parent.scrollY = Double(scrollView.contentOffset.y)
             }
         }
-        
-        
-        //        func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
-        //
-        //        }
         
         func debouncedCaptureScreenshot() {
             // Cancel the previous work item if it was scheduled
@@ -244,7 +273,7 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
                     y: clipRect.origin.y,
                     width: clipRect.size.width,
                     height: clipRect.size.height
-                )                
+                )
                 configuration.rect = adjustedClipRect
             }
             
@@ -257,6 +286,7 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
                     print("Screenshot error: \(error.localizedDescription)")
                 }
             }
+            
         }
     }
 }
