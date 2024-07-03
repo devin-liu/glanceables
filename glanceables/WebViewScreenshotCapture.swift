@@ -9,6 +9,7 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
     @Binding var screenshot: UIImage?
     @Binding var userInteracting: Bool
     @Binding var scrollY:Double
+    @Binding var  capturedElements: [CapturedElement]?
     
     func makeUIView(context: Context) -> WKWebView {
         let webView = WKWebView()
@@ -67,13 +68,13 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
         document.addEventListener('mouseup', function(e) {
             const elements = getElementsWithinBoundary(e.clientX, e.clientY);
             const selectors = elements.map(element => ({
-                ...getElementPosition(element),                
+                ...getElementPosition(element),
                 selector: getUniqueSelector(element)
             }));
             window.webkit.messageHandlers.capturedElementsHandler.postMessage(JSON.stringify(selectors));
         });
         """
-
+        
         
         webView.configuration.userContentController.addUserScript(WKUserScript(source: jsCode, injectionTime: .atDocumentStart, forMainFrameOnly: false))
     }
@@ -199,9 +200,27 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
             }
             
             if message.name == "capturedElementsHandler", let messageBody = message.body as? String {
-                print("capturedElementsHandler ", messageBody)
+                parseCapturedElements(messageBody)
             }
             
+        }
+        
+        func parseCapturedElements(_ jsonString: String) {
+            guard let data = jsonString.data(using: .utf8) else {
+                print("Error: Cannot create data from jsonString")
+                return
+            }
+            
+            do {
+                let elements = try JSONDecoder().decode([CapturedElement].self, from: data)
+                processCapturedElements(elements)
+            } catch {
+                print("Error: \(error)")
+            }
+        }
+        
+        func processCapturedElements(_ elements: [CapturedElement]) {
+            self.parent.capturedElements = elements
         }
         
         private func parseScrollY(_ message: String) -> Double {

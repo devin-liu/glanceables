@@ -14,8 +14,8 @@
 		030062A32C0EAE8900B0242D /* WebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 030062A22C0EAE8900B0242D /* WebView.swift */; };
 		030062A72C0FE8A100B0242D /* WebPreviewCaptureMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 030062A62C0FE8A100B0242D /* WebPreviewCaptureMenuView.swift */; };
 		030062B42C112BD100B0242D /* WebViewItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 030062B32C112BD100B0242D /* WebViewItem.swift */; };
-		03778E3D2C35E531009CB9A1 /* CaptureBoundaryElements.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03778E3C2C35E531009CB9A1 /* CaptureBoundaryElements.swift */; };
 		03778E402C35E740009CB9A1 /* captureElements.js in Resources */ = {isa = PBXBuildFile; fileRef = 03778E3E2C35E6FC009CB9A1 /* captureElements.js */; };
+		03778E422C36028F009CB9A1 /* CapturedElements.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03778E412C36028F009CB9A1 /* CapturedElements.swift */; };
 		0378B8672C096D850005BAE5 /* glanceablesApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0378B8662C096D850005BAE5 /* glanceablesApp.swift */; };
 		0378B8692C096D850005BAE5 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0378B8682C096D850005BAE5 /* ContentView.swift */; };
 		0378B86D2C096D860005BAE5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0378B86C2C096D860005BAE5 /* Assets.xcassets */; };
@@ -52,8 +52,8 @@
 		030062B32C112BD100B0242D /* WebViewItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewItem.swift; sourceTree = SOURCE_ROOT; };
 		0355A0672C17D741005BBAF3 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Platforms/iPhoneOS.platform/Developer/Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		0355A06E2C17DA8B005BBAF3 /* glanceablesTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = glanceablesTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		03778E3C2C35E531009CB9A1 /* CaptureBoundaryElements.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CaptureBoundaryElements.swift; path = glanceables/CaptureBoundaryElements.swift; sourceTree = "<group>"; };
 		03778E3E2C35E6FC009CB9A1 /* captureElements.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; name = captureElements.js; path = glanceables/captureElements.js; sourceTree = "<group>"; };
+		03778E412C36028F009CB9A1 /* CapturedElements.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapturedElements.swift; sourceTree = "<group>"; };
 		0378B8632C096D850005BAE5 /* glanceables.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = glanceables.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0378B8662C096D850005BAE5 /* glanceablesApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = glanceablesApp.swift; sourceTree = "<group>"; };
 		0378B8682C096D850005BAE5 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -109,8 +109,8 @@
 		0378B85A2C096D850005BAE5 = {
 			isa = PBXGroup;
 			children = (
+				03778E412C36028F009CB9A1 /* CapturedElements.swift */,
 				03778E3E2C35E6FC009CB9A1 /* captureElements.js */,
-				03778E3C2C35E531009CB9A1 /* CaptureBoundaryElements.swift */,
 				0378B8652C096D850005BAE5 /* glanceables */,
 				0355A06F2C17DA8B005BBAF3 /* glanceablesTests */,
 				0378B8642C096D850005BAE5 /* Products */,
@@ -272,7 +272,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				030062972C0A7F2600B0242D /* HeaderView.swift in Sources */,
-				03778E3D2C35E531009CB9A1 /* CaptureBoundaryElements.swift in Sources */,
+				03778E422C36028F009CB9A1 /* CapturedElements.swift in Sources */,
 				0378B8772C096DB00005BAE5 /* WebGridSingleSnapshotView.swift in Sources */,
 				0378B8692C096D850005BAE5 /* ContentView.swift in Sources */,
 				038208E02C1BB3F400606536 /* WebViewScreenshotCapture.swift in Sources */,

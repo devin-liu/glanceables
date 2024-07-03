@@ -23,6 +23,8 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
             webView.reload()
         }
         
+        print(item.capturedElements)
+        
         return webView
     }
     

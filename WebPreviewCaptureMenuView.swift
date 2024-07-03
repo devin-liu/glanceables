@@ -17,6 +17,7 @@ struct WebPreviewCaptureMenuView: View {
     @State private var screenshot: UIImage?
     @State private var userInteracting: Bool = false
     @State private var scrollY: Double = 0
+    @State private var capturedElements: [CapturedElement]?
     
     @State private var startLocation: CGPoint? = nil
     @State private var endLocation: CGPoint? = nil
@@ -61,7 +62,7 @@ struct WebPreviewCaptureMenuView: View {
             if isURLValid && !showPreview {
                 GeometryReader { geometry in
                     ZStack {
-                        WebViewScreenshotCapture(url: $validURL, pageTitle: $pageTitle, clipRect: $currentClipRect, originalSize: $originalSize, screenshot: $screenshot, userInteracting: $userInteracting, scrollY: $scrollY)
+                        WebViewScreenshotCapture(url: $validURL, pageTitle: $pageTitle, clipRect: $currentClipRect, originalSize: $originalSize, screenshot: $screenshot, userInteracting: $userInteracting, scrollY: $scrollY, capturedElements: $capturedElements)
                             .frame(maxHeight: .infinity)
                             .gesture(
                                 DragGesture(minimumDistance: 0)
@@ -107,7 +108,7 @@ struct WebPreviewCaptureMenuView: View {
                     if let screenshot = screenshot {
                         screenshotPath = ScreenshotUtils.saveScreenshotToLocalDirectory(screenshot: screenshot)
                     }
-                    let newUrlItem = WebViewItem(id: UUID(), url: validURL!, clipRect: currentClipRect, originalSize: originalSize, screenshotPath: screenshotPath, scrollY: CGFloat(scrollY))
+                    let newUrlItem = WebViewItem(id: UUID(), url: validURL!, clipRect: currentClipRect, originalSize: originalSize, screenshotPath: screenshotPath, scrollY: CGFloat(scrollY), capturedElements: capturedElements)
                     if isEditing, let index = selectedURLIndex {
                         urls[index] = newUrlItem
                     } else {
