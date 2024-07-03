@@ -23,8 +23,6 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
             webView.reload()
         }
         
-        print(item.capturedElements)
-        
         return webView
     }
     
@@ -91,22 +89,38 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
                 self.parent.pageTitle = simplifiedPageTitle
             }
             
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                // Scroll restoration if applicable
-                if let scrollY = self.parent.item.scrollY {
-                    print("refresh scrolling to ", scrollY)
-                    let jsScrollTo = "window.scrollTo(0, \(scrollY));"
-                    webView.evaluateJavaScript(jsScrollTo, completionHandler: nil)
-                }
-                
+            // Restore scroll positions based on captured elements
+            if let elements = self.parent.item.capturedElements {
+                self.restoreScrollPosition(elements, in: webView)
             }
             
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                 // Capture a screenshot
                 self.captureScreenshot()
             }
             
+            DispatchQueue.main.asyncAfter(deadline: .now() + 5.1) {
+                // Restore scroll positions based on captured elements
+                if let elements = self.parent.item.capturedElements {
+                    self.restoreScrollPosition(elements, in: webView)
+                }
+                // Capture a screenshot
+                self.captureScreenshot()
+            }
             
+        }
+        
+        // Method to restore the scroll position for captured elements
+        func restoreScrollPosition(_ elements: [CapturedElement], in webView: WKWebView) {
+            // Assuming 'CapturedElement' has properties like 'relativeTop' that can be used for scrolling
+            guard let firstElement = elements.first else { return }
+            let scrollScript = "window.scrollTo(0, \(firstElement.relativeTop));"
+            webView.evaluateJavaScript(scrollScript, completionHandler: { result, error in
+                if let error = error {
+                    print("Error while trying to scroll: \(error.localizedDescription)")
+                }
+            })
         }
         
         private func captureScreenshot() {
@@ -117,10 +131,17 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
                 // Adjust clipRect based on the current zoom scale and content offset
                 let zoomScale = webView.scrollView.zoomScale
                 let offsetX = webView.scrollView.contentOffset.x
+                var y = clipRect.origin.y
+                
+                if let elements = self.parent.item.capturedElements {
+                    if elements.first != nil {
+                        y = 0
+                    }
+                }
                 
                 let adjustedClipRect = CGRect(
                     x: (clipRect.origin.x + offsetX) / zoomScale,
-                    y: (clipRect.origin.y) / zoomScale,
+                    y: y / zoomScale,
                     width: clipRect.size.width / zoomScale,
                     height: clipRect.size.height / zoomScale
                 )
