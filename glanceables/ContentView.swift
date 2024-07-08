@@ -2,7 +2,9 @@ import SwiftUI
 import UniformTypeIdentifiers
 
 struct ContentView: View {
-    @State private var showingURLModal = false
+    @StateObject private var webClipEditorViewModel = WebClipEditorViewModel()
+
+//    @State private var showingURLModal = false
     @State private var urls: [WebClip] = []
     @State private var draggedItem: WebClip?
     @State private var urlString = ""
@@ -12,7 +14,7 @@ struct ContentView: View {
     
     var body: some View {
         VStack {
-            BlackMenuBarView(isShowingModal: $showingURLModal)
+            BlackMenuBarView(isShowingModal: $webClipEditorViewModel.showingURLModal)
             ScrollView {
                 LazyVGrid(columns: [GridItem(.adaptive(minimum: 300))]) {
                     Text("Glanceables")
@@ -36,8 +38,8 @@ struct ContentView: View {
             .onChange(of: urls, initial: false) {
                 saveURLs()
             }
-            .fullScreenCover(isPresented: $showingURLModal) {
-                WebPreviewCaptureMenuView(showingURLModal: $showingURLModal, urlString: $urlString, isURLValid: $isURLValid, urls: $urls, selectedURLIndex: $selectedURLIndex, isEditing: $isEditing)
+            .fullScreenCover(isPresented:$webClipEditorViewModel.showingURLModal) {
+                WebPreviewCaptureMenuView(showingURLModal: $webClipEditorViewModel.showingURLModal, urlString: $urlString, isURLValid: $isURLValid, urls: $urls, selectedURLIndex: $selectedURLIndex, isEditing: $isEditing)
             }
         }
     }
@@ -45,7 +47,7 @@ struct ContentView: View {
     var emptyStateView: some View {
         VStack {
             Spacer()
-            CreateButtonView(isShowingModal: $showingURLModal)
+            CreateButtonView(isShowingModal: $webClipEditorViewModel.showingURLModal)
                 .padding()
             Spacer()
         }
@@ -66,7 +68,7 @@ struct ContentView: View {
                             selectedURLIndex = index
                             urlString = urls[index].url.absoluteString
                             isEditing = true
-                            showingURLModal = true
+                            webClipEditorViewModel.toggleURLModal()
                         }
                     }) {
                         Label("Edit", systemImage: "pencil")
@@ -94,7 +96,7 @@ struct ContentView: View {
     }
     
     private func resetModalState() {
-        showingURLModal = false
+//        showingURLModal = false
         urlString = ""
         isEditing = false
         selectedURLIndex = nil
