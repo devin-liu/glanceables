@@ -2,15 +2,9 @@ import SwiftUI
 import Combine
 
 struct WebPreviewCaptureMenuView: View {
-    @Binding var showingURLModal: Bool
-    @Binding var urlString: String
-    @Binding var isURLValid: Bool
-    @Binding var urls: [WebClip]
-    @Binding var selectedURLIndex: Int?
-    @Binding var isEditing: Bool    
+    @ObservedObject var viewModel: WebClipEditorViewModel
     
     @State private var debounceWorkItem: DispatchWorkItem?
-    @State private var validURL: URL?
     @State private var pageTitle: String = "Loading..."
     @State private var currentClipRect: CGRect?
     @State private var originalSize: CGSize?
@@ -29,13 +23,13 @@ struct WebPreviewCaptureMenuView: View {
         VStack(alignment: .leading) {
             NavigationView {
                 HStack {
-                    AddURLFormView(urlString: $urlString, validURL: $validURL, isURLValid: $isURLValid, isEditing: $isEditing)
+                    AddURLFormView(viewModel: viewModel)
                 }
-                .navigationBarTitle(isEditing ? "Edit URL" : "New URL")
+                .navigationBarTitle(viewModel.isEditing ? "Edit URL" : "New URL")
                 .navigationBarItems(
                     trailing: HStack {
                         CaptureModeToggleView(captureModeOn: $captureModeOn)
-                        RedXButton(action: resetModalState)
+                        RedXButton(action: viewModel.resetModalState)
                     }
                 )
             }
@@ -44,11 +38,11 @@ struct WebPreviewCaptureMenuView: View {
             
             
             HStack {
-                if !isURLValid && !urlString.isEmpty {
+                if !viewModel.isURLValid && !viewModel.urlString.isEmpty {
                     Text("Invalid URL").foregroundColor(.red)
                 }
                 Button("Save") {
-                    handleSaveURL()
+                    viewModel.saveURL(with: screenshot, currentClipRect: currentClipRect)
                 }.frame(width: 80, height: 40)
                 
             }.frame(height: 80).fixedSize(horizontal: false, vertical: true)
@@ -59,10 +53,10 @@ struct WebPreviewCaptureMenuView: View {
                     .padding()
             }
             
-            if isURLValid && !showPreview {
+            if viewModel.isURLValid && !showPreview {
                 GeometryReader { geometry in
                     ZStack {
-                        WebViewScreenshotCapture(url: $validURL, pageTitle: $pageTitle, clipRect: $currentClipRect, originalSize: $originalSize, screenshot: $screenshot, userInteracting: $userInteracting, scrollY: $scrollY, capturedElements: $capturedElements)
+                        WebViewScreenshotCapture(url: $viewModel.validURL, pageTitle: $pageTitle, clipRect: $currentClipRect, originalSize: $originalSize, screenshot: $screenshot, userInteracting: $userInteracting, scrollY: $scrollY, capturedElements: $capturedElements)
                             .frame(maxHeight: .infinity)
                             .gesture(
                                 DragGesture(minimumDistance: 0)
@@ -74,7 +68,7 @@ struct WebPreviewCaptureMenuView: View {
                                     }
                                     .onEnded { _ in
                                         dragging = false
-//                                        showPreview = true
+                                        //                                        showPreview = true
                                     }
                             )
                         if captureModeOn {
@@ -99,41 +93,6 @@ struct WebPreviewCaptureMenuView: View {
         }
     }
     
-    private func handleSaveURL() {
-        if isURLValid {
-            let validation = URLUtilities.validateURL(from: urlString)
-            if validation.isValid && validation.url?.absoluteString != nil {
-                if !urlString.isEmpty && validation.url?.absoluteString != nil {
-                    var screenshotPath: String? = nil
-                    if let screenshot = screenshot {
-                        screenshotPath = ScreenshotUtils.saveScreenshotToLocalDirectory(screenshot: screenshot)
-                    }
-                    let newUrlItem = WebClip(id: UUID(), url: validURL!, clipRect: currentClipRect, originalSize: originalSize, screenshotPath: screenshotPath, scrollY: CGFloat(scrollY), capturedElements: capturedElements)
-                    if isEditing, let index = selectedURLIndex {
-                        urls[index] = newUrlItem
-                    } else {
-                        urls.append(newUrlItem)
-                    }
-                    resetModalState() // Reset modal only on successful save
-                }
-            }
-        }
-    }
-    
-    private func resetModalState() {
-        showingURLModal = false
-        urlString = ""
-        isEditing = false
-        selectedURLIndex = nil
-        isURLValid = true
-        validURL = nil
-        currentClipRect = nil
-        originalSize = nil
-        screenshot = nil
-        startLocation = nil
-        endLocation = nil
-        showPreview = false
-    }
     
     private func updateClipRect(endLocation: CGPoint, bounds: CGSize) {
         let width = 300.0

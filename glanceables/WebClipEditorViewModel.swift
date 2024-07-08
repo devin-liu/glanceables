@@ -5,6 +5,7 @@ class WebClipEditorViewModel: ObservableObject {
     @Published var showingURLModal = false
     @Published var urls: [WebClip] = []
     @Published var urlString = ""
+    @Published var validURL:URL?
     @Published var isEditing = false
     @Published var selectedURLIndex: Int? = nil
     @Published var isURLValid = true
@@ -26,8 +27,37 @@ class WebClipEditorViewModel: ObservableObject {
     }
     
     func validateURL() {
-        isURLValid = URL(string: urlString) != nil
+        
+        let (isValid, url) = URLUtilities.validateURL(from: urlString)
+        isURLValid = isValid
+        validURL = url
     }
+    
+    func saveURL(with screenshot: UIImage?, currentClipRect: CGRect?) {
+        guard isURLValid, let validURL = URL(string: urlString) else { return }
+        
+        // Save the screenshot and check if the returned path is not nil
+        guard let screenshotPath = screenshot.flatMap(ScreenshotUtils.saveScreenshotToLocalDirectory) else {
+            // Handle the case where the screenshot could not be saved. Decide if you should return or handle differently
+            return
+        }
+        
+        let newWebClip = WebClip(
+            id: UUID(),
+            url: validURL,
+            clipRect: currentClipRect,
+            screenshotPath: screenshotPath
+        )
+        
+        if isEditing, let index = selectedURLIndex {
+            urls[index] = newWebClip
+        } else {
+            urls.append(newWebClip)
+        }
+        saveURLs()
+        resetModalState()
+    }
+    
     
     func resetModalState() {
         showingURLModal = false
@@ -44,7 +74,7 @@ class WebClipEditorViewModel: ObservableObject {
             isEditing = true
             showingURLModal = true
         }
-    }
+    }        
     
     func deleteItem(item: WebClip) {
         UserDefaultsManager.shared.deleteWebViewItem(item)

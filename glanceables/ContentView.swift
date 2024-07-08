@@ -3,14 +3,8 @@ import UniformTypeIdentifiers
 
 struct ContentView: View {
     @StateObject private var webClipEditorViewModel = WebClipEditorViewModel()
-
-//    @State private var showingURLModal = false
     @State private var urls: [WebClip] = []
     @State private var draggedItem: WebClip?
-    @State private var urlString = ""
-    @State private var isEditing = false
-    @State private var selectedURLIndex: Int? = nil
-    @State private var isURLValid = true
     
     var body: some View {
         VStack {
@@ -38,8 +32,8 @@ struct ContentView: View {
             .onChange(of: urls, initial: false) {
                 saveURLs()
             }
-            .fullScreenCover(isPresented:$webClipEditorViewModel.showingURLModal) {
-                WebPreviewCaptureMenuView(showingURLModal: $webClipEditorViewModel.showingURLModal, urlString: $urlString, isURLValid: $isURLValid, urls: $urls, selectedURLIndex: $selectedURLIndex, isEditing: $isEditing)
+            .fullScreenCover(isPresented: $webClipEditorViewModel.showingURLModal) {
+                WebPreviewCaptureMenuView(viewModel: webClipEditorViewModel)
             }
         }
     }
@@ -64,12 +58,7 @@ struct ContentView: View {
                 .onDrop(of: [UTType.text], delegate: DropViewDelegate(item: item, viewModel: $urls, draggedItem: $draggedItem))
                 .contextMenu {
                     Button(action: {
-                        if let index = urls.firstIndex(where: { $0.id == item.id }) {
-                            selectedURLIndex = index
-                            urlString = urls[index].url.absoluteString
-                            isEditing = true
-                            webClipEditorViewModel.toggleURLModal()
-                        }
+                        webClipEditorViewModel.handleEdit(item: item)
                     }) {
                         Label("Edit", systemImage: "pencil")
                     }
@@ -89,18 +78,6 @@ struct ContentView: View {
     
     private func loadURLs() {
         urls = UserDefaultsManager.shared.loadWebViewItems()
-    }
-    
-    private func validateURL() {
-        isURLValid = URL(string: urlString) != nil
-    }
-    
-    private func resetModalState() {
-//        showingURLModal = false
-        urlString = ""
-        isEditing = false
-        selectedURLIndex = nil
-        isURLValid = true
     }
 }
 
