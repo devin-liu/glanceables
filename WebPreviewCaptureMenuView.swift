@@ -5,7 +5,7 @@ struct WebPreviewCaptureMenuView: View {
     @Binding var showingURLModal: Bool
     @Binding var urlString: String
     @Binding var isURLValid: Bool
-    @Binding var urls: [WebViewItem]
+    @Binding var urls: [WebClip]
     @Binding var selectedURLIndex: Int?
     @Binding var isEditing: Bool    
     
@@ -108,7 +108,7 @@ struct WebPreviewCaptureMenuView: View {
                     if let screenshot = screenshot {
                         screenshotPath = ScreenshotUtils.saveScreenshotToLocalDirectory(screenshot: screenshot)
                     }
-                    let newUrlItem = WebViewItem(id: UUID(), url: validURL!, clipRect: currentClipRect, originalSize: originalSize, screenshotPath: screenshotPath, scrollY: CGFloat(scrollY), capturedElements: capturedElements)
+                    let newUrlItem = WebClip(id: UUID(), url: validURL!, clipRect: currentClipRect, originalSize: originalSize, screenshotPath: screenshotPath, scrollY: CGFloat(scrollY), capturedElements: capturedElements)
                     if isEditing, let index = selectedURLIndex {
                         urls[index] = newUrlItem
                     } else {

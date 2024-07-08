@@ -8,7 +8,7 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
     @Binding var clipRect: CGRect?
     @Binding var originalSize: CGSize?
     @Binding var screenshot: UIImage?
-    @Binding var item: WebViewItem
+    @Binding var item: WebClip
     var reloadTrigger: PassthroughSubject<Void, Never> // Add a reload trigger
     var onScreenshotTaken: ((String) -> Void)?
     

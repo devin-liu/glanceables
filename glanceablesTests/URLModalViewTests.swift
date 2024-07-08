@@ -8,7 +8,7 @@ class URLModalViewTests: XCTestCase {
     var showingURLModal: Bool = false
     var urlString: String = ""
     var isURLValid: Bool = false
-    var urls: [WebViewItem] = []
+    var urls: [WebClip] = []
     var selectedURLIndex: Int? = nil
     var isEditing: Bool = false
     var validURL: URL? = nil
@@ -84,7 +84,7 @@ class URLModalViewTests: XCTestCase {
 
     private func handleSaveURL() {
         if isURLValid && !urlString.isEmpty {
-            let newUrlItem = WebViewItem(id: UUID(), url: URL(string: urlString)!, clipRect: nil)
+            let newUrlItem = WebClip(id: UUID(), url: URL(string: urlString)!, clipRect: nil)
             if isEditing, let index = selectedURLIndex {
                 urls[index] = newUrlItem
             } else {

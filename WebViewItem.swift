@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct WebViewItem: Identifiable, Equatable {
+struct WebClip: Identifiable, Equatable {
     let id: UUID
     var url: URL
     var clipRect: CGRect?
@@ -9,7 +9,7 @@ struct WebViewItem: Identifiable, Equatable {
     var scrollY: Double?
     var capturedElements: [CapturedElement]?
 
-    static func ==(lhs: WebViewItem, rhs: WebViewItem) -> Bool {
+    static func ==(lhs: WebClip, rhs: WebClip) -> Bool {
         return lhs.id == rhs.id && lhs.url == rhs.url
     }
 }

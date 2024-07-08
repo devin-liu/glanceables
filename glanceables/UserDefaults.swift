@@ -5,7 +5,7 @@ class UserDefaultsManager {
     static let shared = UserDefaultsManager()
     private let urlsKey = "savedURLs"
     
-    func saveWebViewItems(_ items: [WebViewItem]) {
+    func saveWebViewItems(_ items: [WebClip]) {
         let itemsData = items.map { item -> [String: Any] in
             return encodeWebViewItem(item)
         }
@@ -17,7 +17,7 @@ class UserDefaultsManager {
         return items.firstIndex(where: { $0.id == id }) != nil
     }
     
-    func deleteWebViewItem(_ item: WebViewItem) {
+    func deleteWebViewItem(_ item: WebClip) {
         var items = loadWebViewItems()
         if let index = items.firstIndex(where: { $0.id == item.id }) {
             items.remove(at: index)
@@ -25,7 +25,7 @@ class UserDefaultsManager {
         saveWebViewItems(items)
     }
     
-    func loadWebViewItems() -> [WebViewItem] {
+    func loadWebViewItems() -> [WebClip] {
         guard let dataArray = UserDefaults.standard.array(forKey: urlsKey) as? [[String: Any]] else {
             return []
         }
@@ -33,7 +33,7 @@ class UserDefaultsManager {
         return dataArray.compactMap { decodeWebViewItem(dict: $0) }
     }
     
-    func updateWebViewItem(_ item: WebViewItem) {
+    func updateWebViewItem(_ item: WebClip) {
         var items = loadWebViewItems()
         if let index = items.firstIndex(where: { $0.id == item.id }) {
             items[index] = item
@@ -43,7 +43,7 @@ class UserDefaultsManager {
         saveWebViewItems(items)
     }
     
-    private func encodeWebViewItem(_ item: WebViewItem) -> [String: Any] {
+    private func encodeWebViewItem(_ item: WebClip) -> [String: Any] {
         var dict = [String: Any]()
         dict["url"] = item.url.absoluteString
         dict["id"] = item.id.uuidString
@@ -71,7 +71,7 @@ class UserDefaultsManager {
         return dict
     }
     
-    private func decodeWebViewItem(dict: [String: Any]) -> WebViewItem? {
+    private func decodeWebViewItem(dict: [String: Any]) -> WebClip? {
         guard let urlString = dict["url"] as? String,
               let url = URL(string: urlString),
               let idString = dict["id"] as? String,
@@ -101,6 +101,6 @@ class UserDefaultsManager {
         
         let screenshotPath = dict["screenshotPath"] as? String
         
-        return WebViewItem(id: id, url: url, clipRect: clipRect, originalSize: originalSize, screenshotPath: screenshotPath)
+        return WebClip(id: id, url: url, clipRect: clipRect, originalSize: originalSize, screenshotPath: screenshotPath)
     }
 }

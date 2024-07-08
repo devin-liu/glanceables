@@ -3,8 +3,8 @@ import UniformTypeIdentifiers
 
 struct ContentView: View {
     @State private var showingURLModal = false
-    @State private var urls: [WebViewItem] = []
-    @State private var draggedItem: WebViewItem?
+    @State private var urls: [WebClip] = []
+    @State private var draggedItem: WebClip?
     @State private var urlString = ""
     @State private var isEditing = false
     @State private var selectedURLIndex: Int? = nil
@@ -103,9 +103,9 @@ struct ContentView: View {
 }
 
 struct DropViewDelegate: DropDelegate {
-    let item: WebViewItem
-    @Binding var viewModel: [WebViewItem]
-    @Binding var draggedItem: WebViewItem?
+    let item: WebClip
+    @Binding var viewModel: [WebClip]
+    @Binding var draggedItem: WebClip?
     
     func dropEntered(info: DropInfo) {
         guard let draggedItem = draggedItem, draggedItem.id != item.id else { return }
