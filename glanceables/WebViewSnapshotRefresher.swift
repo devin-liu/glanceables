@@ -3,7 +3,7 @@ import WebKit
 import Combine
 
 struct WebViewSnapshotRefresher: UIViewRepresentable {
-    @ObservedObject private var viewModel = WebClipEditorViewModel()
+    @ObservedObject private var viewModel = WebClipEditorViewModel.shared
     let id: UUID
     var reloadTrigger: PassthroughSubject<Void, Never> // Add a reload trigger
     

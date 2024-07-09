@@ -2,7 +2,7 @@ import SwiftUI
 import UniformTypeIdentifiers
 
 struct ContentView: View {
-    @StateObject private var webClipEditorViewModel = WebClipEditorViewModel()
+    @StateObject private var webClipEditorViewModel = WebClipEditorViewModel.shared
     @State private var draggedItem: WebClip?
     
     var body: some View {
@@ -45,26 +45,26 @@ struct ContentView: View {
     }
     
     var urlGrid: some View {
-            ForEach(webClipEditorViewModel.urls) { item in
-                WebGridSingleSnapshotView(id: item.id)
-                    .onDrag {
-                        self.draggedItem = item  // Ensure draggedItem is a @State or similar to hold the state
-                        return NSItemProvider(object: item.url.absoluteString as NSString)
+        ForEach(webClipEditorViewModel.urls) { item in
+            WebGridSingleSnapshotView(id: item.id)
+                .onDrag {
+                    self.draggedItem = item  // Ensure draggedItem is a @State or similar to hold the state
+                    return NSItemProvider(object: item.url.absoluteString as NSString)
+                }
+                .onDrop(of: [UTType.text], isTargeted: nil) { providers, location in
+                    // Handle drop here, potentially needing to convert this into a delegate or handling function
+                    true
+                }
+                .contextMenu {
+                    Button("Edit") {
+                        webClipEditorViewModel.openEditForItem(item: item)
                     }
-                    .onDrop(of: [UTType.text], isTargeted: nil) { providers, location in
-                        // Handle drop here, potentially needing to convert this into a delegate or handling function
-                        true
+                    Button("Delete") {
+                        webClipEditorViewModel.deleteItem(item: item)
                     }
-                    .contextMenu {
-                        Button("Edit") {
-                            webClipEditorViewModel.openEditForItem(item: item)
-                        }
-                        Button("Delete") {
-                            webClipEditorViewModel.deleteItem(item: item)
-                        }
-                    }
-            }
+                }
         }
+    }
 }
 
 struct DropViewDelegate: DropDelegate {

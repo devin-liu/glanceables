@@ -5,7 +5,7 @@ class WebClipUserDefaultsViewModel {
     static let shared = WebClipUserDefaultsViewModel()  // Singleton instance
     
     private let userDefaultsManager = UserDefaultsManager.shared  // Assuming UserDefaultsManager also uses a singleton pattern
-
+    
     func saveWebViewItems(_ items: [WebClip]) {
         let itemsData = items.map { encodeWebViewItem($0) }
         userDefaultsManager.saveItems(itemsData)
@@ -30,7 +30,7 @@ class WebClipUserDefaultsViewModel {
             userDefaultsManager.updateItem(itemData, at: index)
         }
     }
-
+    
     private func encodeWebViewItem(_ item: WebClip) -> [String: Any] {
         var dict = [String: Any]()
         dict["id"] = item.id.uuidString
@@ -64,15 +64,15 @@ class WebClipUserDefaultsViewModel {
               let url = URL(string: urlString) else {
             return nil
         }
-
+        
         let clipRect = decodeRect(dict: dict["clipRect"] as? [String: Any])
         let originalSize = decodeSize(dict: dict["originalSize"] as? [String: Any])
         let screenshotPath = dict["screenshotPath"] as? String
         let pageTitle = dict["pageTitle"] as? String
-
+        
         return WebClip(id: id, url: url, clipRect: clipRect, originalSize: originalSize, screenshotPath: screenshotPath, pageTitle: pageTitle)
     }
-
+    
     private func decodeRect(dict: [String: Any]?) -> CGRect? {
         guard let dict = dict,
               let x = dict["x"] as? CGFloat,
@@ -83,7 +83,7 @@ class WebClipUserDefaultsViewModel {
         }
         return CGRect(x: x, y: y, width: width, height: height)
     }
-
+    
     private func decodeSize(dict: [String: Any]?) -> CGSize? {
         guard let dict = dict,
               let width = dict["width"] as? CGFloat,

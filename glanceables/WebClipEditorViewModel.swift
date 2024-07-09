@@ -2,6 +2,7 @@ import Foundation
 import SwiftUI
 
 class WebClipEditorViewModel: ObservableObject {
+    static let shared = WebClipEditorViewModel()  // Singleton instance
     @Published var showingURLModal = false
     @Published var urls: [WebClip] = []
     @Published var urlString = ""
@@ -12,7 +13,7 @@ class WebClipEditorViewModel: ObservableObject {
     @Published var originalSize: CGSize?
     
     private var userDefaultsViewModel = WebClipUserDefaultsViewModel.shared
-
+    
     
     // Add a computed property to access a specific WebClip by ID
     func webClip(withId id: UUID) -> WebClip? {
