@@ -42,7 +42,7 @@ struct WebPreviewCaptureMenuView: View {
                     Text("Invalid URL").foregroundColor(.red)
                 }
                 Button("Save") {
-                    viewModel.saveURL(with: screenshot, currentClipRect: currentClipRect)
+                    viewModel.saveURL(with: screenshot, currentClipRect: currentClipRect, pageTitle: pageTitle)
                 }.frame(width: 80, height: 40)
                 
             }.frame(height: 80).fixedSize(horizontal: false, vertical: true)

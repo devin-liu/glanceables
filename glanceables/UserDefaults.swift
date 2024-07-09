@@ -68,6 +68,10 @@ class UserDefaultsManager {
             dict["screenshotPath"] = screenshotPath
         }
         
+        if let pageTitle = item.pageTitle {
+            dict["pageTitle"] = pageTitle
+        }
+        
         return dict
     }
     
@@ -101,6 +105,8 @@ class UserDefaultsManager {
         
         let screenshotPath = dict["screenshotPath"] as? String
         
-        return WebClip(id: id, url: url, clipRect: clipRect, originalSize: originalSize, screenshotPath: screenshotPath)
+        let pageTitle = dict["pageTitle"] as? String
+        
+        return WebClip(id: id, url: url, clipRect: clipRect, originalSize: originalSize, screenshotPath: screenshotPath, pageTitle: pageTitle)
     }
 }

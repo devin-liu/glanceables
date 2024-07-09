@@ -3,14 +3,13 @@ import WebKit
 import Combine
 
 struct WebViewSnapshotRefresher: UIViewRepresentable {
-    @Binding var url: URL
-    @Binding var pageTitle: String
-    @Binding var clipRect: CGRect?
-    @Binding var originalSize: CGSize?
-    @Binding var screenshot: UIImage?
-    @Binding var item: WebClip
+    @ObservedObject private var viewModel = WebClipEditorViewModel()
+    let id: UUID
     var reloadTrigger: PassthroughSubject<Void, Never> // Add a reload trigger
-    var onScreenshotTaken: ((String) -> Void)?
+    
+    private var item: WebClip? {
+        viewModel.webClip(withId: id)
+    }
     
     func makeUIView(context: Context) -> WKWebView {
         let webView = WKWebView()
@@ -57,12 +56,12 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
     }
     
     func updateUIView(_ webView: WKWebView, context: Context) {
-        let currentURLString = webView.url?.absoluteString
-        let newURLString = url.absoluteString
-        
-        if normalizeURL(currentURLString) != normalizeURL(newURLString) {
-            let request = URLRequest(url: url)
-            webView.load(request)
+        if let webClip = viewModel.webClip(withId: id) {
+            let newURLString = webClip.url.absoluteString
+            if webView.url?.absoluteString != newURLString {
+                let request = URLRequest(url: webClip.url)
+                webView.load(request)
+            }
         }
     }
     
@@ -74,6 +73,7 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
         var parent: WebViewSnapshotRefresher
         var webView: WKWebView?
         var reloadSubscription: AnyCancellable?
+        var pageTitle: String?
         
         init(_ parent: WebViewSnapshotRefresher) {
             self.parent = parent
@@ -84,26 +84,26 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
         }
         
         func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                let simplifiedPageTitle = URLUtilities.simplifyPageTitle(webView.title ?? "No Title")
-                self.parent.pageTitle = simplifiedPageTitle
+            
+            let simplifiedPageTitle = URLUtilities.simplifyPageTitle(webView.title ?? "No Title")
+            self.pageTitle = simplifiedPageTitle
+            
+            
+            
+            if let capturedElements = self.parent.item?.capturedElements  {
+                self.restoreScrollPosition(capturedElements, in: webView)
             }
             
-            // Restore scroll positions based on captured elements
-            if let elements = self.parent.item.capturedElements {
-                self.restoreScrollPosition(elements, in: webView)
-            }
             
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
                 // Capture a screenshot
                 self.captureScreenshot()
             }
             
             DispatchQueue.main.asyncAfter(deadline: .now() + 5.1) {
                 // Restore scroll positions based on captured elements
-                if let elements = self.parent.item.capturedElements {
-                    self.restoreScrollPosition(elements, in: webView)
+                if let capturedElements = self.parent.item?.capturedElements  {
+                    self.restoreScrollPosition(capturedElements, in: webView)
                 }
                 // Capture a screenshot
                 self.captureScreenshot()
@@ -125,15 +125,16 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
         
         private func captureScreenshot() {
             guard let webView = webView else { return }
+            guard let item = self.parent.item else { return }
             
             let configuration = WKSnapshotConfiguration()
-            if let clipRect = parent.clipRect {
+            if let clipRect = item.clipRect {
                 // Adjust clipRect based on the current zoom scale and content offset
                 let zoomScale = webView.scrollView.zoomScale
                 let offsetX = webView.scrollView.contentOffset.x
                 var y = clipRect.origin.y
                 
-                if let elements = self.parent.item.capturedElements {
+                if let elements = item.capturedElements {
                     if elements.first != nil {
                         y = 0
                     }
@@ -151,16 +152,21 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
             
             webView.takeSnapshot(with: configuration) { image, error in
                 if let image = image {
-                    DispatchQueue.main.async {
-                        self.parent.screenshot = image
-                        if let screenshotPath = ScreenshotUtils.saveScreenshotToLocalDirectory(screenshot: image) {
-                            self.parent.onScreenshotTaken?(screenshotPath)
+                    if let screenshotPath = ScreenshotUtils.saveScreenshotToLocalDirectory(screenshot: image) {
+                        if let item = self.parent.item {                            
+                            let newPageTitle = self.pageTitle ?? item.pageTitle ?? "Loading..."
+                            self.parent.viewModel.updateWebClip(withId: item.id,
+                                                                newURL: item.url,
+                                                                newClipRect: item.clipRect,
+                                                                newScreenshotPath: screenshotPath,
+                                                                pageTitle: newPageTitle
+                            )
                         }
                     }
-                } else if let error = error {
-                    print("Screenshot error: \(error.localizedDescription)")
+                    
                 }
             }
         }
     }
 }
+

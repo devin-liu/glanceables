@@ -3,7 +3,6 @@ import UniformTypeIdentifiers
 
 struct ContentView: View {
     @StateObject private var webClipEditorViewModel = WebClipEditorViewModel()
-    @State private var urls: [WebClip] = []
     @State private var draggedItem: WebClip?
     
     var body: some View {
@@ -17,7 +16,7 @@ struct ContentView: View {
                         .foregroundColor(Color.black)
                 }
                 LazyVGrid(columns: [GridItem(.adaptive(minimum: 300))]) {
-                    if urls.isEmpty {
+                    if webClipEditorViewModel.urls.isEmpty {
                         emptyStateView
                     } else {
                         urlGrid
@@ -27,10 +26,7 @@ struct ContentView: View {
             .padding()
             .background(Color.gray.opacity(0.1))
             .onAppear {
-                loadURLs()
-            }
-            .onChange(of: urls, initial: false) {
-                saveURLs()
+                webClipEditorViewModel.loadURLs()
             }
             .fullScreenCover(isPresented: $webClipEditorViewModel.showingURLModal) {
                 WebPreviewCaptureMenuView(viewModel: webClipEditorViewModel)
@@ -49,36 +45,26 @@ struct ContentView: View {
     }
     
     var urlGrid: some View {
-        ForEach($urls) { $item in
-            WebGridSingleSnapshotView(item: $item)
-                .onDrag {
-                    self.draggedItem = item
-                    return NSItemProvider(object: item.url.absoluteString as NSString)
-                }
-                .onDrop(of: [UTType.text], delegate: DropViewDelegate(item: item, viewModel: $urls, draggedItem: $draggedItem))
-                .contextMenu {
-                    Button(action: {
-                        webClipEditorViewModel.handleEdit(item: item)
-                    }) {
-                        Label("Edit", systemImage: "pencil")
+            ForEach(webClipEditorViewModel.urls) { item in
+                WebGridSingleSnapshotView(id: item.id)
+                    .onDrag {
+                        self.draggedItem = item  // Ensure draggedItem is a @State or similar to hold the state
+                        return NSItemProvider(object: item.url.absoluteString as NSString)
                     }
-                    Button(action: {
-                        UserDefaultsManager.shared.deleteWebViewItem(item)
-                        loadURLs()
-                    }) {
-                        Label("Delete", systemImage: "trash")
+                    .onDrop(of: [UTType.text], isTargeted: nil) { providers, location in
+                        // Handle drop here, potentially needing to convert this into a delegate or handling function
+                        true
                     }
-                }
+                    .contextMenu {
+                        Button("Edit") {
+                            webClipEditorViewModel.openEditForItem(item: item)
+                        }
+                        Button("Delete") {
+                            webClipEditorViewModel.deleteItem(item: item)
+                        }
+                    }
+            }
         }
-    }
-    
-    private func saveURLs() {
-        UserDefaultsManager.shared.saveWebViewItems(urls)
-    }
-    
-    private func loadURLs() {
-        urls = UserDefaultsManager.shared.loadWebViewItems()
-    }
 }
 
 struct DropViewDelegate: DropDelegate {

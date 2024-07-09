@@ -40,6 +40,4 @@ struct URLUtilities {
         // If no invalid character is found, trim and return the whole title
         return title.trimmingCharacters(in: .whitespaces)
     }
-    
-    
 }

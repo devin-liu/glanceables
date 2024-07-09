@@ -6,7 +6,9 @@ struct WebClip: Identifiable, Equatable {
     var clipRect: CGRect?
     var originalSize: CGSize?
     var screenshotPath: String?  // Add screenshot path property
+    var screenshot: UIImage?
     var scrollY: Double?
+    var pageTitle: String?
     var capturedElements: [CapturedElement]?
 
     static func ==(lhs: WebClip, rhs: WebClip) -> Bool {
