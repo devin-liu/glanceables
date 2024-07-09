@@ -105,9 +105,6 @@ struct WebGridSingleSnapshotView: View {
         return formatter.string(from: interval) ?? "Just now"
     }
     
-    
-    
-    
     private func loadImage(from path: String?) -> UIImage? {
         guard let path = path else { return nil }
         let url = URL(fileURLWithPath: path)

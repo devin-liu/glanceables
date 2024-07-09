@@ -85,10 +85,8 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
         
         func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
             
-            let simplifiedPageTitle = URLUtilities.simplifyPageTitle(webView.title ?? "No Title")
+            let simplifiedPageTitle = URLUtilities.simplifyPageTitle(webView.title ?? "No Title")            
             self.pageTitle = simplifiedPageTitle
-            
-            
             
             if let capturedElements = self.parent.item?.capturedElements  {
                 self.restoreScrollPosition(capturedElements, in: webView)
@@ -153,7 +151,7 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
             webView.takeSnapshot(with: configuration) { image, error in
                 if let image = image {
                     if let screenshotPath = ScreenshotUtils.saveScreenshotToLocalDirectory(screenshot: image) {
-                        if let item = self.parent.item {                            
+                        if let item = self.parent.item {
                             let newPageTitle = self.pageTitle ?? item.pageTitle ?? "Loading..."
                             self.parent.viewModel.updateWebClip(withId: item.id,
                                                                 newURL: item.url,
@@ -162,8 +160,7 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
                                                                 pageTitle: newPageTitle
                             )
                         }
-                    }
-                    
+                    }                    
                 }
             }
         }

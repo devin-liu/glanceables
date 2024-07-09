@@ -15,6 +15,7 @@
 		030062A72C0FE8A100B0242D /* WebPreviewCaptureMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 030062A62C0FE8A100B0242D /* WebPreviewCaptureMenuView.swift */; };
 		030062B42C112BD100B0242D /* WebViewItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 030062B32C112BD100B0242D /* WebViewItem.swift */; };
 		036D58E52C3C99300042D491 /* WebClipEditorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 036D58E42C3C99300042D491 /* WebClipEditorViewModel.swift */; };
+		036D58E72C3CC8460042D491 /* WebClipUserDefaultsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 036D58E62C3CC8460042D491 /* WebClipUserDefaultsViewModel.swift */; };
 		03778E402C35E740009CB9A1 /* captureElements.js in Resources */ = {isa = PBXBuildFile; fileRef = 03778E3E2C35E6FC009CB9A1 /* captureElements.js */; };
 		03778E422C36028F009CB9A1 /* CapturedElements.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03778E412C36028F009CB9A1 /* CapturedElements.swift */; };
 		0378B8672C096D850005BAE5 /* glanceablesApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0378B8662C096D850005BAE5 /* glanceablesApp.swift */; };
@@ -54,6 +55,7 @@
 		0355A0672C17D741005BBAF3 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Platforms/iPhoneOS.platform/Developer/Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		0355A06E2C17DA8B005BBAF3 /* glanceablesTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = glanceablesTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		036D58E42C3C99300042D491 /* WebClipEditorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = WebClipEditorViewModel.swift; path = glanceables/WebClipEditorViewModel.swift; sourceTree = "<group>"; };
+		036D58E62C3CC8460042D491 /* WebClipUserDefaultsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = WebClipUserDefaultsViewModel.swift; path = glanceables/WebClipUserDefaultsViewModel.swift; sourceTree = "<group>"; };
 		03778E3E2C35E6FC009CB9A1 /* captureElements.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; name = captureElements.js; path = glanceables/captureElements.js; sourceTree = "<group>"; };
 		03778E412C36028F009CB9A1 /* CapturedElements.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapturedElements.swift; sourceTree = "<group>"; };
 		0378B8632C096D850005BAE5 /* glanceables.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = glanceables.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -111,6 +113,7 @@
 		0378B85A2C096D850005BAE5 = {
 			isa = PBXGroup;
 			children = (
+				036D58E62C3CC8460042D491 /* WebClipUserDefaultsViewModel.swift */,
 				036D58E42C3C99300042D491 /* WebClipEditorViewModel.swift */,
 				03778E412C36028F009CB9A1 /* CapturedElements.swift */,
 				03778E3E2C35E6FC009CB9A1 /* captureElements.js */,
@@ -284,6 +287,7 @@
 				0300629D2C0D229800B0242D /* BlackMenuBarView.swift in Sources */,
 				036D58E52C3C99300042D491 /* WebClipEditorViewModel.swift in Sources */,
 				030062992C0A833200B0242D /* CreateButtonView.swift in Sources */,
+				036D58E72C3CC8460042D491 /* WebClipUserDefaultsViewModel.swift in Sources */,
 				030062A32C0EAE8900B0242D /* WebView.swift in Sources */,
 				0300629B2C0D209400B0242D /* UserDefaults.swift in Sources */,
 				03C5DAD72C264BE00061FA25 /* RedXButton.swift in Sources */,

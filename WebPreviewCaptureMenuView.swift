@@ -7,7 +7,6 @@ struct WebPreviewCaptureMenuView: View {
     @State private var debounceWorkItem: DispatchWorkItem?
     @State private var pageTitle: String = "Loading..."
     @State private var currentClipRect: CGRect?
-    @State private var originalSize: CGSize?
     @State private var screenshot: UIImage?
     @State private var userInteracting: Bool = false
     @State private var scrollY: Double = 0
@@ -56,7 +55,7 @@ struct WebPreviewCaptureMenuView: View {
             if viewModel.isURLValid && !showPreview {
                 GeometryReader { geometry in
                     ZStack {
-                        WebViewScreenshotCapture(url: $viewModel.validURL, pageTitle: $pageTitle, clipRect: $currentClipRect, originalSize: $originalSize, screenshot: $screenshot, userInteracting: $userInteracting, scrollY: $scrollY, capturedElements: $capturedElements)
+                        WebViewScreenshotCapture(viewModel: viewModel, pageTitle: $pageTitle, clipRect: $currentClipRect, screenshot: $screenshot, userInteracting: $userInteracting, scrollY: $scrollY, capturedElements: $capturedElements)
                             .frame(maxHeight: .infinity)
                             .gesture(
                                 DragGesture(minimumDistance: 0)

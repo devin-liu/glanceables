@@ -2,14 +2,15 @@ import SwiftUI
 import WebKit
 
 struct WebViewScreenshotCapture: UIViewRepresentable {
-    @Binding var url: URL?
+    @ObservedObject var viewModel: WebClipEditorViewModel
+    
     @Binding var pageTitle: String
     @Binding var clipRect: CGRect?
-    @Binding var originalSize: CGSize?
+    
     @Binding var screenshot: UIImage?
     @Binding var userInteracting: Bool
     @Binding var scrollY:Double
-    @Binding var  capturedElements: [CapturedElement]?
+    @Binding var capturedElements: [CapturedElement]?
     
     func makeUIView(context: Context) -> WKWebView {
         let webView = WKWebView()
@@ -44,7 +45,7 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
         // First, check if webView.url is nil
         if webView.url == nil {
             // Safely unwrap the optional url
-            if let validURL = url {
+            if let validURL = viewModel.validURL {
                 // Now you have a non-nil URL, create a URLRequest
                 let request = URLRequest(url: validURL)
                 webView.load(request)
@@ -150,10 +151,8 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
                 self.parent.pageTitle = simplifiedPageTitle
                 
                 self.captureScreenshot()
-                
-                if self.parent.originalSize == nil {
-                    self.parent.originalSize = webView.scrollView.contentSize
-                }
+                                                
+                self.parent.viewModel.saveOriginalSize(newOriginalSize: webView.scrollView.contentSize)                
                 
                 // Initialize clipRect in the center of the WebView frame
                 if self.parent.clipRect == nil, let frame = self.webView?.frame {
@@ -169,14 +168,14 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
         
         func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
             // Extract the host from the current URL
-            let currentHost = self.parent.url!.host
+            let currentHost = self.parent.viewModel.validURL!.host
             
             // Extract the host from the navigation request URL
             if let newUrl = navigationAction.request.url, let newHost = newUrl.host {
                 // Update the parent.url only if the domains match
                 if newHost == currentHost {
                     DispatchQueue.main.async {
-                        self.parent.url = newUrl
+                        self.parent.viewModel.validURL = newUrl
                     }
                 } else {
                     //                    print("Domain mismatch. Current domain: \(currentHost ?? "None"), New domain: \(newHost)")
