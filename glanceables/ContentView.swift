@@ -51,10 +51,8 @@ struct ContentView: View {
                     self.draggedItem = item  // Ensure draggedItem is a @State or similar to hold the state
                     return NSItemProvider(object: item.url.absoluteString as NSString)
                 }
-                .onDrop(of: [UTType.text], isTargeted: nil) { providers, location in
-                    // Handle drop here, potentially needing to convert this into a delegate or handling function
-                    true
-                }
+                .onDrop(of: [UTType.text], delegate: DropViewDelegate(item: item, viewModel: $webClipEditorViewModel.urls, draggedItem: $draggedItem))
+            
                 .contextMenu {
                     Button("Edit") {
                         webClipEditorViewModel.openEditForItem(item: item)

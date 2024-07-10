@@ -11,7 +11,6 @@
 		030062992C0A833200B0242D /* CreateButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 030062982C0A833200B0242D /* CreateButtonView.swift */; };
 		0300629B2C0D209400B0242D /* UserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0300629A2C0D209400B0242D /* UserDefaults.swift */; };
 		0300629D2C0D229800B0242D /* BlackMenuBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0300629C2C0D229800B0242D /* BlackMenuBarView.swift */; };
-		030062A32C0EAE8900B0242D /* WebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 030062A22C0EAE8900B0242D /* WebView.swift */; };
 		030062A72C0FE8A100B0242D /* WebPreviewCaptureMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 030062A62C0FE8A100B0242D /* WebPreviewCaptureMenuView.swift */; };
 		030062B42C112BD100B0242D /* WebViewItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 030062B32C112BD100B0242D /* WebViewItem.swift */; };
 		036D58E52C3C99300042D491 /* WebClipEditorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 036D58E42C3C99300042D491 /* WebClipEditorViewModel.swift */; };
@@ -49,7 +48,6 @@
 		030062982C0A833200B0242D /* CreateButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateButtonView.swift; sourceTree = "<group>"; };
 		0300629A2C0D209400B0242D /* UserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaults.swift; sourceTree = "<group>"; };
 		0300629C2C0D229800B0242D /* BlackMenuBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlackMenuBarView.swift; sourceTree = "<group>"; };
-		030062A22C0EAE8900B0242D /* WebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebView.swift; sourceTree = "<group>"; };
 		030062A62C0FE8A100B0242D /* WebPreviewCaptureMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = WebPreviewCaptureMenuView.swift; path = ../WebPreviewCaptureMenuView.swift; sourceTree = "<group>"; };
 		030062B32C112BD100B0242D /* WebViewItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewItem.swift; sourceTree = SOURCE_ROOT; };
 		0355A0672C17D741005BBAF3 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Platforms/iPhoneOS.platform/Developer/Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
@@ -144,7 +142,6 @@
 				03C5DAD42C2647E20061FA25 /* CaptureModeToggleView.swift */,
 				03C5DAD22C24F0CF0061FA25 /* URLUtilities.swift */,
 				030062B32C112BD100B0242D /* WebViewItem.swift */,
-				030062A22C0EAE8900B0242D /* WebView.swift */,
 				0300629C2C0D229800B0242D /* BlackMenuBarView.swift */,
 				0300629A2C0D209400B0242D /* UserDefaults.swift */,
 				030062982C0A833200B0242D /* CreateButtonView.swift */,
@@ -288,7 +285,6 @@
 				036D58E52C3C99300042D491 /* WebClipEditorViewModel.swift in Sources */,
 				030062992C0A833200B0242D /* CreateButtonView.swift in Sources */,
 				036D58E72C3CC8460042D491 /* WebClipUserDefaultsViewModel.swift in Sources */,
-				030062A32C0EAE8900B0242D /* WebView.swift in Sources */,
 				0300629B2C0D209400B0242D /* UserDefaults.swift in Sources */,
 				03C5DAD72C264BE00061FA25 /* RedXButton.swift in Sources */,
 				038208E22C1BB40400606536 /* WebViewSnapshotRefresher.swift in Sources */,
