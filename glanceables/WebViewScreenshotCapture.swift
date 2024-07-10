@@ -187,8 +187,7 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
         }
         
         func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
-            if message.name == "selectionHandler", let messageBody = message.body as? String {
-                let data = parseMessage(messageBody)
+            if message.name == "selectionHandler", let messageBody = message.body as? String {                
                 let scrollY = parseScrollY(messageBody)
                 if scrollY != 0 {
                     DispatchQueue.main.async {

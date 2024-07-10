@@ -24,7 +24,7 @@ class WebClipUserDefaultsViewModel {
     }
     
     func updateWebViewItem(_ item: WebClip) {
-        var items = loadWebViewItems()
+        let items = loadWebViewItems()
         if let index = items.firstIndex(where: { $0.id == item.id }) {
             let itemData = encodeWebViewItem(item)
             userDefaultsManager.updateItem(itemData, at: index)
