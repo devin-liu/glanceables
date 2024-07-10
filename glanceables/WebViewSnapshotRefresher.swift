@@ -25,36 +25,6 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
         return webView
     }
     
-    func normalizeURL(_ urlString: String?) -> String? {
-        guard let urlString = urlString, var components = URLComponents(string: urlString) else {
-            return nil
-        }
-        
-        // Remove the "www." prefix if it exists
-        if components.host?.hasPrefix("www.") == true {
-            components.host = String(components.host!.dropFirst(4))
-        }
-        
-        // Force the scheme to https
-        components.scheme = "https"
-        
-        // Remove any trailing slash
-        if components.path.hasSuffix("/") {
-            components.path = String(components.path.dropLast())
-        }
-        
-        return components.string
-    }
-    
-    func urlsAreEqual(_ urlString1: String, _ urlString2: String) -> Bool {
-        guard let normalizedURL1 = normalizeURL(urlString1),
-              let normalizedURL2 = normalizeURL(urlString2) else {
-            return false
-        }
-        
-        return normalizedURL1 == normalizedURL2
-    }
-    
     func updateUIView(_ webView: WKWebView, context: Context) {
         if let webClip = viewModel.webClip(withId: id) {
             let newURLString = webClip.url.absoluteString
@@ -85,7 +55,7 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
         
         func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
             
-            let simplifiedPageTitle = URLUtilities.simplifyPageTitle(webView.title ?? "No Title")            
+            let simplifiedPageTitle = URLUtilities.simplifyPageTitle(webView.title ?? "No Title")
             self.pageTitle = simplifiedPageTitle
             
             if let capturedElements = self.parent.item?.capturedElements  {
@@ -160,7 +130,7 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
                                                                 pageTitle: newPageTitle
                             )
                         }
-                    }                    
+                    }
                 }
             }
         }
