@@ -14,10 +14,9 @@ class WebClipEditorViewModel: ObservableObject {
     @Published var originalSize: CGSize?
     @Published var pageTitle: String?
     @Published var screenShot: UIImage?
-    
+    @Published var screenshotPath: String?    
     
     private var userDefaultsViewModel = WebClipUserDefaultsViewModel.shared
-    
     
     // Add a computed property to access a specific WebClip by ID
     func webClip(withId id: UUID) -> WebClip? {
@@ -63,7 +62,7 @@ class WebClipEditorViewModel: ObservableObject {
     func saveURL(with screenshot: UIImage?) {
         guard isURLValid, let validURL = URL(string: urlString) else { return }
         
-        let screenshotPath = screenshot.flatMap(ScreenshotUtils.saveScreenshotToLocalDirectory)
+        screenshotPath = screenshot.flatMap(ScreenshotUtils.saveScreenshotToLocalDirectory)
         let newWebClip = WebClip(
             id: isEditing && selectedURLIndex != nil ? urls[selectedURLIndex!].id : UUID(),
             url: validURL,
@@ -82,13 +81,13 @@ class WebClipEditorViewModel: ObservableObject {
         resetModalState()
     }
     
-    func updateWebClip(withId id: UUID, newURL: URL, newClipRect: CGRect?, newScreenshotPath: String?, pageTitle: String?) {
+    func updateWebClip(withId id: UUID, newURL: URL, newClipRect: CGRect?, newScreenshotPath: String?, newPageTitle: String?) {
         guard let index = urls.firstIndex(where: { $0.id == id }) else { return }
         var webClip = urls[index]        
         webClip.url = newURL
         webClip.clipRect = newClipRect
         webClip.screenshotPath = newScreenshotPath
-        webClip.pageTitle = pageTitle
+        webClip.pageTitle = newPageTitle
         urls[index] = webClip
         saveURLs()
     }

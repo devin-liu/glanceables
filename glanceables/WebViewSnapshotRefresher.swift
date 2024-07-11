@@ -120,14 +120,14 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
             
             webView.takeSnapshot(with: configuration) { image, error in
                 if let image = image {
-                    if let screenshotPath = ScreenshotUtils.saveScreenshotToLocalDirectory(screenshot: image) {
+                    if let newScreenshotPath = ScreenshotUtils.saveScreenshotToLocalDirectory(screenshot: image) {
                         if let item = self.parent.item {
                             let newPageTitle = self.pageTitle ?? item.pageTitle ?? "Loading..."
                             self.parent.viewModel.updateWebClip(withId: item.id,
                                                                 newURL: item.url,
                                                                 newClipRect: item.clipRect,
-                                                                newScreenshotPath: screenshotPath,
-                                                                pageTitle: newPageTitle
+                                                                newScreenshotPath: newScreenshotPath,
+                                                                newPageTitle: newPageTitle
                             )
                         }
                     }
