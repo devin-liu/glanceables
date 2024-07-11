@@ -1,5 +1,8 @@
 # Glanceables
-<img width="1136" alt="Screenshot 2024-07-11 at 4 15 39 PM" src="https://github.com/user-attachments/assets/cd8d73ce-aeb3-4d7f-8b66-ec9dd5278bb9">
+
+
+https://github.com/user-attachments/assets/497c6596-4c36-4baa-b710-b9213e20affd
+
 
 
 ## Overview
@@ -10,6 +13,7 @@ Ever feel like the internet's a crowded room, shouting at you from every corner?
 
 ## Precision Capture and Restoration
 Our web clip capture & restoring algorithm enhances precise selection and automatic recovery of web content. This is for users who need to monitor specific areas of a webpage with high accuracy.
+<img width="1136" alt="Screenshot 2024-07-11 at 4 22 15 PM" src="https://github.com/user-attachments/assets/f0c6da8e-be3d-4c3c-9d65-cb2a26f482c7">
 
 ### How It Works
 - **Interactive Selection:** Users can manually select an area on the webpage by dragging a 300px by 300px rectangle. This can be done anywhere on the webpage to focus on content that matters.
