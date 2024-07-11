@@ -62,12 +62,6 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
                 self.restoreScrollPosition(capturedElements, in: webView)
             }
             
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-                // Capture a screenshot
-                self.captureScreenshot()
-            }
-            
             DispatchQueue.main.asyncAfter(deadline: .now() + 5.1) {
                 // Restore scroll positions based on captured elements
                 if let capturedElements = self.parent.item?.capturedElements  {
