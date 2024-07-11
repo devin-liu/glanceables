@@ -20,6 +20,9 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
         // Subscribe to the reload trigger
         context.coordinator.reloadSubscription = reloadTrigger.sink {
             webView.reload()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+                context.coordinator.captureScreenshot()
+            }
         }
         
         return webView
@@ -45,8 +48,22 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
         var reloadSubscription: AnyCancellable?
         var pageTitle: String?
         
+        private var screenshotTrigger = PassthroughSubject<Void, Never>()
+        private var cancellables = Set<AnyCancellable>()
+        
         init(_ parent: WebViewSnapshotRefresher) {
             self.parent = parent
+            super.init()
+            
+            // Configure the throttle for screenshotTrigger
+            screenshotTrigger
+                .throttle(for: .seconds(60), scheduler: RunLoop.main, latest: true)
+                .sink { [weak self] in
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+                        self?.captureScreenshot()
+                    }
+                }
+                .store(in: &cancellables)
         }
         
         deinit {
@@ -67,7 +84,8 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
                     self.restoreScrollPosition(capturedElements, in: webView)
                 }
                 // Capture a screenshot
-                self.captureScreenshot()
+                self.screenshotTrigger.send(())
+                
             }
             
         }
@@ -84,7 +102,7 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
             })
         }
         
-        private func captureScreenshot() {
+        func captureScreenshot() {
             guard let webView = webView else { return }
             guard let item = self.parent.item else { return }
             
