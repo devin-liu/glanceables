@@ -78,7 +78,7 @@ struct WebGridSingleSnapshotView: View {
     }
     
     private func startTimer() {
-        timer = Timer.scheduledTimer(withTimeInterval: 60, repeats: true) { _ in
+        timer = Timer.scheduledTimer(withTimeInterval: 60, repeats: true) { _ in            
             reloadWebView()
         }
     }

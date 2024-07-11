@@ -54,7 +54,6 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
         }
         
         func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-            
             let simplifiedPageTitle = URLUtilities.simplifyPageTitle(webView.title ?? "No Title")
             self.pageTitle = simplifiedPageTitle
             
