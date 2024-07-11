@@ -12,7 +12,7 @@ struct WebGridSingleSnapshotView: View {
     let id: UUID
     
     private var item: WebClip? {
-        return viewModel.webClip(withId: id)        
+        return viewModel.webClip(withId: id)
     }
     
     var body: some View {
@@ -23,8 +23,10 @@ struct WebGridSingleSnapshotView: View {
                         .resizable()
                         .scaledToFit()
                         .frame(height: 300)
-                        .cornerRadius(16.0)
+                        .cornerRadius(24)
                 }
+                    
+                
                 ScrollView {
                     if let id = item?.id, let originalSize = item?.originalSize {
                         WebViewSnapshotRefresher(id: id, reloadTrigger: reloadTrigger)
@@ -78,7 +80,7 @@ struct WebGridSingleSnapshotView: View {
     }
     
     private func startTimer() {
-        timer = Timer.scheduledTimer(withTimeInterval: 60, repeats: true) { _ in            
+        timer = Timer.scheduledTimer(withTimeInterval: 60, repeats: true) { _ in
             reloadWebView()
         }
     }
