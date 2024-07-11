@@ -4,10 +4,7 @@ import Combine
 struct WebPreviewCaptureMenuView: View {
     @ObservedObject var viewModel: WebClipEditorViewModel
     
-    @State private var debounceWorkItem: DispatchWorkItem?
-    @State private var pageTitle: String = "Loading..."
-    @State private var currentClipRect: CGRect?
-    @State private var screenshot: UIImage?
+    @State private var debounceWorkItem: DispatchWorkItem?    
     @State private var userInteracting: Bool = false
     @State private var scrollY: Double = 0
     @State private var capturedElements: [CapturedElement]?
@@ -41,21 +38,21 @@ struct WebPreviewCaptureMenuView: View {
                     Text("Invalid URL").foregroundColor(.red)
                 }
                 Button("Save") {
-                    viewModel.saveURL(with: screenshot, currentClipRect: currentClipRect, pageTitle: pageTitle)
+                    viewModel.saveURL(with: viewModel.screenShot)
                 }.frame(width: 80, height: 40)
                 
             }.frame(height: 80).fixedSize(horizontal: false, vertical: true)
             
-            if let screenshot = screenshot, showPreview {
+            if let screenshot = $viewModel.screenShot.wrappedValue, showPreview {
                 Image(uiImage: screenshot)
                     .frame(width: 300, height: 300)
-                    .padding()
+                    .padding()                    
             }
             
             if viewModel.isURLValid && !showPreview {
                 GeometryReader { geometry in
                     ZStack {
-                        WebViewScreenshotCapture(viewModel: viewModel, pageTitle: $pageTitle, clipRect: $currentClipRect, screenshot: $screenshot, userInteracting: $userInteracting, scrollY: $scrollY, capturedElements: $capturedElements)
+                        WebViewScreenshotCapture(viewModel: viewModel, userInteracting: $userInteracting, scrollY: $scrollY, capturedElements: $capturedElements)
                             .frame(maxHeight: .infinity)
                             .gesture(
                                 DragGesture(minimumDistance: 0)
@@ -71,7 +68,7 @@ struct WebPreviewCaptureMenuView: View {
                                     }
                             )
                         if captureModeOn {
-                            if let clipRect = currentClipRect {
+                            if let clipRect = viewModel.currentClipRect {
                                 if dragging {
                                     Rectangle()
                                         .stroke(style: StrokeStyle(lineWidth: 2, lineCap: .round, lineJoin: .round, dash: [10, 5]))
@@ -103,6 +100,6 @@ struct WebPreviewCaptureMenuView: View {
         let minX = max(0, min(centerX - width / 2, bounds.width - width))
         let minY = max(0, min(centerY - height / 2, bounds.height - height))
         
-        currentClipRect = CGRect(x: minX, y: minY, width: width, height: height)
+        viewModel.currentClipRect = CGRect(x: minX, y: minY, width: width, height: height)
     }
 }

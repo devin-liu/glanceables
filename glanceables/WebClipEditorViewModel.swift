@@ -9,8 +9,12 @@ class WebClipEditorViewModel: ObservableObject {
     @Published var validURL:URL?
     @Published var isEditing = false
     @Published var selectedURLIndex: Int? = nil
+    @Published var currentClipRect: CGRect?
     @Published var isURLValid = true
     @Published var originalSize: CGSize?
+    @Published var pageTitle: String?
+    @Published var screenShot: UIImage?
+    
     
     private var userDefaultsViewModel = WebClipUserDefaultsViewModel.shared
     
@@ -27,6 +31,10 @@ class WebClipEditorViewModel: ObservableObject {
     
     init() {
         loadURLs()
+    }
+    
+    func saveScreenShot(_ newScreenShot: UIImage){
+        screenShot = newScreenShot
     }
     
     func saveOriginalSize(newOriginalSize: CGSize){
@@ -52,7 +60,7 @@ class WebClipEditorViewModel: ObservableObject {
     }
     
     
-    func saveURL(with screenshot: UIImage?, currentClipRect: CGRect?, pageTitle: String?) {
+    func saveURL(with screenshot: UIImage?) {
         guard isURLValid, let validURL = URL(string: urlString) else { return }
         
         let screenshotPath = screenshot.flatMap(ScreenshotUtils.saveScreenshotToLocalDirectory)

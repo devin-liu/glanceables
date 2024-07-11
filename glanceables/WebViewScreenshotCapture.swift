@@ -3,11 +3,6 @@ import WebKit
 
 struct WebViewScreenshotCapture: UIViewRepresentable {
     @ObservedObject var viewModel: WebClipEditorViewModel
-    
-    @Binding var pageTitle: String
-    @Binding var clipRect: CGRect?
-    
-    @Binding var screenshot: UIImage?
     @Binding var userInteracting: Bool
     @Binding var scrollY:Double
     @Binding var capturedElements: [CapturedElement]?
@@ -148,19 +143,19 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                 let simplifiedPageTitle = URLUtilities.simplifyPageTitle(webView.title ?? "No Title")
                 
-                self.parent.pageTitle = simplifiedPageTitle
+                self.parent.viewModel.pageTitle = simplifiedPageTitle
                 
                 self.captureScreenshot()
-                                                
-                self.parent.viewModel.saveOriginalSize(newOriginalSize: webView.scrollView.contentSize)                
+                
+                self.parent.viewModel.saveOriginalSize(newOriginalSize: webView.scrollView.contentSize)
                 
                 // Initialize clipRect in the center of the WebView frame
-                if self.parent.clipRect == nil, let frame = self.webView?.frame {
+                if self.parent.viewModel.currentClipRect == nil, let frame = self.webView?.frame {
                     let rectWidth: CGFloat = 300 // Example width
                     let rectHeight: CGFloat = 300 // Example height
                     let centerX = frame.width / 2 - rectWidth / 2
                     let centerY = frame.height / 2 - rectHeight / 2
-                    self.parent.clipRect = CGRect(x: centerX, y: centerY, width: rectWidth, height: rectHeight)
+                    self.parent.viewModel.currentClipRect = CGRect(x: centerX, y: centerY, width: rectWidth, height: rectHeight)
                 }
                 
             }
@@ -187,7 +182,7 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
         }
         
         func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
-            if message.name == "selectionHandler", let messageBody = message.body as? String {                
+            if message.name == "selectionHandler", let messageBody = message.body as? String {
                 let scrollY = parseScrollY(messageBody)
                 if scrollY != 0 {
                     DispatchQueue.main.async {
@@ -283,7 +278,7 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
             guard let webView = webView else { return }
             
             let configuration = WKSnapshotConfiguration()
-            if let clipRect = parent.clipRect {
+            if let clipRect = parent.viewModel.currentClipRect {
                 // Capture the current screenshot that the user sees
                 let adjustedClipRect = CGRect(
                     x: clipRect.origin.x,
@@ -297,7 +292,7 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
             webView.takeSnapshot(with: configuration) { image, error in
                 if let image = image {
                     DispatchQueue.main.async {
-                        self.parent.screenshot = image
+                        self.parent.viewModel.saveScreenShot(image)
                     }
                 } else if let error = error {
                     print("Screenshot error: \(error.localizedDescription)")
