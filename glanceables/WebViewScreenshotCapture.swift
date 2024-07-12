@@ -3,9 +3,7 @@ import WebKit
 
 struct WebViewScreenshotCapture: UIViewRepresentable {
     @ObservedObject var viewModel: WebClipEditorViewModel
-    @Binding var userInteracting: Bool
-    @Binding var scrollY:Double
-    @Binding var capturedElements: [CapturedElement]?
+    @ObservedObject var captureMenuViewModel: WebPreviewCaptureMenuViewModel
     
     func makeUIView(context: Context) -> WKWebView {
         let webView = WKWebView()
@@ -186,7 +184,7 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
                 let scrollY = parseScrollY(messageBody)
                 if scrollY != 0 {
                     DispatchQueue.main.async {
-                        self.parent.scrollY = scrollY
+                        self.parent.captureMenuViewModel.scrollY = scrollY
                     }
                 }
                 
@@ -213,7 +211,7 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
         }
         
         func processCapturedElements(_ elements: [CapturedElement]) {
-            self.parent.capturedElements = elements
+            self.parent.captureMenuViewModel.capturedElements = elements
         }
         
         private func parseScrollY(_ message: String) -> Double {
@@ -240,7 +238,7 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
         
         func scrollViewDidScroll(_ scrollView: UIScrollView) {
             DispatchQueue.main.async {
-                self.parent.scrollY = Double(scrollView.contentOffset.y)
+                self.parent.captureMenuViewModel.scrollY = Double(scrollView.contentOffset.y)
             }
         }
         
@@ -261,17 +259,17 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
         
         
         func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
-            self.parent.userInteracting = true
+            self.parent.captureMenuViewModel.userInteracting = true
         }
         
         func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
             if !decelerate {
-                self.parent.userInteracting = false
+                self.parent.captureMenuViewModel.userInteracting = false
             }
         }
         
         func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-            self.parent.userInteracting = false
+            self.parent.captureMenuViewModel.userInteracting = false
         }
         
         private func captureScreenshot() {

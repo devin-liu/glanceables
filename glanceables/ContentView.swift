@@ -3,6 +3,7 @@ import UniformTypeIdentifiers
 
 struct ContentView: View {
     @StateObject private var webClipEditorViewModel = WebClipEditorViewModel.shared
+    @StateObject private var captureMenuViewModel = WebPreviewCaptureMenuViewModel()
     @State private var draggedItem: WebClip?
     
     var body: some View {
@@ -29,7 +30,7 @@ struct ContentView: View {
                 webClipEditorViewModel.loadURLs()
             }
             .fullScreenCover(isPresented: $webClipEditorViewModel.showingURLModal) {
-                WebPreviewCaptureMenuView(viewModel: webClipEditorViewModel)
+                WebPreviewCaptureMenuView(viewModel: webClipEditorViewModel, captureMenuViewModel: captureMenuViewModel)
             }
         }
     }

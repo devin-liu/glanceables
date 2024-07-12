@@ -13,6 +13,7 @@
 		0300629D2C0D229800B0242D /* BlackMenuBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0300629C2C0D229800B0242D /* BlackMenuBarView.swift */; };
 		030062A72C0FE8A100B0242D /* WebPreviewCaptureMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 030062A62C0FE8A100B0242D /* WebPreviewCaptureMenuView.swift */; };
 		030062B42C112BD100B0242D /* WebViewItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 030062B32C112BD100B0242D /* WebViewItem.swift */; };
+		03553FE32C41F6A800FCB4CC /* WebPreviewCaptureMenuViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03553FE22C41F6A800FCB4CC /* WebPreviewCaptureMenuViewModel.swift */; };
 		036D58E52C3C99300042D491 /* WebClipEditorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 036D58E42C3C99300042D491 /* WebClipEditorViewModel.swift */; };
 		036D58E72C3CC8460042D491 /* WebClipUserDefaultsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 036D58E62C3CC8460042D491 /* WebClipUserDefaultsViewModel.swift */; };
 		03778E402C35E740009CB9A1 /* captureElements.js in Resources */ = {isa = PBXBuildFile; fileRef = 03778E3E2C35E6FC009CB9A1 /* captureElements.js */; };
@@ -50,6 +51,7 @@
 		0300629C2C0D229800B0242D /* BlackMenuBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlackMenuBarView.swift; sourceTree = "<group>"; };
 		030062A62C0FE8A100B0242D /* WebPreviewCaptureMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = WebPreviewCaptureMenuView.swift; path = ../WebPreviewCaptureMenuView.swift; sourceTree = "<group>"; };
 		030062B32C112BD100B0242D /* WebViewItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewItem.swift; sourceTree = SOURCE_ROOT; };
+		03553FE22C41F6A800FCB4CC /* WebPreviewCaptureMenuViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebPreviewCaptureMenuViewModel.swift; sourceTree = "<group>"; };
 		0355A0672C17D741005BBAF3 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Platforms/iPhoneOS.platform/Developer/Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		0355A06E2C17DA8B005BBAF3 /* glanceablesTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = glanceablesTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		036D58E42C3C99300042D491 /* WebClipEditorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebClipEditorViewModel.swift; sourceTree = "<group>"; };
@@ -148,6 +150,7 @@
 				0300629A2C0D209400B0242D /* UserDefaults.swift */,
 				030062982C0A833200B0242D /* CreateButtonView.swift */,
 				030062A62C0FE8A100B0242D /* WebPreviewCaptureMenuView.swift */,
+				03553FE22C41F6A800FCB4CC /* WebPreviewCaptureMenuViewModel.swift */,
 				030062962C0A7F2600B0242D /* HeaderView.swift */,
 				0378B8662C096D850005BAE5 /* glanceablesApp.swift */,
 				0378B8682C096D850005BAE5 /* ContentView.swift */,
@@ -276,6 +279,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				03553FE32C41F6A800FCB4CC /* WebPreviewCaptureMenuViewModel.swift in Sources */,
 				030062972C0A7F2600B0242D /* HeaderView.swift in Sources */,
 				03778E422C36028F009CB9A1 /* CapturedElements.swift in Sources */,
 				0378B8772C096DB00005BAE5 /* WebGridSingleSnapshotView.swift in Sources */,

@@ -3,17 +3,7 @@ import Combine
 
 struct WebPreviewCaptureMenuView: View {
     @ObservedObject var viewModel: WebClipEditorViewModel
-    
-    @State private var debounceWorkItem: DispatchWorkItem?    
-    @State private var userInteracting: Bool = false
-    @State private var scrollY: Double = 0
-    @State private var capturedElements: [CapturedElement]?
-    
-    @State private var startLocation: CGPoint? = nil
-    @State private var endLocation: CGPoint? = nil
-    @State private var dragging: Bool = false
-    @State private var showPreview: Bool = false
-    @State private var captureModeOn: Bool = true
+    @ObservedObject var captureMenuViewModel: WebPreviewCaptureMenuViewModel
     
     var body: some View {
         VStack(alignment: .leading) {
@@ -24,14 +14,13 @@ struct WebPreviewCaptureMenuView: View {
                 .navigationBarTitle(viewModel.isEditing ? "Edit URL" : "New URL")
                 .navigationBarItems(
                     trailing: HStack {
-                        CaptureModeToggleView(captureModeOn: $captureModeOn)
+                        CaptureModeToggleView(captureModeOn: $captureMenuViewModel.captureModeOn)
                         RedXButton(action: viewModel.resetModalState)
                     }
                 )
             }
             .frame(height: 300)
-            .fixedSize(horizontal: false, vertical: true)
-            
+            .fixedSize(horizontal: false, vertical: true)            
             
             HStack {
                 if !viewModel.isURLValid && !viewModel.urlString.isEmpty {
@@ -43,33 +32,33 @@ struct WebPreviewCaptureMenuView: View {
                 
             }.frame(height: 80).fixedSize(horizontal: false, vertical: true)
             
-            if let screenshot = $viewModel.screenShot.wrappedValue, showPreview {
+            if let screenshot = $viewModel.screenShot.wrappedValue, captureMenuViewModel.showPreview {
                 Image(uiImage: screenshot)
                     .frame(width: 300, height: 300)
-                    .padding()                    
+                    .padding()
             }
             
-            if viewModel.isURLValid && !showPreview {
+            if viewModel.isURLValid && !captureMenuViewModel.showPreview {
                 GeometryReader { geometry in
                     ZStack {
-                        WebViewScreenshotCapture(viewModel: viewModel, userInteracting: $userInteracting, scrollY: $scrollY, capturedElements: $capturedElements)
+                        WebViewScreenshotCapture(viewModel: viewModel, captureMenuViewModel: captureMenuViewModel)
                             .frame(maxHeight: .infinity)
                             .gesture(
                                 DragGesture(minimumDistance: 0)
                                     .onChanged { value in
-                                        startLocation = startLocation ?? value.location
-                                        endLocation = value.location
-                                        dragging = true
+                                        captureMenuViewModel.startLocation = captureMenuViewModel.startLocation ?? value.location
+                                        captureMenuViewModel.endLocation = value.location
+                                        captureMenuViewModel.dragging = true
                                         updateClipRect(endLocation: value.location, bounds: geometry.size)
                                     }
                                     .onEnded { _ in
-                                        dragging = false
+                                        captureMenuViewModel.dragging = false
                                         //                                        showPreview = true
                                     }
                             )
-                        if captureModeOn {
+                        if captureMenuViewModel.captureModeOn {
                             if let clipRect = viewModel.currentClipRect {
-                                if dragging {
+                                if captureMenuViewModel.dragging {
                                     Rectangle()
                                         .stroke(style: StrokeStyle(lineWidth: 2, lineCap: .round, lineJoin: .round, dash: [10, 5]))
                                         .path(in: clipRect)
