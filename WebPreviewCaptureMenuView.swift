@@ -6,17 +6,14 @@ struct WebPreviewCaptureMenuView: View {
     @ObservedObject var captureMenuViewModel: WebPreviewCaptureMenuViewModel
     
     var body: some View {
-        VStack(alignment: .leading) {
+        VStack{
             HStack {
                 AddURLFormView(viewModel: viewModel)
-            }
-            HStack {
-                CaptureModeToggleView(captureModeOn: $captureMenuViewModel.captureModeOn)
                 RedXButton(action: viewModel.resetModalState)
             }
-            
-            .frame(height: 300)
-            .fixedSize(horizontal: false, vertical: true)
+            .background(Color.white)
+            .cornerRadius(10)
+            .padding(10)
             
             HStack {
                 if !viewModel.isURLValid && !viewModel.urlString.isEmpty {
@@ -26,7 +23,7 @@ struct WebPreviewCaptureMenuView: View {
                     viewModel.saveURL(with: viewModel.screenShot)
                 }.frame(width: 80, height: 40)
                 
-            }.frame(height: 80).fixedSize(horizontal: false, vertical: true)
+            }
             
             if let screenshot = $viewModel.screenShot.wrappedValue, captureMenuViewModel.showPreview {
                 Image(uiImage: screenshot)
@@ -39,6 +36,7 @@ struct WebPreviewCaptureMenuView: View {
                     ZStack {
                         WebViewScreenshotCapture(viewModel: viewModel, captureMenuViewModel: captureMenuViewModel)
                             .frame(maxHeight: .infinity)
+                            .frame(width: geometry.size.width)
                             .gesture(
                                 DragGesture(minimumDistance: 0)
                                     .onChanged { value in
@@ -65,15 +63,14 @@ struct WebPreviewCaptureMenuView: View {
                                     .path(in: clipRect)
                             }
                         }
-                        
-                        
                     }
                 }
             }
             Spacer()
         }
+        .background(Color.white) // Set the overall background of the VStack to white
+        .cornerRadius(10)
     }
-    
     
     private func updateClipRect(endLocation: CGPoint, bounds: CGSize) {
         let width = 300.0

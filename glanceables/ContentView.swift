@@ -30,8 +30,10 @@ struct ContentView: View {
                 webClipEditorViewModel.loadURLs()
             }
             .fullScreenCover(isPresented: $webClipEditorViewModel.showingURLModal) {
-                WebPreviewCaptureMenuView(viewModel: webClipEditorViewModel, captureMenuViewModel: captureMenuViewModel)
+                WebPreviewCaptureMenuView(viewModel: webClipEditorViewModel, captureMenuViewModel: captureMenuViewModel).padding(20)
+                    .background(Color(.systemGray6))
             }
+            
         }
     }
     
