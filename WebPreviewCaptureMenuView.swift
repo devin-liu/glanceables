@@ -7,20 +7,16 @@ struct WebPreviewCaptureMenuView: View {
     
     var body: some View {
         VStack(alignment: .leading) {
-            NavigationView {
-                HStack {
-                    AddURLFormView(viewModel: viewModel)
-                }
-                .navigationBarTitle(viewModel.isEditing ? "Edit URL" : "New URL")
-                .navigationBarItems(
-                    trailing: HStack {
-                        CaptureModeToggleView(captureModeOn: $captureMenuViewModel.captureModeOn)
-                        RedXButton(action: viewModel.resetModalState)
-                    }
-                )
+            HStack {
+                AddURLFormView(viewModel: viewModel)
             }
+            HStack {
+                CaptureModeToggleView(captureModeOn: $captureMenuViewModel.captureModeOn)
+                RedXButton(action: viewModel.resetModalState)
+            }
+            
             .frame(height: 300)
-            .fixedSize(horizontal: false, vertical: true)            
+            .fixedSize(horizontal: false, vertical: true)
             
             HStack {
                 if !viewModel.isURLValid && !viewModel.urlString.isEmpty {

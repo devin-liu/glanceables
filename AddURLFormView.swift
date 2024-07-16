@@ -5,17 +5,34 @@ struct AddURLFormView: View {
     @State private var debounceWorkItem: DispatchWorkItem?
     
     var body: some View {
-        Form {
-            Section(header: Text(viewModel.isEditing ? "Edit URL" : "Add a new URL")) {
-                TextField("Enter URL here", text: $viewModel.urlString)
-                    .autocapitalization(.none)
-                    .disableAutocorrection(true)
-                    .textInputAutocapitalization(.never)
-                    .onChange(of: viewModel.urlString, {
-                        debounceValidation()
-                    })
-            }            
+        
+        
+        HStack {
+            Image(systemName: "magnifyingglass")
+                .foregroundColor(.gray)
+            
+            TextField("Search or enter website name", text: $viewModel.urlString)
+                .autocapitalization(.none)
+                .disableAutocorrection(true)
+                .textInputAutocapitalization(.never)
+                .onChange(of: viewModel.urlString, {
+                    debounceValidation()
+                })
+            
+            
+            if viewModel.urlString != "" {
+                Button(action: {
+                    viewModel.urlString = ""
+                }) {
+                    Image(systemName: "xmark.circle.fill")
+                        .foregroundColor(.gray)
+                }
+            }
         }
+        .padding(8)
+        .background(Color(.systemGray6))
+        .cornerRadius(10)
+        .padding(.horizontal)
     }
     
     private func debounceValidation() {
@@ -24,5 +41,5 @@ struct AddURLFormView: View {
             viewModel.validateURL()
         }
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.15, execute: debounceWorkItem!)
-    }        
+    }
 }
