@@ -21,9 +21,7 @@ struct AddURLFormView: View {
             
             
             if viewModel.urlString != "" {
-                Button(action: {
-                    viewModel.urlString = ""
-                }) {
+                Button(action: clearTextField) {
                     Image(systemName: "xmark.circle.fill")
                         .foregroundColor(.gray)
                 }
@@ -41,5 +39,9 @@ struct AddURLFormView: View {
             viewModel.validateURL()
         }
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.15, execute: debounceWorkItem!)
+    }
+    
+    private func clearTextField() {
+        viewModel.urlString = ""
     }
 }
