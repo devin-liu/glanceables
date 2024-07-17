@@ -6,9 +6,10 @@ struct WebPreviewCaptureMenuView: View {
     @ObservedObject var captureMenuViewModel: WebPreviewCaptureMenuViewModel
     
     var body: some View {
-        ZStack {            
+        ZStack {
             VStack{
                 AddURLFormView(viewModel: viewModel)
+                    .padding(10)
                 HStack {
                     if !viewModel.isURLValid && !viewModel.urlString.isEmpty {
                         Text("Invalid URL").foregroundColor(.red)
@@ -62,7 +63,7 @@ struct WebPreviewCaptureMenuView: View {
                 }
                 Spacer()
             }
-            .background(Color.white) // Set the overall background of the VStack to white
+            .background(Color(UIColor.secondarySystemBackground))
             .cornerRadius(10)
             // Red 'X' Button Positioned Absolutely at the Top-Right
             VStack {

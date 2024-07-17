@@ -27,13 +27,13 @@ struct AddURLFormView: View {
         }
         .multilineTextAlignment(.center)  // Centers the text inside the TextField
         .frame(width: UIScreen.main.bounds.width * 0.7)
-        .padding(.vertical, 10)  // Adjust vertical padding to increase height
+        .padding(.vertical, 5)  // Adjust vertical padding to increase height
         .padding(.horizontal, 20)  // Adjust horizontal padding for wider spacing
-        .background(Color(.systemGray6))  // Set the background color
+        .background(Color(.systemGray5))  // Set the background color
         .cornerRadius(10)  // Apply corner radius to smooth the edges
         .overlay(
             RoundedRectangle(cornerRadius: 10)
-                .stroke(Color(.systemGray4), lineWidth: 1)  // Apply a light gray border
+                .stroke(Color(.systemGray3), lineWidth: 1)  // Apply a light gray border
         )
     }
     
