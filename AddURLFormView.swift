@@ -26,7 +26,7 @@ struct AddURLFormView: View {
             }
             if !viewModel.isURLValid && !viewModel.urlString.isEmpty {
                 Text("Invalid URL")
-                    .foregroundColor(.red)                             
+                    .foregroundColor(.red)
             }
         }
         .multilineTextAlignment(.center)  // Centers the text inside the TextField

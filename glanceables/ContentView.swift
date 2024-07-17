@@ -32,8 +32,7 @@ struct ContentView: View {
             .fullScreenCover(isPresented: $webClipEditorViewModel.showingURLModal) {
                 WebPreviewCaptureMenuView(viewModel: webClipEditorViewModel, captureMenuViewModel: captureMenuViewModel).padding(20)
                     .background(Color(.systemGray6).opacity(0.85))
-            }
-            
+            }            
         }
     }
     

@@ -10,12 +10,6 @@ struct WebPreviewCaptureMenuView: View {
             VStack{
                 AddURLFormView(viewModel: viewModel)
                     .padding(10)
-                HStack {
-                    SaveButtonView {
-                        viewModel.saveURL(with: viewModel.screenShot)
-                    }
-                    
-                }
                 
                 if let screenshot = $viewModel.screenShot.wrappedValue, captureMenuViewModel.showPreview {
                     Image(uiImage: screenshot)

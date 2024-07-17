@@ -15,18 +15,14 @@ struct CaptureRectangleView: View {
                             .frame(width: clipRect.width, height: clipRect.height)
                             .position(x: clipRect.midX, y: clipRect.midY)
                     }else{
-                        //                        SaveButtonView {
-                        //                            viewModel.saveURL(with: viewModel.screenShot)
-                        //                        }
                         Rectangle()
                             .stroke(style: StrokeStyle(lineWidth: 2, lineCap: .round, lineJoin: .round, dash: [10, 5]))
                             .frame(width: clipRect.width, height: clipRect.height)
-                        //                            .position(x: clipRect.midX, y: clipRect.midY)
                             .overlay(
                                 SaveButtonView {
                                     viewModel.saveURL(with: viewModel.screenShot)
                                 }
-                                    .offset(x: 10, y: 10)
+                                    .offset(x: -10, y: -65)
                                 , alignment: .topTrailing
                             )
                             .position(x: clipRect.midX, y: clipRect.midY)
