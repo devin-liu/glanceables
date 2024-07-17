@@ -7,17 +7,29 @@ struct CaptureRectangleView: View {
     var body: some View {
         ZStack {
             if captureMenuViewModel.dragEnded {
-                Rectangle()
-                    .fill(Color.gray.opacity(0.5))
+                // Gray overlay
+                GeometryReader { geometry in
+                    Path { path in
+                        // Full screen rectangle
+                        path.addRect(CGRect(origin: .zero, size: geometry.size))
+                        
+                        // Subtract the clip rectangle if it exists
+                        if let clipRect = viewModel.currentClipRect {
+                            path.addRect(clipRect)
+                        }
+                    }
+                    .fill(Color.gray.opacity(0.5), style: FillStyle(eoFill: true))
+                    
                     .edgesIgnoringSafeArea(.all)
                     .allowsHitTesting(false)
+                }
             }
             if captureMenuViewModel.captureModeOn {
                 if let clipRect = viewModel.currentClipRect {
                     if captureMenuViewModel.dragging {
                         Rectangle()
                             .stroke(style: StrokeStyle(lineWidth: 2, lineCap: .round, lineJoin: .round, dash: [10, 5]))
-                            .background(Color.black.opacity(0.1))
+                        
                             .frame(width: clipRect.width, height: clipRect.height)
                             .position(x: clipRect.midX, y: clipRect.midY)
                     }else{
