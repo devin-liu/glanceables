@@ -29,16 +29,21 @@ struct WebPreviewCaptureMenuView: View {
                                             captureMenuViewModel.startLocation = captureMenuViewModel.startLocation ?? value.location
                                             captureMenuViewModel.endLocation = value.location
                                             captureMenuViewModel.dragging = true
+                                            captureMenuViewModel.dragEnded = false
                                             updateClipRect(endLocation: value.location, bounds: geometry.size)
                                         }
                                         .onEnded { _ in
                                             captureMenuViewModel.dragging = false
+                                            captureMenuViewModel.dragEnded = true
+                                            
                                             //                                        showPreview = true
                                         }
                                 )
                             CaptureRectangleView(captureMenuViewModel: captureMenuViewModel, viewModel: viewModel)
                         }
+                        
                     }
+                    
                 }
                 Spacer()
             }

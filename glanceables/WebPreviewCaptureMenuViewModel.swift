@@ -8,6 +8,7 @@ class WebPreviewCaptureMenuViewModel: ObservableObject {
     @Published var startLocation: CGPoint? = nil
     @Published var endLocation: CGPoint? = nil
     @Published var dragging: Bool = false
+    @Published var dragEnded: Bool = false
     @Published var showPreview: Bool = false
     @Published var captureModeOn: Bool = true
     

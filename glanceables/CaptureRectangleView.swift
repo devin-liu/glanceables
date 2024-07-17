@@ -6,6 +6,12 @@ struct CaptureRectangleView: View {
     
     var body: some View {
         ZStack {
+            if captureMenuViewModel.dragEnded {
+                Rectangle()
+                    .fill(Color.gray.opacity(0.5))
+                    .edgesIgnoringSafeArea(.all)
+                    .allowsHitTesting(false)
+            }
             if captureMenuViewModel.captureModeOn {
                 if let clipRect = viewModel.currentClipRect {
                     if captureMenuViewModel.dragging {
