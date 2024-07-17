@@ -10,10 +10,10 @@ struct WebPreviewCaptureMenuView: View {
             VStack{
                 AddURLFormView(viewModel: viewModel)
                     .padding(10)
-                HStack {                    
-                    Button("Save") {
+                HStack {
+                    SaveButtonView {
                         viewModel.saveURL(with: viewModel.screenShot)
-                    }.frame(width: 80, height: 40)
+                    }
                     
                 }
                 
