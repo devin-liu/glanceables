@@ -40,6 +40,11 @@ struct AddURLFormView: View {
             RoundedRectangle(cornerRadius: 10)
                 .stroke(Color(.systemGray3), lineWidth: 1)  // Apply a light gray border
         )
+        .onAppear {
+            if !viewModel.urlString.isEmpty {
+                debounceValidation()
+            }
+        }
     }
     
     private func debounceValidation() {
