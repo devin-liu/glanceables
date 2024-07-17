@@ -10,10 +10,7 @@ struct WebPreviewCaptureMenuView: View {
             VStack{
                 AddURLFormView(viewModel: viewModel)
                     .padding(10)
-                HStack {
-                    if !viewModel.isURLValid && !viewModel.urlString.isEmpty {
-                        Text("Invalid URL").foregroundColor(.red)
-                    }
+                HStack {                    
                     Button("Save") {
                         viewModel.saveURL(with: viewModel.screenShot)
                     }.frame(width: 80, height: 40)

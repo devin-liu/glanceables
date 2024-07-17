@@ -24,6 +24,10 @@ struct AddURLFormView: View {
                 Image(systemName: "magnifyingglass")
                     .foregroundColor(.gray)
             }
+            if !viewModel.isURLValid && !viewModel.urlString.isEmpty {
+                Text("Invalid URL")
+                    .foregroundColor(.red)                             
+            }
         }
         .multilineTextAlignment(.center)  // Centers the text inside the TextField
         .frame(width: UIScreen.main.bounds.width * 0.7)
