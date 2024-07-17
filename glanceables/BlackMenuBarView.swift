@@ -3,7 +3,7 @@ import SwiftUI
 struct BlackMenuBarView: View {
     @State private var searchText: String = ""
     @Binding var isShowingModal: Bool  // Use this Binding to control modal visibility from outside
-
+    
     var body: some View {
         HStack {
             Spacer()
@@ -22,12 +22,12 @@ struct BlackMenuBarView: View {
 
 struct SearchBar: View {
     @Binding var text: String
-
+    
     var body: some View {
         HStack {
             Image(systemName: "magnifyingglass")
                 .foregroundColor(.gray)
-
+            
             TextField("Search", text: $text)
                 .foregroundColor(.white)
                 .textFieldStyle(PlainTextFieldStyle())
@@ -40,7 +40,7 @@ struct SearchBar: View {
 
 struct ParentView: View {
     @State private var showingAddURLModal = false
-
+    
     var body: some View {
         BlackMenuBarView(isShowingModal: $showingAddURLModal)
             .frame(maxHeight: .infinity, alignment: .top)

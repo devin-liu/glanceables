@@ -85,3 +85,19 @@ struct WebPreviewCaptureMenuView: View {
         viewModel.currentClipRect = CGRect(x: minX, y: minY, width: width, height: height)
     }
 }
+
+struct WebPreviewCaptureMenuView_Previews: PreviewProvider {
+    static var previewViewModel: WebClipEditorViewModel = {
+        let model = WebClipEditorViewModel()
+        model.urlString = "https://news.ycombinator.com/"  // Set the URL string here
+        model.validateURL()
+        return model
+    }()
+    static var previews: some View {
+        WebPreviewCaptureMenuView(
+            viewModel: previewViewModel,
+            captureMenuViewModel: WebPreviewCaptureMenuViewModel()
+        )
+    }
+}
+
