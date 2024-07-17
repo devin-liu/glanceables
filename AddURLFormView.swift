@@ -12,6 +12,7 @@ struct AddURLFormView: View {
                 .textInputAutocapitalization(.never)
                 .onChange(of: viewModel.urlString, {
                     debounceValidation()
+                    viewModel.showValidationError = false
                 })
             
             if viewModel.urlString != "" {
@@ -24,7 +25,7 @@ struct AddURLFormView: View {
                 Image(systemName: "magnifyingglass")
                     .foregroundColor(.gray)
             }
-            if !viewModel.isURLValid && !viewModel.urlString.isEmpty {
+            if !viewModel.isURLValid && viewModel.showValidationError && !viewModel.urlString.isEmpty {
                 Text("Invalid URL")
                     .foregroundColor(.red)
             }
@@ -47,6 +48,7 @@ struct AddURLFormView: View {
             viewModel.validateURL()
         }
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.15, execute: debounceWorkItem!)
+        viewModel.showValidationError = true
     }
     
     private func clearTextField() {

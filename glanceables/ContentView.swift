@@ -17,7 +17,7 @@ struct ContentView: View {
                         .foregroundColor(Color.black)
                 }
                 LazyVGrid(columns: [GridItem(.adaptive(minimum: 300))]) {
-                    if webClipEditorViewModel.urls.isEmpty {
+                    if webClipEditorViewModel.webClips.isEmpty {
                         emptyStateView
                     } else {
                         urlGrid
@@ -32,7 +32,7 @@ struct ContentView: View {
             .fullScreenCover(isPresented: $webClipEditorViewModel.showingURLModal) {
                 WebPreviewCaptureMenuView(viewModel: webClipEditorViewModel, captureMenuViewModel: captureMenuViewModel).padding(20)
                     .background(Color(.systemGray6).opacity(0.85))
-            }            
+            }
         }
     }
     
@@ -47,13 +47,13 @@ struct ContentView: View {
     }
     
     var urlGrid: some View {
-        ForEach(webClipEditorViewModel.urls) { item in
+        ForEach(webClipEditorViewModel.webClips) { item in
             WebGridSingleSnapshotView(id: item.id)
                 .onDrag {
                     self.draggedItem = item  // Ensure draggedItem is a @State or similar to hold the state
                     return NSItemProvider(object: item.url.absoluteString as NSString)
                 }
-                .onDrop(of: [UTType.text], delegate: DropViewDelegate(item: item, viewModel: $webClipEditorViewModel.urls, draggedItem: $draggedItem))
+                .onDrop(of: [UTType.text], delegate: DropViewDelegate(item: item, viewModel: $webClipEditorViewModel.webClips, draggedItem: $draggedItem))
             
                 .contextMenu {
                     Button("Edit") {

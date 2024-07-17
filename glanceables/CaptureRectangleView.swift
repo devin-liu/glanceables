@@ -25,28 +25,32 @@ struct CaptureRectangleView: View {
                 }
             }
             if captureMenuViewModel.captureModeOn {
-                if let clipRect = viewModel.currentClipRect {
-                    if captureMenuViewModel.dragging {
-                        Rectangle()
-                            .stroke(style: StrokeStyle(lineWidth: 2, lineCap: .round, lineJoin: .round, dash: [10, 5]))
-                        
-                            .frame(width: clipRect.width, height: clipRect.height)
-                            .position(x: clipRect.midX, y: clipRect.midY)
-                    }else{
-                        Rectangle()
-                            .stroke(style: StrokeStyle(lineWidth: 2, lineCap: .round, lineJoin: .round, dash: [10, 5]))
-                            .frame(width: clipRect.width, height: clipRect.height)
-                            .overlay(
-                                SaveButtonView {
-                                    viewModel.saveURL(with: viewModel.screenShot)
-                                }
-                                    .offset(x: -10, y: -65)
-                                , alignment: .topTrailing
-                            )
-                            .position(x: clipRect.midX, y: clipRect.midY)
-                    }
-                }
+                captureModeContent                
             }
+        }
+    }
+    
+    
+    @ViewBuilder
+    private var captureModeContent: some View {
+        if let clipRect = viewModel.currentClipRect {
+            Rectangle()
+                .stroke(style: StrokeStyle(lineWidth: 2, lineCap: .round, lineJoin: .round, dash: [10, 5]))
+                .frame(width: clipRect.width, height: clipRect.height)
+                .overlay(saveButtonOverlay, alignment: .topTrailing)
+                .position(x: clipRect.midX, y: clipRect.midY)
+        }
+    }
+    
+    @ViewBuilder
+    private var saveButtonOverlay: some View {
+        if captureMenuViewModel.dragEnded {
+            SaveButtonView {
+                viewModel.saveURL(with: viewModel.screenShot)
+            }
+            .offset(x: -10, y: -65)
+        } else {
+            EmptyView()
         }
     }
 }
@@ -75,3 +79,5 @@ struct CaptureRectangleView_Previews: PreviewProvider {
         }
     }
 }
+
+

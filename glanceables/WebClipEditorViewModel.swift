@@ -4,13 +4,14 @@ import SwiftUI
 class WebClipEditorViewModel: ObservableObject {
     static let shared = WebClipEditorViewModel()  // Singleton instance
     @Published var showingURLModal = false
-    @Published var urls: [WebClip] = []
+    @Published var webClips: [WebClip] = []
     @Published var urlString = ""
     @Published var validURL:URL?
     @Published var isEditing = false
     @Published var selectedURLIndex: Int? = nil
     @Published var currentClipRect: CGRect?
     @Published var isURLValid = true
+    @Published var showValidationError = false
     @Published var originalSize: CGSize?
     @Published var pageTitle: String?
     @Published var screenShot: UIImage?
@@ -20,7 +21,7 @@ class WebClipEditorViewModel: ObservableObject {
     
     // Add a computed property to access a specific WebClip by ID
     func webClip(withId id: UUID) -> WebClip? {
-        return urls.first(where: { $0.id == id })
+        return webClips.first(where: { $0.id == id })
     }
     
     func imageForWebClip(withId id: UUID) -> UIImage? {
@@ -45,11 +46,11 @@ class WebClipEditorViewModel: ObservableObject {
     }
     
     func loadURLs() {
-        urls = userDefaultsViewModel.loadWebViewItems()
+        webClips = userDefaultsViewModel.loadWebViewItems()
     }
     
     func saveURLs() {
-        userDefaultsViewModel.saveWebViewItems(urls)
+        userDefaultsViewModel.saveWebViewItems(webClips)
     }
     
     func validateURL() {
@@ -64,7 +65,7 @@ class WebClipEditorViewModel: ObservableObject {
         
         screenshotPath = screenshot.flatMap(ScreenshotUtils.saveScreenshotToLocalDirectory)
         let newWebClip = WebClip(
-            id: isEditing && selectedURLIndex != nil ? urls[selectedURLIndex!].id : UUID(),
+            id: isEditing && selectedURLIndex != nil ? webClips[selectedURLIndex!].id : UUID(),
             url: validURL,
             clipRect: currentClipRect,
             originalSize: originalSize,
@@ -73,22 +74,22 @@ class WebClipEditorViewModel: ObservableObject {
         )
         
         if isEditing, let index = selectedURLIndex {
-            urls[index] = newWebClip
+            webClips[index] = newWebClip
         } else {
-            urls.append(newWebClip)
+            webClips.append(newWebClip)
         }
         saveURLs()
         resetModalState()
     }
     
     func updateWebClip(withId id: UUID, newURL: URL, newClipRect: CGRect?, newScreenshotPath: String?, newPageTitle: String?) {
-        guard let index = urls.firstIndex(where: { $0.id == id }) else { return }
-        var webClip = urls[index]        
+        guard let index = webClips.firstIndex(where: { $0.id == id }) else { return }
+        var webClip = webClips[index]
         webClip.url = newURL
         webClip.clipRect = newClipRect
         webClip.screenshotPath = newScreenshotPath
         webClip.pageTitle = newPageTitle
-        urls[index] = webClip
+        webClips[index] = webClip
         saveURLs()
     }
     
@@ -102,9 +103,9 @@ class WebClipEditorViewModel: ObservableObject {
     }
     
     func openEditForItem(item: WebClip) {
-        if let index = urls.firstIndex(where: { $0.id == item.id }) {
+        if let index = webClips.firstIndex(where: { $0.id == item.id }) {
             selectedURLIndex = index
-            urlString = urls[index].url.absoluteString
+            urlString = webClips[index].url.absoluteString
             isEditing = true
             showingURLModal = true
         }
