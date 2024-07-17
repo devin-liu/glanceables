@@ -45,19 +45,7 @@ struct WebPreviewCaptureMenuView: View {
                                             //                                        showPreview = true
                                         }
                                 )
-                            if captureMenuViewModel.captureModeOn {
-                                if let clipRect = viewModel.currentClipRect {
-                                    if captureMenuViewModel.dragging {
-                                        Rectangle()
-                                            .stroke(style: StrokeStyle(lineWidth: 2, lineCap: .round, lineJoin: .round, dash: [10, 5]))
-                                            .path(in: clipRect)
-                                            .background(Color.black.opacity(0.1))
-                                    }
-                                    Rectangle()
-                                        .stroke(style: StrokeStyle(lineWidth: 1, lineCap: .round, lineJoin: .round, dash: [10, 5]))
-                                        .path(in: clipRect)
-                                }
-                            }
+                            CaptureRectangleView(captureMenuViewModel: captureMenuViewModel, viewModel: viewModel)
                         }
                     }
                 }
@@ -76,8 +64,6 @@ struct WebPreviewCaptureMenuView: View {
                 Spacer() // Push everything to the top
             }
         }
-        
-        
     }
     
     private func updateClipRect(endLocation: CGPoint, bounds: CGSize) {
