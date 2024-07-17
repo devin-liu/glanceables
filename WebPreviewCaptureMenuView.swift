@@ -11,7 +11,6 @@ struct WebPreviewCaptureMenuView: View {
                 AddURLFormView(viewModel: viewModel)
                 RedXButton(action: viewModel.resetModalState)
             }
-            .background(Color.white)
             .cornerRadius(10)
             .padding(10)
             

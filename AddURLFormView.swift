@@ -6,11 +6,6 @@ struct AddURLFormView: View {
     
     var body: some View {
         HStack {
-            Image(systemName: "magnifyingglass")
-                .foregroundColor(.gray)
-                .padding(.leading, 10) // Slight padding to align with the left edge
-            
-            
             TextField("Search or enter website name", text: $viewModel.urlString)
                 .autocapitalization(.none)
                 .disableAutocorrection(true)
@@ -25,12 +20,21 @@ struct AddURLFormView: View {
                         .foregroundColor(.gray)
                 }
                 .padding(.trailing, 10) // Slight padding before the right edge
+            }else{
+                Image(systemName: "magnifyingglass")
+                    .foregroundColor(.gray)
             }
         }
-        .padding(.vertical, 8)
-        .background(Color(.systemGray6))
-        .cornerRadius(10)
-        .padding(.horizontal, 20) // Adjust this to ensure it fits well within its parent view
+        .multilineTextAlignment(.center)  // Centers the text inside the TextField
+        .frame(width: UIScreen.main.bounds.width * 0.7)
+        .padding(.vertical, 10)  // Adjust vertical padding to increase height
+        .padding(.horizontal, 20)  // Adjust horizontal padding for wider spacing
+        .background(Color(.systemGray6))  // Set the background color
+        .cornerRadius(10)  // Apply corner radius to smooth the edges
+        .overlay(
+            RoundedRectangle(cornerRadius: 10)
+                .stroke(Color(.systemGray4), lineWidth: 1)  // Apply a light gray border
+        )
     }
     
     private func debounceValidation() {
@@ -43,5 +47,17 @@ struct AddURLFormView: View {
     
     private func clearTextField() {
         viewModel.urlString = ""
+    }
+}
+
+struct AddURLFormView_Previews: PreviewProvider {
+    static var previews: some View {
+        VStack{
+            AddURLFormView(viewModel: WebClipEditorViewModel())
+                .previewLayout(.sizeThatFits)
+                .padding()
+            
+            Spacer()
+        }
     }
 }
