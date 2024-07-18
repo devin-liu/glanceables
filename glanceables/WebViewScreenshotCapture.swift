@@ -12,7 +12,7 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
         webView.scrollView.delegate = context.coordinator
         
         configureMessageHandler(webView: webView, contentController: webView.configuration.userContentController, context: context)
-        loadJavaScript(webView: webView)
+        JavaScriptLoader.loadJavaScript(webView: webView, resourceName: "captureElements", extensionType: "js")
         injectSelectionScript(webView: webView)
         injectCaptureElementsScript(webView: webView)
         
@@ -20,19 +20,7 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
         context.coordinator.webView = webView
         
         return webView
-    }
-    
-    func loadJavaScript(webView: WKWebView) {
-        guard let scriptURL = Bundle.main.url(forResource: "captureElements", withExtension: "js"),
-              let scriptContent = try? String(contentsOf: scriptURL) else {
-            print("Failed to load JavaScript file")
-            return
-        }
-        
-        let userScript = WKUserScript(source: scriptContent, injectionTime: .atDocumentStart, forMainFrameOnly: false)
-        webView.configuration.userContentController.addUserScript(userScript)
-    }
-    
+    }    
     
     func updateUIView(_ webView: WKWebView, context: Context) {
         // First, check if webView.url is nil

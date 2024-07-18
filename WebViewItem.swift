@@ -10,6 +10,7 @@ struct WebClip: Identifiable, Equatable {
     var scrollY: Double?
     var pageTitle: String?
     var capturedElements: [CapturedElement]?
+    var htmlElements: [HTMLElement]?
 
     static func ==(lhs: WebClip, rhs: WebClip) -> Bool {
         return lhs.id == rhs.id && lhs.url == rhs.url

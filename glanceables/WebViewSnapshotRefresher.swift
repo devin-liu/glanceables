@@ -15,7 +15,10 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
         let webView = WKWebView()
         webView.navigationDelegate = context.coordinator
         
-        context.coordinator.webView = webView
+        configureMessageHandler(webView: webView, contentController: webView.configuration.userContentController, context: context)
+        JavaScriptLoader.loadJavaScript(webView: webView, resourceName: "captureElements", extensionType: "js")
+        injectGetElementsFromSelectorsScript(webView: webView)
+        
         
         // Subscribe to the reload trigger
         context.coordinator.reloadSubscription = reloadTrigger.sink {
@@ -24,6 +27,8 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
                 context.coordinator.captureScreenshot()
             }
         }
+        
+        context.coordinator.webView = webView
         
         return webView
     }
@@ -42,7 +47,35 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
         Coordinator(self)
     }
     
-    class Coordinator: NSObject, WKNavigationDelegate {
+    
+    private func configureMessageHandler(webView: WKWebView, contentController: WKUserContentController, context: Context) {
+        contentController.add(context.coordinator, name: "elementsFromSelectorsHandler")
+    }
+    
+    private func injectGetElementsFromSelectorsScript(webView: WKWebView){        
+        print("capturedElements", self.item?.capturedElements)
+        guard let firstElement = self.item?.capturedElements?.first else { return }
+        let elementSelector = firstElement.selector
+        
+        print("elementSelector", elementSelector)
+        
+        let jsCode = """
+                    window.webkit.messageHandlers.elementsFromSelectorsHandler.postMessage("hi there");
+        document.addEventListener('DOMContentLoaded', function(e) {
+            const elements = document.querySelectorAll('\(elementSelector)');
+            const selectors = Array.from(elements).map(element => {
+                return {selector: '\(elementSelector)', rect: element.getBoundingClientRect()};
+            });
+            window.webkit.messageHandlers.elementsFromSelectorsHandler.postMessage(JSON.stringify(selectors));
+        });
+        """
+        
+        webView.configuration.userContentController.addUserScript(WKUserScript(source: jsCode, injectionTime: .atDocumentStart, forMainFrameOnly: false))
+    }
+    
+    
+    
+    class Coordinator: NSObject, WKNavigationDelegate, WKScriptMessageHandler {
         var parent: WebViewSnapshotRefresher
         var webView: WKWebView?
         var reloadSubscription: AnyCancellable?
@@ -100,6 +133,43 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
                     print("Error while trying to scroll: \(error.localizedDescription)")
                 }
             })
+        }
+        
+        func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
+            if message.name == "elementsFromSelectorsHandler", let messageBody = message.body as? String {
+                //                TODO:: Debug why this is not being hit
+                print("elementsFromSelectorsHandler")
+                parseElementsFromSelectors(messageBody)
+            }
+            
+        }
+        
+        func parseElementsFromSelectors(_ jsonString: String) {
+            guard let data = jsonString.data(using: .utf8) else {
+                print("Error: Cannot create data from jsonString")
+                return
+            }
+            
+            do {
+                let elements = try JSONDecoder().decode([HTMLElement].self, from: data)
+                processElements(elements)
+            } catch {
+                print("Error: \(error)")
+            }
+        }
+        
+        
+        func processElements(_ elements: [HTMLElement]) {
+            print("processElements ", elements)
+            LlamaAPIManager.shared.interpretChanges(htmlElements: elements) { result in
+                switch result {
+                case .success(let filename):
+                    print("Generated filename: \(filename)")
+                    // Do something with the generated filename, e.g., update UI or model
+                case .failure(let error):
+                    print("Error interpreting changes: \(error.localizedDescription)")
+                }
+            }
         }
         
         func captureScreenshot() {
