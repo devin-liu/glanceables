@@ -7,33 +7,20 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
     let id: UUID
     var reloadTrigger: PassthroughSubject<Void, Never> // Add a reload trigger
     
-    private var item: WebClip? {
+    var item: WebClip? {
         viewModel.webClip(withId: id)
     }
     
     func makeUIView(context: Context) -> WKWebView {
         let webView = WKWebView()
         webView.navigationDelegate = context.coordinator
+        webView.uiDelegate = context.coordinator
         
         configureMessageHandler(webView: webView, contentController: webView.configuration.userContentController, context: context)
         JavaScriptLoader.loadJavaScript(webView: webView, resourceName: "captureElements", extensionType: "js")
-        injectGetElementsFromSelectorsScript(webView: webView)
-        
-        
-        // Subscribe to the reload trigger
-        context.coordinator.reloadSubscription = reloadTrigger.sink {
-            webView.reload()
-            DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
-                context.coordinator.captureScreenshot()
-            }
-        }
         
         context.coordinator.webView = webView
         
-        return webView
-    }
-    
-    func updateUIView(_ webView: WKWebView, context: Context) {
         if let webClip = viewModel.webClip(withId: id) {
             let newURLString = webClip.url.absoluteString
             if webView.url?.absoluteString != newURLString {
@@ -41,7 +28,21 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
                 webView.load(request)
             }
         }
+        
+        return webView
     }
+    
+    func updateUIView(_ webView: WKWebView, context: Context) {
+//        if let webClip = viewModel.webClip(withId: id) {
+//            let newURLString = webClip.url.absoluteString
+//            if webView.url?.absoluteString != newURLString {
+//                let request = URLRequest(url: webClip.url)
+//                webView.load(request)
+//            }
+//        }
+    }
+    
+    
     
     func makeCoordinator() -> Coordinator {
         Coordinator(self)
@@ -52,27 +53,9 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
         contentController.add(context.coordinator, name: "elementsFromSelectorsHandler")
     }
     
-    private func injectGetElementsFromSelectorsScript(webView: WKWebView){                
-        guard let firstElement = self.item?.capturedElements?.first else { return }
-        let elementSelector = firstElement.selector
-        
-        let jsCode = """
-                    window.webkit.messageHandlers.elementsFromSelectorsHandler.postMessage("hi there");
-        document.addEventListener('DOMContentLoaded', function(e) {
-            const elements = document.querySelectorAll('\(elementSelector)');
-            const selectors = Array.from(elements).map(element => {
-                return {selector: '\(elementSelector)', rect: element.getBoundingClientRect()};
-            });
-            window.webkit.messageHandlers.elementsFromSelectorsHandler.postMessage(JSON.stringify(selectors));
-        });
-        """
-        
-        webView.configuration.userContentController.addUserScript(WKUserScript(source: jsCode, injectionTime: .atDocumentStart, forMainFrameOnly: false))
-    }
     
     
-    
-    class Coordinator: NSObject, WKNavigationDelegate, WKScriptMessageHandler {
+    class Coordinator: NSObject, WKNavigationDelegate, WKUIDelegate, UIScrollViewDelegate, WKScriptMessageHandler {
         var parent: WebViewSnapshotRefresher
         var webView: WKWebView?
         var reloadSubscription: AnyCancellable?
@@ -100,7 +83,12 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
             reloadSubscription?.cancel()
         }
         
+        func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
+            print("Started loading: \(String(describing: webView.url))")
+        }
+        
         func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+            
             let simplifiedPageTitle = URLUtilities.simplifyPageTitle(webView.title ?? "No Title")
             self.pageTitle = simplifiedPageTitle
             
@@ -108,16 +96,53 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
                 self.restoreScrollPosition(capturedElements, in: webView)
             }
             
-            DispatchQueue.main.asyncAfter(deadline: .now() + 5.1) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.1) {
                 // Restore scroll positions based on captured elements
                 if let capturedElements = self.parent.item?.capturedElements  {
                     self.restoreScrollPosition(capturedElements, in: webView)
                 }
                 // Capture a screenshot
                 self.screenshotTrigger.send(())
-                
             }
+                        
+                injectGetElementsFromSelectorsScript(webView: webView)
+                // Subscribe to the reload trigger
+                self.reloadSubscription = self.parent.reloadTrigger.sink {
+                    webView.reload()
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                        self.captureScreenshot()
+                    }
+                }
+        }
+        
+        func injectGetElementsFromSelectorsScript(webView: WKWebView){
+            guard let firstElement = self.parent.item?.capturedElements?.first else { return }
+            let elementSelector = firstElement.selector
+            let jsCode = """
+            function restoreElements() {
+                try {
+                    const elementSelector = "\\\(elementSelector)";
+                    const elements = document.querySelectorAll(elementSelector);
+                    const selectors = Array.from(elements).map(element => {
+                        return {selector: elementSelector, text: element.innerText, outerHTML: element.outerHTML};
+                    });
+                    
+                                window.webkit.messageHandlers.elementsFromSelectorsHandler.postMessage(JSON.stringify(selectors));
+                } catch (error) {
+                    console.error('Error in script:', error);
+                
+                                window.webkit.messageHandlers.elementsFromSelectorsHandler.postMessage('Error: ' + error.message);
             
+                }
+            };
+            setTimeout(restoreElements, 1000)
+            """
+            
+            webView.evaluateJavaScript(jsCode) { (result, error) in
+                if let error = error {
+                    print("JavaScript execution error: \(error.localizedDescription)")
+                }
+            }
         }
         
         // Method to restore the scroll position for captured elements
@@ -134,11 +159,8 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
         
         func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
             if message.name == "elementsFromSelectorsHandler", let messageBody = message.body as? String {
-                //                TODO:: Debug why this is not being hit
-                print("elementsFromSelectorsHandler")
                 parseElementsFromSelectors(messageBody)
             }
-            
         }
         
         func parseElementsFromSelectors(_ jsonString: String) {
@@ -157,8 +179,7 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
         
         
         func processElements(_ elements: [HTMLElement]) {
-            print("processElements ", elements)
-            LlamaAPIManager.shared.interpretChanges(htmlElements: elements) { result in
+            LlamaAPIManager.shared.analyzeHTML(htmlElements: elements) { result in
                 switch result {
                 case .success(let filename):
                     print("Generated filename: \(filename)")
@@ -172,6 +193,7 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
         func captureScreenshot() {
             guard let webView = webView else { return }
             guard let item = self.parent.item else { return }
+            
             
             let configuration = WKSnapshotConfiguration()
             if let clipRect = item.clipRect {

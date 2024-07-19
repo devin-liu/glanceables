@@ -16,8 +16,6 @@ struct CapturedElement: Codable {
 
 
 struct HTMLElement: Codable {
-    let innerHTML: String
     let outerHTML: String
-    let tagName: String
-    let attributes: [String: String]
+    
 }
