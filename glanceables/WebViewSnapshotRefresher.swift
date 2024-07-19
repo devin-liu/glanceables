@@ -32,13 +32,13 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
     }
     
     func updateUIView(_ webView: WKWebView, context: Context) {
-        if let webClip = viewModel.webClip(withId: id) {
-            let newURLString = webClip.url.absoluteString
-            if webView.url?.absoluteString != newURLString {
-                let request = URLRequest(url: webClip.url)
-                webView.load(request)
-            }
-        }
+        //        if let webClip = viewModel.webClip(withId: id) {
+        //            let newURLString = webClip.url.absoluteString
+        //            if webView.url?.absoluteString != newURLString {
+        //                let request = URLRequest(url: webClip.url)
+        //                webView.load(request)
+        //            }
+        //        }
     }
     
     
@@ -54,8 +54,10 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
     
     
     func injectGetElementsFromSelectorsScript(webView: WKWebView) {
-        guard let lastElement = self.item?.capturedElements?.last else { return }
-        let elementSelector = lastElement.selector
+        //        guard let lastElement = self.item?.capturedElements?.last else { return }
+        //        let elementSelector = lastElement.selector
+        guard let firstElement = self.item?.capturedElements?.first else { return }
+        let elementSelector = firstElement.selector
         let jsCode = """
         (function() {
             function restoreElements() {

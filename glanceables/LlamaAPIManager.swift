@@ -101,7 +101,7 @@ class LlamaAPIManager: ObservableObject {
                                 print(conciseText)
                                 self.conciseText = conciseText
                             } else {
-                                print("Key 'concise_text' not found or value is not a string")
+                                print("Key 'concise_text' not found or value is not a string", jsonObject)
                             }
                         } else {
                             print("Failed to convert JSON data to dictionary")
