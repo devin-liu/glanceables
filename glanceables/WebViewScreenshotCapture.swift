@@ -197,8 +197,7 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
             }
         }
         
-        func processCapturedElements(_ elements: [CapturedElement]) {
-            print("processCapturedElements ", elements)
+        func processCapturedElements(_ elements: [CapturedElement]) {            
             self.parent.captureMenuViewModel.capturedElements = elements
         }
         

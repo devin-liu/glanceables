@@ -60,7 +60,7 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
         (function() {
             function restoreElements() {
                 try {
-                    const elementSelector = "\\\(elementSelector)";
+                    const elementSelector = "\(elementSelector)";
                     const elements = document.querySelectorAll(elementSelector);
                     const selectors = Array.from(elements).map(element => {
                         return {selector: elementSelector, text: element.innerText, outerHTML: element.outerHTML};
@@ -68,13 +68,13 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
                     
                     window.webkit.messageHandlers.elementsFromSelectorsHandler.postMessage(JSON.stringify(selectors));
                 } catch (error) {
-                    console.error('Error in script:', error);                    
+                    console.error('Error in script:', error);
                     window.webkit.messageHandlers.elementsFromSelectorsHandler.postMessage('Error: ' + error.message);
                 }
             }
         
             function watchForElement() {
-                const elementSelector = "\\\(elementSelector)";
+                const elementSelector = "\(elementSelector)";
                 const observer = new MutationObserver((mutationsList, observer) => {
                     const elements = document.querySelectorAll(elementSelector);
                     if (elements.length > 0) {
@@ -97,7 +97,6 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
         })();
         """
         
-
         webView.configuration.userContentController.addUserScript(WKUserScript(source: jsCode, injectionTime: .atDocumentEnd, forMainFrameOnly: false))
     }
     
@@ -153,11 +152,6 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
                 self.screenshotTrigger.send(())
             }
             
-//            DispatchQueue.main.asyncAfter(deadline: .now() + 1.1) {
-//                self.injectGetElementsFromSelectorsScript(webView: webView)
-//            }
-            
-            
             // Subscribe to the reload trigger
             self.reloadSubscription = self.parent.reloadTrigger.sink {
                 webView.reload()
@@ -201,9 +195,6 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
         
         
         func processElements(_ elements: [HTMLElement]) {
-            if elements.first == nil {
-                print("no elements for ", self.parent.item?.capturedElements?.first?.selector, self.parent.item?.url.absoluteString)
-            }
             self.parent.llamaAPIManager.analyzeHTML(htmlElements: elements) { result in
                 switch result {
                 case .success(let result):
