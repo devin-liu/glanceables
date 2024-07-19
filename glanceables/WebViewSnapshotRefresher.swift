@@ -21,6 +21,7 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
         JavaScriptLoader.loadJavaScript(webView: webView, resourceName: "captureElements", extensionType: "js")
         
         context.coordinator.webView = webView
+        injectGetElementsFromSelectorsScript(webView: webView)
         
         if let webClip = viewModel.webClip(withId: id) {
             let request = URLRequest(url: webClip.url)
@@ -49,6 +50,55 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
     
     private func configureMessageHandler(webView: WKWebView, contentController: WKUserContentController, context: Context) {
         contentController.add(context.coordinator, name: "elementsFromSelectorsHandler")
+    }
+    
+    
+    func injectGetElementsFromSelectorsScript(webView: WKWebView) {
+        guard let lastElement = self.item?.capturedElements?.last else { return }
+        let elementSelector = lastElement.selector
+        let jsCode = """
+        (function() {
+            function restoreElements() {
+                try {
+                    const elementSelector = "\\\(elementSelector)";
+                    const elements = document.querySelectorAll(elementSelector);
+                    const selectors = Array.from(elements).map(element => {
+                        return {selector: elementSelector, text: element.innerText, outerHTML: element.outerHTML};
+                    });
+                    
+                    window.webkit.messageHandlers.elementsFromSelectorsHandler.postMessage(JSON.stringify(selectors));
+                } catch (error) {
+                    console.error('Error in script:', error);                    
+                    window.webkit.messageHandlers.elementsFromSelectorsHandler.postMessage('Error: ' + error.message);
+                }
+            }
+        
+            function watchForElement() {
+                const elementSelector = "\\\(elementSelector)";
+                const observer = new MutationObserver((mutationsList, observer) => {
+                    const elements = document.querySelectorAll(elementSelector);
+                    if (elements.length > 0) {
+                        restoreElements();
+                        observer.disconnect(); // Stop observing once elements are found
+                    }
+                });
+        
+                observer.observe(document.body, { childList: true, subtree: true });
+        
+                // Check if the elements are already present
+                const elements = document.querySelectorAll(elementSelector);
+                if (elements.length > 0) {
+                    restoreElements();
+                    observer.disconnect();
+                }
+            }
+        
+            watchForElement();
+        })();
+        """
+        
+
+        webView.configuration.userContentController.addUserScript(WKUserScript(source: jsCode, injectionTime: .atDocumentEnd, forMainFrameOnly: false))
     }
     
     
@@ -103,9 +153,9 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
                 self.screenshotTrigger.send(())
             }
             
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.1) {
-                self.injectGetElementsFromSelectorsScript(webView: webView)
-            }
+//            DispatchQueue.main.asyncAfter(deadline: .now() + 1.1) {
+//                self.injectGetElementsFromSelectorsScript(webView: webView)
+//            }
             
             
             // Subscribe to the reload trigger
@@ -116,54 +166,6 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
                 }
             }
         }
-        
-        func injectGetElementsFromSelectorsScript(webView: WKWebView) {
-            guard let lastElement = self.parent.item?.capturedElements?.last else { return }
-            let elementSelector = lastElement.selector
-            let jsCode = """
-            (function() {
-                function restoreElements() {
-                    try {
-                        const elementSelector = "\\\(elementSelector)";
-                        const elements = document.querySelectorAll(elementSelector);
-                        const selectors = Array.from(elements).map(element => {
-                            return {selector: elementSelector, text: element.innerText, outerHTML: element.outerHTML};
-                        });
-                        
-                        window.webkit.messageHandlers.elementsFromSelectorsHandler.postMessage(JSON.stringify(selectors));
-                    } catch (error) {
-                        console.error('Error in script:', error);
-                        
-                        window.webkit.messageHandlers.elementsFromSelectorsHandler.postMessage('Error: ' + error.message);
-                    }
-                }
-            
-                function watchForElement() {
-                    const elementSelector = "\\\(elementSelector)";
-                    const observer = new MutationObserver((mutationsList, observer) => {
-                        const elements = document.querySelectorAll(elementSelector);
-                        if (elements.length > 0) {
-                            restoreElements();
-                            observer.disconnect(); // Stop observing once elements are found
-                        }
-                    });
-            
-                    observer.observe(document.body, { childList: true, subtree: true });
-            
-                    // Check if the elements are already present
-                    const elements = document.querySelectorAll(elementSelector);
-                    if (elements.length > 0) {
-                        restoreElements();
-                        observer.disconnect();
-                    }
-                }
-            
-                watchForElement();
-            })();
-            """
-            
-            webView.evaluateJavaScript(jsCode, completionHandler: nil)
-        }      
         
         // Method to restore the scroll position for captured elements
         func restoreScrollPosition(_ elements: [CapturedElement], in webView: WKWebView) {
