@@ -143,7 +143,6 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
                     let centerY = frame.height / 2 - rectHeight / 2
                     self.parent.viewModel.currentClipRect = CGRect(x: centerX, y: centerY, width: rectWidth, height: rectHeight)
                 }
-                
             }
         }
         
@@ -199,6 +198,7 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
         }
         
         func processCapturedElements(_ elements: [CapturedElement]) {
+            print("processCapturedElements ", elements)
             self.parent.captureMenuViewModel.capturedElements = elements
         }
         

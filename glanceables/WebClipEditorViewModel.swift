@@ -15,7 +15,7 @@ class WebClipEditorViewModel: ObservableObject {
     @Published var originalSize: CGSize?
     @Published var pageTitle: String?
     @Published var screenShot: UIImage?
-    @Published var screenshotPath: String?    
+    @Published var screenshotPath: String?
     
     private var userDefaultsViewModel = WebClipUserDefaultsViewModel.shared
     
@@ -60,8 +60,10 @@ class WebClipEditorViewModel: ObservableObject {
     }
     
     
-    func saveURL(with screenshot: UIImage?) {
+    func saveURL(screenshot: UIImage?, capturedElements: [CapturedElement]?) {
         guard isURLValid, let validURL = URL(string: urlString) else { return }
+        
+        print("saveURL ", capturedElements)
         
         screenshotPath = screenshot.flatMap(ScreenshotUtils.saveScreenshotToLocalDirectory)
         let newWebClip = WebClip(
@@ -70,7 +72,8 @@ class WebClipEditorViewModel: ObservableObject {
             clipRect: currentClipRect,
             originalSize: originalSize,
             screenshotPath: screenshotPath ?? "",
-            pageTitle: pageTitle
+            pageTitle: pageTitle,
+            capturedElements: capturedElements
         )
         
         if isEditing, let index = selectedURLIndex {

@@ -46,7 +46,7 @@ struct CaptureRectangleView: View {
     private var saveButtonOverlay: some View {
         if captureMenuViewModel.dragEnded {
             SaveButtonView {
-                viewModel.saveURL(with: viewModel.screenShot)
+                viewModel.saveURL(screenshot: viewModel.screenShot, capturedElements: captureMenuViewModel.capturedElements)
             }
             .offset(x: -10, y: -65)
         } else {

@@ -52,12 +52,9 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
         contentController.add(context.coordinator, name: "elementsFromSelectorsHandler")
     }
     
-    private func injectGetElementsFromSelectorsScript(webView: WKWebView){        
-        print("capturedElements", self.item?.capturedElements)
+    private func injectGetElementsFromSelectorsScript(webView: WKWebView){                
         guard let firstElement = self.item?.capturedElements?.first else { return }
         let elementSelector = firstElement.selector
-        
-        print("elementSelector", elementSelector)
         
         let jsCode = """
                     window.webkit.messageHandlers.elementsFromSelectorsHandler.postMessage("hi there");
