@@ -60,15 +60,21 @@ class WebClipEditorViewModel: ObservableObject {
     }
     
     
-    func saveURL(screenshot: UIImage?, capturedElements: [CapturedElement]?) {
-        guard isURLValid, let validURL = URL(string: urlString) else { return }
+    func saveURL(screenshot: UIImage?, capturedElements: [CapturedElement]?, id: UUID? = nil) {
+        guard isURLValid, validURL != nil else { return }
         
-        print("saveURL ", capturedElements)
+        print("saveURL ", validURL)
         
+        // Generate a new UUID if id is nil
+        let newId = id ?? UUID()
+        
+        // Save the screenshot to the local directory and get the path
         screenshotPath = screenshot.flatMap(ScreenshotUtils.saveScreenshotToLocalDirectory)
+        
+        // Create a new WebClip object
         let newWebClip = WebClip(
-            id: isEditing && selectedURLIndex != nil ? webClips[selectedURLIndex!].id : UUID(),
-            url: validURL,
+            id: newId,
+            url: validURL!,
             clipRect: currentClipRect,
             originalSize: originalSize,
             screenshotPath: screenshotPath ?? "",
@@ -76,15 +82,18 @@ class WebClipEditorViewModel: ObservableObject {
             capturedElements: capturedElements
         )
         
+        // Update the webClips array
         if isEditing, let index = selectedURLIndex {
             webClips[index] = newWebClip
         } else {
             webClips.append(newWebClip)
         }
+        
+        // Save the URLs and reset the modal state
         saveURLs()
         resetModalState()
     }
-    
+
     func updateWebClip(withId id: UUID, newURL: URL, newClipRect: CGRect?, newScreenshotPath: String?, newPageTitle: String?) {
         guard let index = webClips.firstIndex(where: { $0.id == id }) else { return }
         var webClip = webClips[index]
@@ -108,7 +117,7 @@ class WebClipEditorViewModel: ObservableObject {
     func openEditForItem(item: WebClip) {
         if let index = webClips.firstIndex(where: { $0.id == item.id }) {
             selectedURLIndex = index
-            urlString = webClips[index].url.absoluteString
+            urlString = webClips[index].url.absoluteURL.absoluteString
             isEditing = true
             showingURLModal = true
         }

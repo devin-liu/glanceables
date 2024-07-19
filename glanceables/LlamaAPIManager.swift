@@ -1,12 +1,11 @@
 import Foundation
 
 // Class for managing interaction with the Llama API
-class LlamaAPIManager: ObservableObject {
-    
-    static let shared = LlamaAPIManager()
+class LlamaAPIManager: ObservableObject {    
     
     @Published var isSending: Bool = false
     @Published var response: String? = nil
+    @Published var conciseText: String? = nil
     
     func analyzeHTML(htmlElements: [HTMLElement], completion: @escaping (Result<String, Error>) -> Void) {
         print("Started analyzing HTML elements")
@@ -99,7 +98,8 @@ class LlamaAPIManager: ObservableObject {
                         if let jsonObject = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
                             // Extract the value for "concise_text"
                             if let conciseText = jsonObject["concise_text"] as? String {
-                                print(conciseText)  // Output the concise text
+                                print(conciseText)
+                                self.conciseText = conciseText
                             } else {
                                 print("Key 'concise_text' not found or value is not a string")
                             }
