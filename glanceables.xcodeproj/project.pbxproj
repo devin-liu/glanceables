@@ -29,6 +29,10 @@
 		038208E22C1BB40400606536 /* WebViewSnapshotRefresher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 038208E12C1BB40400606536 /* WebViewSnapshotRefresher.swift */; };
 		03A868512C4865C900CCB79D /* CaptureRectangleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03A868502C4865C900CCB79D /* CaptureRectangleView.swift */; };
 		03A868532C48692A00CCB79D /* SaveButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03A868522C48692A00CCB79D /* SaveButtonView.swift */; };
+		03A868552C48871000CCB79D /* LlamaAPIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03A868542C48871000CCB79D /* LlamaAPIManager.swift */; };
+		03A868572C48880600CCB79D /* Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03A868562C48880600CCB79D /* Response.swift */; };
+		03A868592C489B3100CCB79D /* JavascriptLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03A868582C489B3100CCB79D /* JavascriptLoader.swift */; };
+		03A8685B2C4B312E00CCB79D /* LlamaResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03A8685A2C4B312E00CCB79D /* LlamaResult.swift */; };
 		03C5DAD12C23A76B0061FA25 /* ScreenshotUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03C5DAD02C23A76B0061FA25 /* ScreenshotUtils.swift */; };
 		03C5DAD32C24F0CF0061FA25 /* URLUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03C5DAD22C24F0CF0061FA25 /* URLUtilities.swift */; };
 		03C5DAD52C2647E20061FA25 /* CaptureModeToggleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03C5DAD42C2647E20061FA25 /* CaptureModeToggleView.swift */; };
@@ -72,6 +76,10 @@
 		038208E12C1BB40400606536 /* WebViewSnapshotRefresher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewSnapshotRefresher.swift; sourceTree = "<group>"; };
 		03A868502C4865C900CCB79D /* CaptureRectangleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CaptureRectangleView.swift; path = glanceables/CaptureRectangleView.swift; sourceTree = "<group>"; };
 		03A868522C48692A00CCB79D /* SaveButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveButtonView.swift; sourceTree = "<group>"; };
+		03A868542C48871000CCB79D /* LlamaAPIManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = LlamaAPIManager.swift; path = glanceables/LlamaAPIManager.swift; sourceTree = "<group>"; };
+		03A868562C48880600CCB79D /* Response.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Response.swift; sourceTree = "<group>"; };
+		03A868582C489B3100CCB79D /* JavascriptLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JavascriptLoader.swift; sourceTree = "<group>"; };
+		03A8685A2C4B312E00CCB79D /* LlamaResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LlamaResult.swift; sourceTree = "<group>"; };
 		03C5DAD02C23A76B0061FA25 /* ScreenshotUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenshotUtils.swift; sourceTree = SOURCE_ROOT; };
 		03C5DAD22C24F0CF0061FA25 /* URLUtilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLUtilities.swift; sourceTree = "<group>"; };
 		03C5DAD42C2647E20061FA25 /* CaptureModeToggleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureModeToggleView.swift; sourceTree = "<group>"; };
@@ -118,6 +126,8 @@
 		0378B85A2C096D850005BAE5 = {
 			isa = PBXGroup;
 			children = (
+				03A868542C48871000CCB79D /* LlamaAPIManager.swift */,
+				03A868562C48880600CCB79D /* Response.swift */,
 				03A868522C48692A00CCB79D /* SaveButtonView.swift */,
 				03A868502C4865C900CCB79D /* CaptureRectangleView.swift */,
 				0378B8652C096D850005BAE5 /* glanceables */,
@@ -144,6 +154,7 @@
 				03C5DAD62C264BE00061FA25 /* RedXButton.swift */,
 				03C5DAD02C23A76B0061FA25 /* ScreenshotUtils.swift */,
 				038208E12C1BB40400606536 /* WebViewSnapshotRefresher.swift */,
+				03A868582C489B3100CCB79D /* JavascriptLoader.swift */,
 				038208DF2C1BB3F400606536 /* WebViewScreenshotCapture.swift */,
 				03C5DAD42C2647E20061FA25 /* CaptureModeToggleView.swift */,
 				036D58E62C3CC8460042D491 /* WebClipUserDefaultsViewModel.swift */,
@@ -152,6 +163,7 @@
 				03778E3E2C35E6FC009CB9A1 /* captureElements.js */,
 				03C5DAD22C24F0CF0061FA25 /* URLUtilities.swift */,
 				030062B32C112BD100B0242D /* WebViewItem.swift */,
+				03A8685A2C4B312E00CCB79D /* LlamaResult.swift */,
 				0300629C2C0D229800B0242D /* BlackMenuBarView.swift */,
 				0300629A2C0D209400B0242D /* UserDefaults.swift */,
 				030062982C0A833200B0242D /* CreateButtonView.swift */,
@@ -287,12 +299,14 @@
 			files = (
 				03553FE32C41F6A800FCB4CC /* WebPreviewCaptureMenuViewModel.swift in Sources */,
 				030062972C0A7F2600B0242D /* HeaderView.swift in Sources */,
+				03A8685B2C4B312E00CCB79D /* LlamaResult.swift in Sources */,
 				03A868512C4865C900CCB79D /* CaptureRectangleView.swift in Sources */,
 				03778E422C36028F009CB9A1 /* CapturedElements.swift in Sources */,
 				0378B8772C096DB00005BAE5 /* WebGridSingleSnapshotView.swift in Sources */,
 				0378B8692C096D850005BAE5 /* ContentView.swift in Sources */,
 				038208E02C1BB3F400606536 /* WebViewScreenshotCapture.swift in Sources */,
 				03C5DAD32C24F0CF0061FA25 /* URLUtilities.swift in Sources */,
+				03A868552C48871000CCB79D /* LlamaAPIManager.swift in Sources */,
 				03C5DAD52C2647E20061FA25 /* CaptureModeToggleView.swift in Sources */,
 				0300629D2C0D229800B0242D /* BlackMenuBarView.swift in Sources */,
 				036D58E52C3C99300042D491 /* WebClipEditorViewModel.swift in Sources */,
@@ -300,6 +314,8 @@
 				036D58E72C3CC8460042D491 /* WebClipUserDefaultsViewModel.swift in Sources */,
 				0300629B2C0D209400B0242D /* UserDefaults.swift in Sources */,
 				03C5DAD72C264BE00061FA25 /* RedXButton.swift in Sources */,
+				03A868572C48880600CCB79D /* Response.swift in Sources */,
+				03A868592C489B3100CCB79D /* JavascriptLoader.swift in Sources */,
 				038208E22C1BB40400606536 /* WebViewSnapshotRefresher.swift in Sources */,
 				03C5DAD92C2A4DB20061FA25 /* AddURLFormView.swift in Sources */,
 				030062A72C0FE8A100B0242D /* WebPreviewCaptureMenuView.swift in Sources */,

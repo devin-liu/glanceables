@@ -35,9 +35,16 @@ class WebClipUserDefaultsViewModel {
         var dict = [String: Any]()
         dict["id"] = item.id.uuidString
         dict["url"] = item.url.absoluteString
-        dict["pageTitle"] = item.pageTitle
-        dict["screenshotPath"] = item.screenshotPath
+        dict["pageTitle"] = item.pageTitle ?? ""
+        dict["screenshotPath"] = item.screenshotPath ?? ""
+        dict["scrollY"] = item.scrollY ?? 0
         
+        // Encode screenshot as Base64 string
+        if let screenshot = item.screenshot, let imageData = screenshot.pngData() {
+            dict["screenshot"] = imageData.base64EncodedString()
+        }
+        
+        // Encode CGRect and CGSize
         if let clipRect = item.clipRect {
             dict["clipRect"] = [
                 "x": clipRect.origin.x,
@@ -54,8 +61,18 @@ class WebClipUserDefaultsViewModel {
             ]
         }
         
+        // Encode CapturedElement and HTMLElement using JSON serialization
+        if let capturedElements = item.capturedElements {
+            dict["capturedElements"] = try? JSONEncoder().encode(capturedElements).base64EncodedString()
+        }
+        
+        if let htmlElements = item.htmlElements {
+            dict["htmlElements"] = try? JSONEncoder().encode(htmlElements).base64EncodedString()
+        }
+        
         return dict
     }
+    
     
     private func decodeWebViewItem(dict: [String: Any]) -> WebClip? {
         guard let idString = dict["id"] as? String,
@@ -65,13 +82,30 @@ class WebClipUserDefaultsViewModel {
             return nil
         }
         
+        let pageTitle = dict["pageTitle"] as? String
+        let screenshotPath = dict["screenshotPath"] as? String
+        let scrollY = dict["scrollY"] as? Double
         let clipRect = decodeRect(dict: dict["clipRect"] as? [String: Any])
         let originalSize = decodeSize(dict: dict["originalSize"] as? [String: Any])
-        let screenshotPath = dict["screenshotPath"] as? String
-        let pageTitle = dict["pageTitle"] as? String
         
-        return WebClip(id: id, url: url, clipRect: clipRect, originalSize: originalSize, screenshotPath: screenshotPath, pageTitle: pageTitle)
+        var screenshot: UIImage?
+        if let screenshotString = dict["screenshot"] as? String, let imageData = Data(base64Encoded: screenshotString) {
+            screenshot = UIImage(data: imageData)
+        }
+        
+        var capturedElements: [CapturedElement]?
+        if let elementsString = dict["capturedElements"] as? String, let elementsData = Data(base64Encoded: elementsString) {
+            capturedElements = try? JSONDecoder().decode([CapturedElement].self, from: elementsData)
+        }
+        
+        var htmlElements: [HTMLElement]?
+        if let elementsString = dict["htmlElements"] as? String, let elementsData = Data(base64Encoded: elementsString) {
+            htmlElements = try? JSONDecoder().decode([HTMLElement].self, from: elementsData)
+        }
+        
+        return WebClip(id: id, url: url, clipRect: clipRect, originalSize: originalSize, screenshotPath: screenshotPath, screenshot: screenshot, scrollY: scrollY, pageTitle: pageTitle, capturedElements: capturedElements, htmlElements: htmlElements)
     }
+    
     
     private func decodeRect(dict: [String: Any]?) -> CGRect? {
         guard let dict = dict,

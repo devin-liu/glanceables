@@ -12,3 +12,10 @@ struct CapturedElement: Codable {
     let relativeLeft: Double
     let selector: String
 }
+
+
+
+struct HTMLElement: Codable {
+    let outerHTML: String
+    
+}

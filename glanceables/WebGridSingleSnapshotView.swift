@@ -25,7 +25,6 @@ struct WebGridSingleSnapshotView: View {
                         .frame(height: 300)
                         .cornerRadius(24)
                 }
-                    
                 
                 ScrollView {
                     if let id = item?.id, let originalSize = item?.originalSize {
@@ -44,6 +43,11 @@ struct WebGridSingleSnapshotView: View {
                 .font(.headline)
                 .lineLimit(1)
                 .truncationMode(.tail)
+                .padding()
+            
+            
+            Text(item?.llamaResult?.conciseText ?? " ")
+                .font(.caption)
                 .padding()
             
             

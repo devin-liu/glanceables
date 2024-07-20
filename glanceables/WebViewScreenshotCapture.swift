@@ -12,7 +12,7 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
         webView.scrollView.delegate = context.coordinator
         
         configureMessageHandler(webView: webView, contentController: webView.configuration.userContentController, context: context)
-        loadJavaScript(webView: webView)
+        JavaScriptLoader.loadJavaScript(webView: webView, resourceName: "captureElements", extensionType: "js")
         injectSelectionScript(webView: webView)
         injectCaptureElementsScript(webView: webView)
         
@@ -21,18 +21,6 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
         
         return webView
     }
-    
-    func loadJavaScript(webView: WKWebView) {
-        guard let scriptURL = Bundle.main.url(forResource: "captureElements", withExtension: "js"),
-              let scriptContent = try? String(contentsOf: scriptURL) else {
-            print("Failed to load JavaScript file")
-            return
-        }
-        
-        let userScript = WKUserScript(source: scriptContent, injectionTime: .atDocumentStart, forMainFrameOnly: false)
-        webView.configuration.userContentController.addUserScript(userScript)
-    }
-    
     
     func updateUIView(_ webView: WKWebView, context: Context) {
         // First, check if webView.url is nil
@@ -55,6 +43,7 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
     private func configureMessageHandler(webView: WKWebView, contentController: WKUserContentController, context: Context) {
         contentController.add(context.coordinator, name: "selectionHandler")
         contentController.add(context.coordinator, name: "capturedElementsHandler")
+        contentController.add(context.coordinator, name: "userStoppedInteracting")
     }
     
     private func injectCaptureElementsScript(webView: WKWebView){
@@ -121,6 +110,7 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
                     selector: selector
                 };
                 window.webkit.messageHandlers.selectionHandler.postMessage(JSON.stringify(data));
+                window.webkit.messageHandlers.userStoppedInteracting.postMessage(null);
             });
         """
         webView.configuration.userContentController.addUserScript(WKUserScript(source: jsString, injectionTime: .atDocumentStart, forMainFrameOnly: false))
@@ -155,26 +145,29 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
                     let centerY = frame.height / 2 - rectHeight / 2
                     self.parent.viewModel.currentClipRect = CGRect(x: centerX, y: centerY, width: rectWidth, height: rectHeight)
                 }
-                
             }
+        }        
+        
+        // Helper function to extract the domain from a hostname
+        func extractDomain(from host: String) -> String? {
+            let components = host.components(separatedBy: ".")
+            guard components.count >= 2 else { return nil }
+            return components.suffix(2).joined(separator: ".")
         }
         
         func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
-            // Extract the host from the current URL
-            let currentHost = self.parent.viewModel.validURL!.host
-            
-            // Extract the host from the navigation request URL
-            if let newUrl = navigationAction.request.url, let newHost = newUrl.host {
+            // Extract the domain from the current URL
+            let currentDomain = self.parent.viewModel.validURL!.host.flatMap(extractDomain)
+            // Extract the domain from the navigation request URL
+            if let newUrl = navigationAction.request.url, let newHost = newUrl.host, let newDomain = extractDomain(from: newHost) {
                 // Update the parent.url only if the domains match
-                if newHost == currentHost {
-                    DispatchQueue.main.async {
-                        self.parent.viewModel.validURL = newUrl
-                    }
+                if newDomain == currentDomain {
+                    self.parent.viewModel.validURL = newUrl
                 } else {
-                    //                    print("Domain mismatch. Current domain: \(currentHost ?? "None"), New domain: \(newHost)")
+                    print("Domain mismatch. Current domain: \(currentDomain ?? "None"), New domain: \(newDomain)")
                 }
             } else {
-                //                print("Invalid or no host found in new URL")
+                print("Invalid or no host found in new URL")
             }
             decisionHandler(.allow)
         }
@@ -192,6 +185,18 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
             
             if message.name == "capturedElementsHandler", let messageBody = message.body as? String {
                 parseCapturedElements(messageBody)
+            }
+            
+            if message.name == "userStoppedInteracting" {
+                // Handle user stop interaction here
+                userDidStopInteracting()
+            }
+            
+        }
+        
+        func userDidStopInteracting() {
+            if let newUrl = self.webView?.url {
+                self.parent.viewModel.validURL = newUrl
             }
             
         }

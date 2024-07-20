@@ -15,7 +15,7 @@ class WebClipEditorViewModel: ObservableObject {
     @Published var originalSize: CGSize?
     @Published var pageTitle: String?
     @Published var screenShot: UIImage?
-    @Published var screenshotPath: String?    
+    @Published var screenshotPath: String?
     
     private var userDefaultsViewModel = WebClipUserDefaultsViewModel.shared
     
@@ -59,40 +59,54 @@ class WebClipEditorViewModel: ObservableObject {
         validURL = url
     }
     
-    
-    func saveURL(with screenshot: UIImage?) {
-        guard isURLValid, let validURL = URL(string: urlString) else { return }
+    func addWebClip(screenshot: UIImage?, capturedElements: [CapturedElement]?) {
+        guard isURLValid, validURL != nil else { return }
         
-        screenshotPath = screenshot.flatMap(ScreenshotUtils.saveScreenshotToLocalDirectory)
         let newWebClip = WebClip(
-            id: isEditing && selectedURLIndex != nil ? webClips[selectedURLIndex!].id : UUID(),
-            url: validURL,
+            id: UUID(),
+            url: validURL!,
             clipRect: currentClipRect,
             originalSize: originalSize,
-            screenshotPath: screenshotPath ?? "",
-            pageTitle: pageTitle
+            screenshotPath: screenshot.flatMap(ScreenshotUtils.saveScreenshotToLocalDirectory) ?? "",
+            pageTitle: pageTitle,
+            capturedElements: capturedElements
         )
         
-        if isEditing, let index = selectedURLIndex {
-            webClips[index] = newWebClip
-        } else {
-            webClips.append(newWebClip)
-        }
+        webClips.append(newWebClip)
         saveURLs()
         resetModalState()
     }
     
-    func updateWebClip(withId id: UUID, newURL: URL, newClipRect: CGRect?, newScreenshotPath: String?, newPageTitle: String?) {
-        guard let index = webClips.firstIndex(where: { $0.id == id }) else { return }
+    func updateWebClip(withId id: UUID, newURL: URL? = nil, newClipRect: CGRect? = nil, newScreenshotPath: String? = nil, newPageTitle: String? = nil, newCapturedElements: [CapturedElement]? = nil, newLlamaResult: LlamaResult? = nil) {
+        guard let index = webClips.firstIndex(where: { $0.id == id }) else {
+            return
+        }
+        
         var webClip = webClips[index]
-        webClip.url = newURL
-        webClip.clipRect = newClipRect
-        webClip.screenshotPath = newScreenshotPath
-        webClip.pageTitle = newPageTitle
+        
+        // Update only if new values are provided
+        if let newURL = newURL {
+            webClip.url = newURL
+        }
+        if let newClipRect = newClipRect {
+            webClip.clipRect = newClipRect
+        }
+        if let newScreenshotPath = newScreenshotPath {
+            webClip.screenshotPath = newScreenshotPath
+        }
+        if let newPageTitle = newPageTitle {
+            webClip.pageTitle = newPageTitle
+        }
+        if let newCapturedElements = newCapturedElements {
+            webClip.capturedElements = newCapturedElements
+        }
+        if let newLlamaResult = newLlamaResult {
+            webClip.llamaResult = newLlamaResult
+        }
+        
         webClips[index] = webClip
         saveURLs()
     }
-    
     
     func resetModalState() {
         showingURLModal = false
@@ -105,7 +119,7 @@ class WebClipEditorViewModel: ObservableObject {
     func openEditForItem(item: WebClip) {
         if let index = webClips.firstIndex(where: { $0.id == item.id }) {
             selectedURLIndex = index
-            urlString = webClips[index].url.absoluteString
+            urlString = webClips[index].url.absoluteURL.absoluteString
             isEditing = true
             showingURLModal = true
         }
