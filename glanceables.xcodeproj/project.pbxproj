@@ -32,6 +32,7 @@
 		03A868552C48871000CCB79D /* LlamaAPIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03A868542C48871000CCB79D /* LlamaAPIManager.swift */; };
 		03A868572C48880600CCB79D /* Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03A868562C48880600CCB79D /* Response.swift */; };
 		03A868592C489B3100CCB79D /* JavascriptLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03A868582C489B3100CCB79D /* JavascriptLoader.swift */; };
+		03A8685B2C4B312E00CCB79D /* LlamaResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03A8685A2C4B312E00CCB79D /* LlamaResult.swift */; };
 		03C5DAD12C23A76B0061FA25 /* ScreenshotUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03C5DAD02C23A76B0061FA25 /* ScreenshotUtils.swift */; };
 		03C5DAD32C24F0CF0061FA25 /* URLUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03C5DAD22C24F0CF0061FA25 /* URLUtilities.swift */; };
 		03C5DAD52C2647E20061FA25 /* CaptureModeToggleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03C5DAD42C2647E20061FA25 /* CaptureModeToggleView.swift */; };
@@ -78,6 +79,7 @@
 		03A868542C48871000CCB79D /* LlamaAPIManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = LlamaAPIManager.swift; path = glanceables/LlamaAPIManager.swift; sourceTree = "<group>"; };
 		03A868562C48880600CCB79D /* Response.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Response.swift; sourceTree = "<group>"; };
 		03A868582C489B3100CCB79D /* JavascriptLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JavascriptLoader.swift; sourceTree = "<group>"; };
+		03A8685A2C4B312E00CCB79D /* LlamaResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LlamaResult.swift; sourceTree = "<group>"; };
 		03C5DAD02C23A76B0061FA25 /* ScreenshotUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenshotUtils.swift; sourceTree = SOURCE_ROOT; };
 		03C5DAD22C24F0CF0061FA25 /* URLUtilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLUtilities.swift; sourceTree = "<group>"; };
 		03C5DAD42C2647E20061FA25 /* CaptureModeToggleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureModeToggleView.swift; sourceTree = "<group>"; };
@@ -161,6 +163,7 @@
 				03778E3E2C35E6FC009CB9A1 /* captureElements.js */,
 				03C5DAD22C24F0CF0061FA25 /* URLUtilities.swift */,
 				030062B32C112BD100B0242D /* WebViewItem.swift */,
+				03A8685A2C4B312E00CCB79D /* LlamaResult.swift */,
 				0300629C2C0D229800B0242D /* BlackMenuBarView.swift */,
 				0300629A2C0D209400B0242D /* UserDefaults.swift */,
 				030062982C0A833200B0242D /* CreateButtonView.swift */,
@@ -296,6 +299,7 @@
 			files = (
 				03553FE32C41F6A800FCB4CC /* WebPreviewCaptureMenuViewModel.swift in Sources */,
 				030062972C0A7F2600B0242D /* HeaderView.swift in Sources */,
+				03A8685B2C4B312E00CCB79D /* LlamaResult.swift in Sources */,
 				03A868512C4865C900CCB79D /* CaptureRectangleView.swift in Sources */,
 				03778E422C36028F009CB9A1 /* CapturedElements.swift in Sources */,
 				0378B8772C096DB00005BAE5 /* WebGridSingleSnapshotView.swift in Sources */,

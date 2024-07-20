@@ -8,8 +8,7 @@ class LlamaAPIManager: ObservableObject {
     @Published var conciseText: String? = nil
     
     func analyzeHTML(htmlElements: [HTMLElement], completion: @escaping (Result<String, Error>) -> Void) {
-        print("Started analyzing HTML elements")
-        
+        print("Started analyzing HTML elements")        
         guard !htmlElements.isEmpty else {
             completion(.failure(NSError(domain: "LlamaAPIManager", code: 1, userInfo: [NSLocalizedDescriptionKey: "No HTML elements to analyze."])))
             return

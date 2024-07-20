@@ -32,13 +32,7 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
     }
     
     func updateUIView(_ webView: WKWebView, context: Context) {
-        //        if let webClip = viewModel.webClip(withId: id) {
-        //            let newURLString = webClip.url.absoluteString
-        //            if webView.url?.absoluteString != newURLString {
-        //                let request = URLRequest(url: webClip.url)
-        //                webView.load(request)
-        //            }
-        //        }
+        
     }
     
     
@@ -53,9 +47,7 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
     }
     
     
-    func injectGetElementsFromSelectorsScript(webView: WKWebView) {
-        //        guard let lastElement = self.item?.capturedElements?.last else { return }
-        //        let elementSelector = lastElement.selector
+    func injectGetElementsFromSelectorsScript(webView: WKWebView) {        
         guard let firstElement = self.item?.capturedElements?.first else { return }
         let elementSelector = firstElement.selector
         let jsCode = """
@@ -241,12 +233,7 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
                     if let newScreenshotPath = ScreenshotUtils.saveScreenshotToFile(using: item, from: image) {
                         if let item = self.parent.item {
                             let newPageTitle = self.pageTitle ?? item.pageTitle ?? "Loading..."
-                            self.parent.viewModel.updateWebClip(withId: item.id,
-                                                                newURL: item.url,
-                                                                newClipRect: item.clipRect,
-                                                                newScreenshotPath: newScreenshotPath,
-                                                                newPageTitle: newPageTitle
-                            )
+                            self.parent.viewModel.updateWebClip(withId: item.id, newScreenshotPath: newScreenshotPath)
                         }
                     }
                 }

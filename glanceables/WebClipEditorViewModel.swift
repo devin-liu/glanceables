@@ -60,50 +60,101 @@ class WebClipEditorViewModel: ObservableObject {
     }
     
     
-    func saveURL(screenshot: UIImage?, capturedElements: [CapturedElement]?, id: UUID? = nil) {
+    //    func saveURL(screenshot: UIImage?, capturedElements: [CapturedElement]?, id: UUID? = nil) {
+    //        guard isURLValid, validURL != nil else { return }
+    //        
+    //        let newId = id ?? UUID()
+    //        
+    //        // Save the screenshot to the local directory and get the path
+    //        screenshotPath = screenshot.flatMap(ScreenshotUtils.saveScreenshotToLocalDirectory)
+    //        
+    //        // Create a new WebClip object
+    //        let newWebClip = WebClip(
+    //            id: newId,
+    //            url: validURL!,
+    //            clipRect: currentClipRect,
+    //            originalSize: originalSize,
+    //            screenshotPath: screenshotPath ?? "",
+    //            pageTitle: pageTitle,
+    //            capturedElements: capturedElements
+    //        )
+    //        
+    //        // Update the webClips array
+    //        if isEditing, let index = selectedURLIndex {
+    //            webClips[index] = newWebClip
+    //        } else {
+    //            webClips.append(newWebClip)
+    //        }
+    //        
+    //        // Save the URLs and reset the modal state
+    //        saveURLs()
+    //        resetModalState()
+    //    }
+    
+    func addWebClip(screenshot: UIImage?, capturedElements: [CapturedElement]?) {
         guard isURLValid, validURL != nil else { return }
         
-        print("saveURL ", validURL)
-        
-        // Generate a new UUID if id is nil
-        let newId = id ?? UUID()
-        
-        // Save the screenshot to the local directory and get the path
-        screenshotPath = screenshot.flatMap(ScreenshotUtils.saveScreenshotToLocalDirectory)
-        
-        // Create a new WebClip object
         let newWebClip = WebClip(
-            id: newId,
+            id: UUID(),
             url: validURL!,
             clipRect: currentClipRect,
             originalSize: originalSize,
-            screenshotPath: screenshotPath ?? "",
+            screenshotPath: screenshot.flatMap(ScreenshotUtils.saveScreenshotToLocalDirectory) ?? "",
             pageTitle: pageTitle,
             capturedElements: capturedElements
         )
         
-        // Update the webClips array
-        if isEditing, let index = selectedURLIndex {
-            webClips[index] = newWebClip
-        } else {
-            webClips.append(newWebClip)
-        }
-        
-        // Save the URLs and reset the modal state
+        webClips.append(newWebClip)
         saveURLs()
         resetModalState()
     }
-
-    func updateWebClip(withId id: UUID, newURL: URL, newClipRect: CGRect?, newScreenshotPath: String?, newPageTitle: String?) {
-        guard let index = webClips.firstIndex(where: { $0.id == id }) else { return }
+    
+    //    func updateWebClip(withId id: UUID, urlString: String, screenshot: UIImage?, newClipRect: CGRect?, newPageTitle: String?, capturedElements: [CapturedElement]?) -> Bool {
+    //        let (isValid, url) = URLUtilities.validateURL(from: urlString)
+    //        guard isValid, let validURL = url, let index = webClips.firstIndex(where: { $0.id == id }) else {
+    //            return false
+    //        }
+    //
+    //        var webClip = webClips[index]
+    //        webClip.url = validURL
+    //        webClip.clipRect = newClipRect ?? webClip.clipRect
+    //        webClip.pageTitle = newPageTitle ?? webClip.pageTitle
+    //        webClip.capturedElements = capturedElements ?? webClip.capturedElements
+    //        webClip.screenshotPath = screenshot.flatMap(ScreenshotUtils.saveScreenshotToLocalDirectory) ?? webClip.screenshotPath
+    //
+    //        webClips[index] = webClip
+    //        saveURLs()
+    //
+    //        return true
+    //    }
+    func updateWebClip(withId id: UUID, newURL: URL? = nil, newClipRect: CGRect? = nil, newScreenshotPath: String? = nil, newPageTitle: String? = nil, newCapturedElements: [CapturedElement]? = nil) {
+        guard let index = webClips.firstIndex(where: { $0.id == id }) else {
+            return
+        }
+        
         var webClip = webClips[index]
-        webClip.url = newURL
-        webClip.clipRect = newClipRect
-        webClip.screenshotPath = newScreenshotPath
-        webClip.pageTitle = newPageTitle
+        
+        // Update only if new values are provided
+        if let newURL = newURL {
+            webClip.url = newURL
+        }
+        if let newClipRect = newClipRect {
+            webClip.clipRect = newClipRect
+        }
+        if let newScreenshotPath = newScreenshotPath {
+            webClip.screenshotPath = newScreenshotPath
+        }
+        if let newPageTitle = newPageTitle {
+            webClip.pageTitle = newPageTitle
+        }
+        if let newCapturedElements = newCapturedElements {
+            webClip.capturedElements = newCapturedElements
+        }
+        
         webClips[index] = webClip
         saveURLs()
     }
+    
     
     
     func resetModalState() {

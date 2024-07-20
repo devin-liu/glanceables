@@ -11,6 +11,7 @@ struct WebClip: Identifiable, Equatable {
     var pageTitle: String?
     var capturedElements: [CapturedElement]?
     var htmlElements: [HTMLElement]?
+    var llamaResult: LlamaResult?  // Add a property for LlamaResult
 
     static func ==(lhs: WebClip, rhs: WebClip) -> Bool {
         return lhs.id == rhs.id && lhs.url == rhs.url
