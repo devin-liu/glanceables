@@ -227,8 +227,7 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
                 if let image = image {
                     if let newScreenshotPath = ScreenshotUtils.saveScreenshotToFile(using: item, from: image) {
                         if let item = self.parent.item {
-                            let newPageTitle = self.pageTitle ?? item.pageTitle ?? "Loading..."
-                            self.parent.viewModel.updateWebClip(withId: item.id, newScreenshotPath: newScreenshotPath, newPageTitle: newPageTitle)
+                            self.parent.viewModel.updateWebClip(withId: item.id, newScreenshotPath: newScreenshotPath)
                         }
                     }
                 }

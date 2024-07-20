@@ -108,8 +108,6 @@ class WebClipEditorViewModel: ObservableObject {
         saveURLs()
     }
     
-    
-    
     func resetModalState() {
         showingURLModal = false
         urlString = ""
