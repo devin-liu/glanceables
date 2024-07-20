@@ -36,7 +36,6 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
     }
     
     
-    
     func makeCoordinator() -> Coordinator {
         Coordinator(self)
     }
@@ -47,7 +46,7 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
     }
     
     
-    func injectGetElementsFromSelectorsScript(webView: WKWebView) {        
+    func injectGetElementsFromSelectorsScript(webView: WKWebView) {
         guard let firstElement = self.item?.capturedElements?.first else { return }
         let elementSelector = firstElement.selector
         let jsCode = """
@@ -124,12 +123,7 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
             reloadSubscription?.cancel()
         }
         
-        func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
-            print("Started loading: \(String(describing: webView.url))")
-        }
-        
         func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-            print("Finished loading: \(String(describing: webView.url))")
             let simplifiedPageTitle = URLUtilities.simplifyPageTitle(webView.title ?? "No Title")
             self.pageTitle = simplifiedPageTitle
             
@@ -192,6 +186,7 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
             self.parent.llamaAPIManager.analyzeHTML(htmlElements: elements) { result in
                 switch result {
                 case .success(let result):
+                    self.parent.viewModel.updateWebClip(withId: self.parent.id, newLlamaResult: LlamaResult(conciseText: result))
                     print("Generated result: \(result)")
                     // Do something with the generated filename, e.g., update UI or model
                 case .failure(let error):
@@ -233,7 +228,7 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
                     if let newScreenshotPath = ScreenshotUtils.saveScreenshotToFile(using: item, from: image) {
                         if let item = self.parent.item {
                             let newPageTitle = self.pageTitle ?? item.pageTitle ?? "Loading..."
-                            self.parent.viewModel.updateWebClip(withId: item.id, newScreenshotPath: newScreenshotPath)
+                            self.parent.viewModel.updateWebClip(withId: item.id, newScreenshotPath: newScreenshotPath, newPageTitle: newPageTitle)
                         }
                     }
                 }

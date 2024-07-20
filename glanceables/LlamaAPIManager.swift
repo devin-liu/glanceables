@@ -8,7 +8,7 @@ class LlamaAPIManager: ObservableObject {
     @Published var conciseText: String? = nil
     
     func analyzeHTML(htmlElements: [HTMLElement], completion: @escaping (Result<String, Error>) -> Void) {
-        print("Started analyzing HTML elements")        
+        print("Started analyzing HTML elements")
         guard !htmlElements.isEmpty else {
             completion(.failure(NSError(domain: "LlamaAPIManager", code: 1, userInfo: [NSLocalizedDescriptionKey: "No HTML elements to analyze."])))
             return
@@ -87,29 +87,15 @@ class LlamaAPIManager: ObservableObject {
             }
             
             DispatchQueue.main.async {
-                self.response = responses.joined(separator: "")  // Combine all responses into one string
-                
-                // Convert response to JSON and extract the value for "concise_text"
+                self.response = responses.joined(separator: "")
                 if let responseString = self.response,
-                   let data = responseString.data(using: .utf8) {
-                    do {
-                        // Convert the JSON string to a dictionary
-                        if let jsonObject = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
-                            // Extract the value for "concise_text"
-                            if let conciseText = jsonObject["concise_text"] as? String {
-                                print(conciseText)
-                                self.conciseText = conciseText
-                            } else {
-                                print("Key 'concise_text' not found or value is not a string", jsonObject)
-                            }
-                        } else {
-                            print("Failed to convert JSON data to dictionary")
-                        }
-                    } catch {
-                        print("Error during JSON deserialization: \(error)")
-                    }
+                   let data = responseString.data(using: .utf8),
+                   let jsonObject = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any],
+                   let conciseText = jsonObject["concise_text"] as? String {
+                    self.conciseText = conciseText
+                    completion(.success(conciseText))
                 } else {
-                    print("Response is nil or invalid")
+                    completion(.failure(NSError(domain: "LlamaAPIManager", code: 5, userInfo: [NSLocalizedDescriptionKey: "Failed to parse JSON data or 'concise_text' key missing."])))
                 }
             }
         }.resume()  // Resume the task if it was suspended
