@@ -93,7 +93,7 @@ class LlamaAPIManager: ObservableObject {
         
         Output JSON:
         {
-            "concise_text": Analyze inner text to produce readable text for humans.
+            "concise_text": Simplify innerText to produce readable text for humans.
         }
         """
         

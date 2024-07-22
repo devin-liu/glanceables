@@ -1,3 +1,19 @@
+function scrollToElementWithRelativeTop(selector, desiredRelativeTop) {
+    const element = document.querySelector(selector);
+    if (element) {
+        const currentPosition = getElementPosition(element).relativeTop;
+        const offset = desiredRelativeTop - currentPosition;
+        const newScrollPosition = window.scrollY + offset;
+        
+        window.scrollTo({
+        top: newScrollPosition,
+        behavior: 'instant'  // Optional: for smooth scrolling
+        });
+    } else {
+        console.error("Element not found with selector: " + selector);
+    }
+}
+
 function getElementPosition(element) {
     const rect = element.getBoundingClientRect();
     return {

@@ -60,7 +60,11 @@ class WebViewCoordinator: NSObject, WKNavigationDelegate, WKUIDelegate, UIScroll
     func restoreScrollPosition(_ elements: [CapturedElement], in webView: WKWebView) {
         // Assuming 'CapturedElement' has properties like 'relativeTop' that can be used for scrolling
         guard let firstElement = elements.first else { return }
-        let scrollScript = "window.scrollTo(0, \(firstElement.relativeTop));"
+        
+        let scrollScript = """
+        scrollToElementWithRelativeTop("\(firstElement.selector)", \(firstElement.relativeTop));
+        """
+        
         webView.evaluateJavaScript(scrollScript, completionHandler: { result, error in
             if let error = error {
                 print("Error while trying to scroll: \(error.localizedDescription)")
@@ -116,13 +120,7 @@ class WebViewCoordinator: NSObject, WKNavigationDelegate, WKUIDelegate, UIScroll
             // Adjust clipRect based on the current zoom scale and content offset
             let zoomScale = webView.scrollView.zoomScale
             let offsetX = webView.scrollView.contentOffset.x
-            var y = clipRect.origin.y
-            
-            if let elements = item.capturedElements {
-                if elements.first != nil {
-                    y = 0
-                }
-            }
+            let y = clipRect.origin.y
             
             let adjustedClipRect = CGRect(
                 x: (clipRect.origin.x + offsetX) / zoomScale,
