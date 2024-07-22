@@ -12,7 +12,7 @@
 		0300629B2C0D209400B0242D /* UserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0300629A2C0D209400B0242D /* UserDefaults.swift */; };
 		0300629D2C0D229800B0242D /* BlackMenuBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0300629C2C0D229800B0242D /* BlackMenuBarView.swift */; };
 		030062A72C0FE8A100B0242D /* WebPreviewCaptureMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 030062A62C0FE8A100B0242D /* WebPreviewCaptureMenuView.swift */; };
-		030062B42C112BD100B0242D /* WebViewItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 030062B32C112BD100B0242D /* WebViewItem.swift */; };
+		030062B42C112BD100B0242D /* WebClip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 030062B32C112BD100B0242D /* WebClip.swift */; };
 		03553FE32C41F6A800FCB4CC /* WebPreviewCaptureMenuViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03553FE22C41F6A800FCB4CC /* WebPreviewCaptureMenuViewModel.swift */; };
 		036D58E52C3C99300042D491 /* WebClipEditorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 036D58E42C3C99300042D491 /* WebClipEditorViewModel.swift */; };
 		036D58E72C3CC8460042D491 /* WebClipUserDefaultsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 036D58E62C3CC8460042D491 /* WebClipUserDefaultsViewModel.swift */; };
@@ -55,8 +55,8 @@
 		030062982C0A833200B0242D /* CreateButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateButtonView.swift; sourceTree = "<group>"; };
 		0300629A2C0D209400B0242D /* UserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaults.swift; sourceTree = "<group>"; };
 		0300629C2C0D229800B0242D /* BlackMenuBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlackMenuBarView.swift; sourceTree = "<group>"; };
-		030062A62C0FE8A100B0242D /* WebPreviewCaptureMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = WebPreviewCaptureMenuView.swift; path = ../WebPreviewCaptureMenuView.swift; sourceTree = "<group>"; };
-		030062B32C112BD100B0242D /* WebViewItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewItem.swift; sourceTree = SOURCE_ROOT; };
+		030062A62C0FE8A100B0242D /* WebPreviewCaptureMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebPreviewCaptureMenuView.swift; sourceTree = "<group>"; };
+		030062B32C112BD100B0242D /* WebClip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = WebClip.swift; path = glanceables/Model/WebClip.swift; sourceTree = SOURCE_ROOT; };
 		03553FE22C41F6A800FCB4CC /* WebPreviewCaptureMenuViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebPreviewCaptureMenuViewModel.swift; sourceTree = "<group>"; };
 		0355A0672C17D741005BBAF3 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Platforms/iPhoneOS.platform/Developer/Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		0355A06E2C17DA8B005BBAF3 /* glanceablesTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = glanceablesTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -74,17 +74,17 @@
 		038208D92C18CAFB00606536 /* WebViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewTests.swift; sourceTree = "<group>"; };
 		038208DF2C1BB3F400606536 /* WebViewScreenshotCapture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewScreenshotCapture.swift; sourceTree = "<group>"; };
 		038208E12C1BB40400606536 /* WebViewSnapshotRefresher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewSnapshotRefresher.swift; sourceTree = "<group>"; };
-		03A868502C4865C900CCB79D /* CaptureRectangleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CaptureRectangleView.swift; path = glanceables/CaptureRectangleView.swift; sourceTree = "<group>"; };
+		03A868502C4865C900CCB79D /* CaptureRectangleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureRectangleView.swift; sourceTree = "<group>"; };
 		03A868522C48692A00CCB79D /* SaveButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveButtonView.swift; sourceTree = "<group>"; };
-		03A868542C48871000CCB79D /* LlamaAPIManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = LlamaAPIManager.swift; path = glanceables/LlamaAPIManager.swift; sourceTree = "<group>"; };
+		03A868542C48871000CCB79D /* LlamaAPIManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LlamaAPIManager.swift; sourceTree = "<group>"; };
 		03A868562C48880600CCB79D /* Response.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Response.swift; sourceTree = "<group>"; };
 		03A868582C489B3100CCB79D /* JavascriptLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JavascriptLoader.swift; sourceTree = "<group>"; };
 		03A8685A2C4B312E00CCB79D /* LlamaResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LlamaResult.swift; sourceTree = "<group>"; };
-		03C5DAD02C23A76B0061FA25 /* ScreenshotUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenshotUtils.swift; sourceTree = SOURCE_ROOT; };
+		03C5DAD02C23A76B0061FA25 /* ScreenshotUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ScreenshotUtils.swift; path = glanceables/Utilities/ScreenshotUtils.swift; sourceTree = SOURCE_ROOT; };
 		03C5DAD22C24F0CF0061FA25 /* URLUtilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLUtilities.swift; sourceTree = "<group>"; };
 		03C5DAD42C2647E20061FA25 /* CaptureModeToggleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureModeToggleView.swift; sourceTree = "<group>"; };
 		03C5DAD62C264BE00061FA25 /* RedXButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RedXButton.swift; sourceTree = "<group>"; };
-		03C5DAD82C2A4DB20061FA25 /* AddURLFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddURLFormView.swift; sourceTree = SOURCE_ROOT; };
+		03C5DAD82C2A4DB20061FA25 /* AddURLFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AddURLFormView.swift; path = glanceables/View/AddURLFormView.swift; sourceTree = SOURCE_ROOT; };
 		03DF92F42C40B98A00625AEB /* glanceables.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = glanceables.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -126,10 +126,6 @@
 		0378B85A2C096D850005BAE5 = {
 			isa = PBXGroup;
 			children = (
-				03A868542C48871000CCB79D /* LlamaAPIManager.swift */,
-				03A868562C48880600CCB79D /* Response.swift */,
-				03A868522C48692A00CCB79D /* SaveButtonView.swift */,
-				03A868502C4865C900CCB79D /* CaptureRectangleView.swift */,
 				0378B8652C096D850005BAE5 /* glanceables */,
 				0355A06F2C17DA8B005BBAF3 /* glanceablesTests */,
 				0378B8642C096D850005BAE5 /* Products */,
@@ -150,29 +146,18 @@
 			isa = PBXGroup;
 			children = (
 				03DF92F42C40B98A00625AEB /* glanceables.entitlements */,
-				03C5DAD82C2A4DB20061FA25 /* AddURLFormView.swift */,
-				03C5DAD62C264BE00061FA25 /* RedXButton.swift */,
-				03C5DAD02C23A76B0061FA25 /* ScreenshotUtils.swift */,
+				03A8685D2C4EE54200CCB79D /* View */,
+				03A8685F2C4EE63500CCB79D /* Utilities */,
 				038208E12C1BB40400606536 /* WebViewSnapshotRefresher.swift */,
+				03A868542C48871000CCB79D /* LlamaAPIManager.swift */,
+				03A868562C48880600CCB79D /* Response.swift */,
 				03A868582C489B3100CCB79D /* JavascriptLoader.swift */,
 				038208DF2C1BB3F400606536 /* WebViewScreenshotCapture.swift */,
-				03C5DAD42C2647E20061FA25 /* CaptureModeToggleView.swift */,
-				036D58E62C3CC8460042D491 /* WebClipUserDefaultsViewModel.swift */,
-				036D58E42C3C99300042D491 /* WebClipEditorViewModel.swift */,
-				03778E412C36028F009CB9A1 /* CapturedElements.swift */,
+				03A8685E2C4EE5B300CCB79D /* ViewModel */,
+				03A8685C2C4EE50600CCB79D /* Model */,
 				03778E3E2C35E6FC009CB9A1 /* captureElements.js */,
-				03C5DAD22C24F0CF0061FA25 /* URLUtilities.swift */,
-				030062B32C112BD100B0242D /* WebViewItem.swift */,
-				03A8685A2C4B312E00CCB79D /* LlamaResult.swift */,
-				0300629C2C0D229800B0242D /* BlackMenuBarView.swift */,
-				0300629A2C0D209400B0242D /* UserDefaults.swift */,
-				030062982C0A833200B0242D /* CreateButtonView.swift */,
-				030062A62C0FE8A100B0242D /* WebPreviewCaptureMenuView.swift */,
-				03553FE22C41F6A800FCB4CC /* WebPreviewCaptureMenuViewModel.swift */,
-				030062962C0A7F2600B0242D /* HeaderView.swift */,
 				0378B8662C096D850005BAE5 /* glanceablesApp.swift */,
 				0378B8682C096D850005BAE5 /* ContentView.swift */,
-				0378B8762C096DB00005BAE5 /* WebGridSingleSnapshotView.swift */,
 				0378B86C2C096D860005BAE5 /* Assets.xcassets */,
 				0378B86E2C096D860005BAE5 /* Preview Content */,
 			);
@@ -185,6 +170,53 @@
 				0378B86F2C096D860005BAE5 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		03A8685C2C4EE50600CCB79D /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				0300629A2C0D209400B0242D /* UserDefaults.swift */,
+				03778E412C36028F009CB9A1 /* CapturedElements.swift */,
+				03A8685A2C4B312E00CCB79D /* LlamaResult.swift */,
+				030062B32C112BD100B0242D /* WebClip.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		03A8685D2C4EE54200CCB79D /* View */ = {
+			isa = PBXGroup;
+			children = (
+				03C5DAD82C2A4DB20061FA25 /* AddURLFormView.swift */,
+				030062962C0A7F2600B0242D /* HeaderView.swift */,
+				0300629C2C0D229800B0242D /* BlackMenuBarView.swift */,
+				03C5DAD42C2647E20061FA25 /* CaptureModeToggleView.swift */,
+				03A868502C4865C900CCB79D /* CaptureRectangleView.swift */,
+				030062A62C0FE8A100B0242D /* WebPreviewCaptureMenuView.swift */,
+				0378B8762C096DB00005BAE5 /* WebGridSingleSnapshotView.swift */,
+				030062982C0A833200B0242D /* CreateButtonView.swift */,
+				03A868522C48692A00CCB79D /* SaveButtonView.swift */,
+				03C5DAD62C264BE00061FA25 /* RedXButton.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		03A8685E2C4EE5B300CCB79D /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				036D58E62C3CC8460042D491 /* WebClipUserDefaultsViewModel.swift */,
+				036D58E42C3C99300042D491 /* WebClipEditorViewModel.swift */,
+				03553FE22C41F6A800FCB4CC /* WebPreviewCaptureMenuViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		03A8685F2C4EE63500CCB79D /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				03C5DAD02C23A76B0061FA25 /* ScreenshotUtils.swift */,
+				03C5DAD22C24F0CF0061FA25 /* URLUtilities.swift */,
+			);
+			path = Utilities;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -321,7 +353,7 @@
 				030062A72C0FE8A100B0242D /* WebPreviewCaptureMenuView.swift in Sources */,
 				03C5DAD12C23A76B0061FA25 /* ScreenshotUtils.swift in Sources */,
 				0378B8672C096D850005BAE5 /* glanceablesApp.swift in Sources */,
-				030062B42C112BD100B0242D /* WebViewItem.swift in Sources */,
+				030062B42C112BD100B0242D /* WebClip.swift in Sources */,
 				03A868532C48692A00CCB79D /* SaveButtonView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
