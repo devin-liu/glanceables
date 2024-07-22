@@ -45,55 +45,11 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
         contentController.add(context.coordinator, name: "elementsFromSelectorsHandler")
     }
     
-    
     func injectGetElementsFromSelectorsScript(webView: WKWebView) {
         guard let firstElement = self.item?.capturedElements?.first else { return }
         let elementSelector = firstElement.selector
-        let jsCode = """
-        (function() {
-            function restoreElements() {
-                try {
-                    const elementSelector = "\(elementSelector)";
-                    const elements = document.querySelectorAll(elementSelector);
-                    const selectors = Array.from(elements).map(element => {
-                        return {selector: elementSelector, text: element.innerText, outerHTML: element.outerHTML};
-                    });
-                    
-                    window.webkit.messageHandlers.elementsFromSelectorsHandler.postMessage(JSON.stringify(selectors));
-                } catch (error) {
-                    console.error('Error in script:', error);
-                    window.webkit.messageHandlers.elementsFromSelectorsHandler.postMessage('Error: ' + error.message);
-                }
-            }
-        
-            function watchForElement() {
-                const elementSelector = "\(elementSelector)";
-                const observer = new MutationObserver((mutationsList, observer) => {
-                    const elements = document.querySelectorAll(elementSelector);
-                    if (elements.length > 0) {
-                        restoreElements();
-                        observer.disconnect(); // Stop observing once elements are found
-                    }
-                });
-        
-                observer.observe(document.body, { childList: true, subtree: true });
-        
-                // Check if the elements are already present
-                const elements = document.querySelectorAll(elementSelector);
-                if (elements.length > 0) {
-                    restoreElements();
-                    observer.disconnect();
-                }
-            }
-        
-            watchForElement();
-        })();
-        """
-        
-        webView.configuration.userContentController.addUserScript(WKUserScript(source: jsCode, injectionTime: .atDocumentEnd, forMainFrameOnly: false))
-    }
-    
-    
+        JavaScriptLoader.injectGetElementsFromSelectorsScript(webView: webView, elementSelector: elementSelector)
+    }    
     
     class Coordinator: NSObject, WKNavigationDelegate, WKUIDelegate, UIScrollViewDelegate, WKScriptMessageHandler {
         var parent: WebViewSnapshotRefresher
