@@ -82,15 +82,19 @@ class WebViewCoordinator: NSObject, WKNavigationDelegate, WKUIDelegate, UIScroll
         
         do {
             let elements = try JSONDecoder().decode([HTMLElement].self, from: data)
-            processElements(elements)
+            if let innerText = elements.last?.innerText {
+                print("InnerText result: ", innerText)
+                processElementsInnerText(innerText)
+            }
+            
         } catch {
             print("Error: \(error)")
         }
     }
     
     
-    func processElements(_ elements: [HTMLElement]) {
-        self.parent.llamaAPIManager.analyzeHTML(htmlElements: elements) { result in
+    func processElementsInnerText(_ innerText: String) {
+        self.parent.llamaAPIManager.analyzeInnerText(innerText: innerText) { result in
             switch result {
             case .success(let result):
                 self.parent.viewModel.updateWebClip(withId: self.parent.id, newLlamaResult: LlamaResult(conciseText: result))

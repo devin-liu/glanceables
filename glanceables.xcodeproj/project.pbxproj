@@ -17,7 +17,7 @@
 		036D58E52C3C99300042D491 /* WebClipEditorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 036D58E42C3C99300042D491 /* WebClipEditorViewModel.swift */; };
 		036D58E72C3CC8460042D491 /* WebClipUserDefaultsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 036D58E62C3CC8460042D491 /* WebClipUserDefaultsViewModel.swift */; };
 		03778E402C35E740009CB9A1 /* captureElements.js in Resources */ = {isa = PBXBuildFile; fileRef = 03778E3E2C35E6FC009CB9A1 /* captureElements.js */; };
-		03778E422C36028F009CB9A1 /* CapturedElements.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03778E412C36028F009CB9A1 /* CapturedElements.swift */; };
+		03778E422C36028F009CB9A1 /* CapturedElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03778E412C36028F009CB9A1 /* CapturedElement.swift */; };
 		0378B8672C096D850005BAE5 /* glanceablesApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0378B8662C096D850005BAE5 /* glanceablesApp.swift */; };
 		0378B8692C096D850005BAE5 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0378B8682C096D850005BAE5 /* ContentView.swift */; };
 		0378B86D2C096D860005BAE5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0378B86C2C096D860005BAE5 /* Assets.xcassets */; };
@@ -64,7 +64,7 @@
 		036D58E42C3C99300042D491 /* WebClipEditorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebClipEditorViewModel.swift; sourceTree = "<group>"; };
 		036D58E62C3CC8460042D491 /* WebClipUserDefaultsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebClipUserDefaultsViewModel.swift; sourceTree = "<group>"; };
 		03778E3E2C35E6FC009CB9A1 /* captureElements.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = captureElements.js; sourceTree = "<group>"; };
-		03778E412C36028F009CB9A1 /* CapturedElements.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapturedElements.swift; sourceTree = "<group>"; };
+		03778E412C36028F009CB9A1 /* CapturedElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapturedElement.swift; sourceTree = "<group>"; };
 		0378B8632C096D850005BAE5 /* glanceables.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = glanceables.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0378B8662C096D850005BAE5 /* glanceablesApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = glanceablesApp.swift; sourceTree = "<group>"; };
 		0378B8682C096D850005BAE5 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -176,7 +176,7 @@
 			isa = PBXGroup;
 			children = (
 				0300629A2C0D209400B0242D /* UserDefaults.swift */,
-				03778E412C36028F009CB9A1 /* CapturedElements.swift */,
+				03778E412C36028F009CB9A1 /* CapturedElement.swift */,
 				03A8685A2C4B312E00CCB79D /* LlamaResult.swift */,
 				030062B32C112BD100B0242D /* WebClip.swift */,
 			);
@@ -336,7 +336,7 @@
 				030062972C0A7F2600B0242D /* HeaderView.swift in Sources */,
 				03A8685B2C4B312E00CCB79D /* LlamaResult.swift in Sources */,
 				03A868512C4865C900CCB79D /* CaptureRectangleView.swift in Sources */,
-				03778E422C36028F009CB9A1 /* CapturedElements.swift in Sources */,
+				03778E422C36028F009CB9A1 /* CapturedElement.swift in Sources */,
 				0378B8772C096DB00005BAE5 /* WebGridSingleSnapshotView.swift in Sources */,
 				0378B8692C096D850005BAE5 /* ContentView.swift in Sources */,
 				038208E02C1BB3F400606536 /* WebViewScreenshotCapture.swift in Sources */,

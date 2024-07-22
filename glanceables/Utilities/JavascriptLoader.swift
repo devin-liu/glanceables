@@ -20,7 +20,7 @@ struct JavaScriptLoader {
                     const elementSelector = "\(elementSelector)";
                     const elements = document.querySelectorAll(elementSelector);
                     const selectors = Array.from(elements).map(element => {
-                        return {selector: elementSelector, text: element.innerText, outerHTML: element.outerHTML};
+                        return {selector: elementSelector, innerText: element.innerText, outerHTML: element.outerHTML};
                     });
                     
                     window.webkit.messageHandlers.elementsFromSelectorsHandler.postMessage(JSON.stringify(selectors));

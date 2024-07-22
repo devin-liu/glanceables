@@ -1,19 +1,14 @@
 import Foundation
 
 // Class for managing interaction with the Llama API
-class LlamaAPIManager: ObservableObject {    
+class LlamaAPIManager: ObservableObject {
     
     @Published var isSending: Bool = false
     @Published var response: String? = nil
     @Published var conciseText: String? = nil
     
-    func analyzeHTML(htmlElements: [HTMLElement], completion: @escaping (Result<String, Error>) -> Void) {
-        print("Started analyzing HTML elements")
-        guard !htmlElements.isEmpty else {
-            completion(.failure(NSError(domain: "LlamaAPIManager", code: 1, userInfo: [NSLocalizedDescriptionKey: "No HTML elements to analyze."])))
-            return
-        }
-        
+    // Modular function to perform the API request
+    private func performRequest(prompt: String, completion: @escaping (Result<String, Error>) -> Void) {
         guard !isSending else {
             completion(.failure(NSError(domain: "LlamaAPIManager", code: 2, userInfo: [NSLocalizedDescriptionKey: "Request is already in progress."])))
             return
@@ -32,22 +27,9 @@ class LlamaAPIManager: ObservableObject {
         request.httpMethod = "POST"
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         
-        // Creating the prompt for analyzing HTML elements
-        let htmlAnalysisPrompt = """
-        HTML Input:
-        \(
-            htmlElements.map { "<div>\($0.outerHTML)</div>" }.joined(separator: "\n")
-        )
-        
-        Output JSON:
-        {
-            "concise_text": Analyze HTML to produce readable text for humans.
-        }
-        """
-        
         let body: [String: Any] = [
             "model": "llama3",
-            "prompt": htmlAnalysisPrompt,
+            "prompt": prompt,
             "options": ["num_ctx": 4096],
             "format": "json",
             "stream": false,
@@ -62,27 +44,25 @@ class LlamaAPIManager: ObservableObject {
         }
         
         URLSession.shared.dataTask(with: request) { data, response, error in
-            defer { DispatchQueue.main.async { self.isSending = false } }  // Ensure isSending is reset after operation
+            defer { DispatchQueue.main.async { self.isSending = false } }
             
             if let error = error {
-                DispatchQueue.main.async { self.response = "Error: \(error.localizedDescription)" }  // Handle errors by updating the response
+                DispatchQueue.main.async { self.response = "Error: \(error.localizedDescription)" }
                 return
             }
             
-            // Ensure data was received
             guard let data = data else {
-                DispatchQueue.main.async { self.response = "No data received" }  // Handle the absence of data
+                DispatchQueue.main.async { self.response = "No data received" }
                 return
             }
             
-            let decoder = JSONDecoder()  // Initialize JSON decoder
-            let lines = data.split(separator: 10)  // Split the data into lines
-            var responses = [String]()  // Array to hold the decoded responses
+            let decoder = JSONDecoder()
+            let lines = data.split(separator: 10)
+            var responses = [String]()
             
-            // Iterate over each line of data
             for line in lines {
                 if let jsonLine = try? decoder.decode(Response.self, from: Data(line)) {
-                    responses.append(jsonLine.response)  // Decode each line and append the response
+                    responses.append(jsonLine.response)
                 }
             }
             
@@ -98,6 +78,47 @@ class LlamaAPIManager: ObservableObject {
                     completion(.failure(NSError(domain: "LlamaAPIManager", code: 5, userInfo: [NSLocalizedDescriptionKey: "Failed to parse JSON data or 'concise_text' key missing."])))
                 }
             }
-        }.resume()  // Resume the task if it was suspended
+        }.resume()
+    }
+    
+    func analyzeInnerText(innerText: String, completion: @escaping (Result<String, Error>) -> Void) {
+        guard !innerText.isEmpty else {
+            completion(.failure(NSError(domain: "LlamaAPIManager", code: 6, userInfo: [NSLocalizedDescriptionKey: "Empty innerText."])))
+            return
+        }
+        
+        let innerTextPrompt = """
+        InnerText Input:
+        \(innerText)
+        
+        Output JSON:
+        {
+            "concise_text": Analyze inner text to produce readable text for humans.
+        }
+        """
+        
+        performRequest(prompt: innerTextPrompt, completion: completion)
+    }
+    
+    func analyzeHTML(htmlElements: [HTMLElement], completion: @escaping (Result<String, Error>) -> Void) {
+        print("Started analyzing HTML elements")
+        guard !htmlElements.isEmpty else {
+            completion(.failure(NSError(domain: "LlamaAPIManager", code: 1, userInfo: [NSLocalizedDescriptionKey: "No HTML elements to analyze."])))
+            return
+        }
+        
+        let htmlAnalysisPrompt = """
+        HTML Input:
+        \(
+            htmlElements.map { "<div>\($0.outerHTML)</div>" }.joined(separator: "\n")
+        )
+        
+        Output JSON:
+        {
+            "concise_text": Analyze HTML to produce readable text for humans.
+        }
+        """
+        
+        performRequest(prompt: htmlAnalysisPrompt, completion: completion)
     }
 }
