@@ -13,7 +13,8 @@ Ever feel like the internet's a crowded room, shouting at you from every corner?
 
 ## Precision Capture and Restoration
 Our web clip capture & restoring algorithm enhances precise selection and automatic recovery of web content. This is for users who need to monitor specific areas of a webpage with high accuracy.
-<img width="1136" alt="Screenshot 2024-07-11 at 4 22 15 PM" src="https://github.com/user-attachments/assets/f0c6da8e-be3d-4c3c-9d65-cb2a26f482c7">
+
+<img width="1136" alt="Screenshot 2024-07-22 at 11 16 53 AM" src="https://github.com/user-attachments/assets/32b4ed7f-cdbf-4145-bfbf-af767a8a69e6">
 
 ### How It Works
 - **Interactive Selection:** Users can manually select an area on the webpage by dragging a 300px by 300px rectangle. This can be done anywhere on the webpage to focus on content that matters.
@@ -23,6 +24,12 @@ Our web clip capture & restoring algorithm enhances precise selection and automa
 
 ### Auto-Refresh
 To ensure you are viewing the most current information, webpages within Glanceables refresh automatically every 60 seconds.
+
+### How to Run
+1. This project requires [Ollama](https://ollama.com/download) for local LLM integration, please download that first.
+2. Go to the [releases page](https://github.com/devin-liu/glanceables/releases) and download the latest version.
+3. Add your first glanceable by following the interactive guide on our application.
+
 
 ## How to Help Out
 - **Report Issues:** Stumbled upon a problem or have a suggestion? Pop it into our issues section.
