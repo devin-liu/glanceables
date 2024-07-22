@@ -7,7 +7,7 @@ struct JavaScriptLoader {
             print("Failed to load JavaScript file: \(resourceName).\(extensionType)")
             return
         }
-
+        
         let userScript = WKUserScript(source: scriptContent, injectionTime: .atDocumentStart, forMainFrameOnly: false)
         webView.configuration.userContentController.addUserScript(userScript)
     }
