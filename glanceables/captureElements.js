@@ -22,7 +22,6 @@ function getElementPosition(element) {
     };
 }
 
-
 function getUniqueSelector(element) {
     if (!element) return null;
     
@@ -59,12 +58,13 @@ function getUniqueSelector(element) {
     return path;
 }
 
-
 function getElementsWithinBoundary(x, y) {
     const elements = document.elementsFromPoint(x, y);
     const boundarySize = 150;
     const yMin = y - boundarySize;
     const yMax = y + boundarySize;
+    const xMin = x - boundarySize;
+    const xMax = x + boundarySize;
     
     return elements.filter(element => {
         const rect = element.getBoundingClientRect();
@@ -73,11 +73,15 @@ function getElementsWithinBoundary(x, y) {
         const isTopWithinBoundary = rect.top >= yMin && rect.top <= yMax;
         const isBottomWithinBoundary = rect.bottom >= yMin && rect.bottom <= yMax;
         
+        // Check if the horizontal position of the element is within the boundary
+        const isLeftWithinBoundary = rect.left >= xMin && rect.left <= xMax;
+        const isRightWithinBoundary = rect.right >= xMin && rect.right <= xMax;
+        
         // Allow elements where either the top or bottom is within the vertical boundary
-        return (isTopWithinBoundary || isBottomWithinBoundary);
+        // and either the left or right is within the horizontal boundary
+        return (isTopWithinBoundary || isBottomWithinBoundary) && (isLeftWithinBoundary || isRightWithinBoundary);
     });
 }
-
 
 function getElementsFromSelectors(selectors) {
     let elements = [];

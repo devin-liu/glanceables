@@ -127,6 +127,18 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
             self.parent = parent
         }
         
+        func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!
+        ) {
+            // Initialize clipRect in the center of the WebView frame
+            if self.parent.viewModel.currentClipRect == nil, let frame = self.webView?.frame {
+                let rectWidth: CGFloat = 300 // Example width
+                let rectHeight: CGFloat = 300 // Example height
+                let centerX = frame.width / 2 - rectWidth / 2
+                let centerY = frame.height / 2 - rectHeight / 2
+                self.parent.viewModel.currentClipRect = CGRect(x: centerX, y: centerY, width: rectWidth, height: rectHeight)
+            }
+        }
+        
         func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                 let simplifiedPageTitle = URLUtilities.simplifyPageTitle(webView.title ?? "No Title")
@@ -157,7 +169,8 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
         
         func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
             // Extract the domain from the current URL
-            let currentDomain = self.parent.viewModel.validURL!.host.flatMap(extractDomain)
+            guard let validURL = self.parent.viewModel.validURL else { return }
+            let currentDomain = validURL.host.flatMap(extractDomain)
             // Extract the domain from the navigation request URL
             if let newUrl = navigationAction.request.url, let newHost = newUrl.host, let newDomain = extractDomain(from: newHost) {
                 // Update the parent.url only if the domains match

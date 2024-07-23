@@ -88,14 +88,22 @@ class LlamaAPIManager: ObservableObject {
         }
         
         let innerTextPrompt = """
-        InnerText Input:
+        Instructions:
+        - Extract key information such as headlines, prices, and times.
+        - Simplify the text to produce readable content for humans.
+        
+        Input Text:
         \(innerText)
         
-        Output JSON:
+        Expected Output JSON Format:
         {
-            "concise_text": Simplify innerText to produce readable text for humans.
+            "concise_text": "<concise version of input text>"
         }
+        
+        Objective:
+        Transform and extract essential data from the provided text.
         """
+        
         
         performRequest(prompt: innerTextPrompt, completion: completion)
     }
