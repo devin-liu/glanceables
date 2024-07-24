@@ -1,12 +1,17 @@
 import SwiftUI
 
 struct BlackMenuBarView: View {
+    @ObservedObject var captureViewModel = WebPreviewCaptureMenuViewModel.shared
     @State private var searchText: String = ""
     @Binding var isShowingModal: Bool  // Use this Binding to control modal visibility from outside
     
     var body: some View {
         HStack {
             Spacer()
+            if isShowingModal {
+                CaptureModeToggleView(viewModel: captureViewModel)
+                    .padding(.trailing, 24)
+            }
             Button(action: {
                 self.isShowingModal.toggle()  // Toggle the modal visibilityÏÏ
             }) {

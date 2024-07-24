@@ -8,7 +8,9 @@ struct ContentView: View {
     
     var body: some View {
         VStack {
+            
             BlackMenuBarView(isShowingModal: $webClipEditorViewModel.showingURLModal)
+            
             ScrollView {
                 LazyVGrid(columns: [GridItem(.adaptive(minimum: 300))]) {
                     Text("Glanceables")
@@ -30,8 +32,11 @@ struct ContentView: View {
                 webClipEditorViewModel.loadURLs()
             }
             .fullScreenCover(isPresented: $webClipEditorViewModel.showingURLModal) {
-                WebPreviewCaptureMenuView(viewModel: webClipEditorViewModel, captureMenuViewModel: captureMenuViewModel).padding(20)
-                    .background(Color(.systemGray6).opacity(0.85))
+                VStack{
+                    BlackMenuBarView(captureViewModel: captureMenuViewModel, isShowingModal:  $webClipEditorViewModel.showingURLModal)
+                    WebPreviewCaptureMenuView(viewModel: webClipEditorViewModel, captureMenuViewModel: captureMenuViewModel).padding(20)
+                        .background(Color(.systemGray6).opacity(0.85))
+                }
             }
         }
     }

@@ -1,19 +1,34 @@
 import SwiftUI
 
 struct CaptureModeToggleView: View {
-    @Binding var captureModeOn: Bool
-
+    @ObservedObject var viewModel: WebPreviewCaptureMenuViewModel
+    
+    
     var body: some View {
-        HStack {
-            Text("CAPTURE MODE")
-                .font(.system(size: 14, weight: .medium))
-                .foregroundColor(.white)
+        HStack(spacing: 10) {  // Reduced spacing between elements
+            VStack {  // Use VStack for vertical stacking of text
+                Text("CAPTURE")
+                    .font(.system(size: 12, weight: .semibold))
+                    .foregroundColor(.white)
+                Text("MODE")
+                    .font(.system(size: 12, weight: .semibold))
+                    .foregroundColor(.white)
+            }
             
-            Toggle("", isOn: $captureModeOn)
+            Toggle("", isOn: $viewModel.captureModeOn)
                 .toggleStyle(SwitchToggleStyle(tint: .blue))
+                .frame(width: 51, height: 31)  // Specific sizing for the toggle
         }
-        .padding()
-//        .background(Color.black) // Assuming the toggle bar has a black background
-        .cornerRadius(10) // Optional: if you want rounded corners
+        .padding(.horizontal, 10)  // Horizontal padding
+        .padding(.vertical, 5)  // Vertical padding        
+        .cornerRadius(10)  // Optional: Rounded corners for the background
+    }
+}
+
+// SwiftUI Preview
+struct CaptureModeToggleView_Previews: PreviewProvider {
+    static var previews: some View {
+        CaptureModeToggleView(viewModel: WebPreviewCaptureMenuViewModel())
+            .previewLayout(.sizeThatFits)  // Uses minimal size that fits the content
     }
 }

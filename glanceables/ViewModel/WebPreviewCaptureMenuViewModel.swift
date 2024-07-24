@@ -2,6 +2,8 @@ import SwiftUI
 import Combine
 
 class WebPreviewCaptureMenuViewModel: ObservableObject {
+    static let shared = WebPreviewCaptureMenuViewModel()  // Singleton instance
+    
     @Published var userInteracting: Bool = false
     @Published var scrollY: Double = 0
     @Published var capturedElements: [CapturedElement]?

@@ -34,12 +34,12 @@ struct WebPreviewCaptureMenuView: View {
                                         }
                                         .onEnded { _ in
                                             captureMenuViewModel.dragging = false
-                                            captureMenuViewModel.dragEnded = true
-                                            
-                                            //                                        showPreview = true
+                                            captureMenuViewModel.dragEnded = true                                                                                        
                                         }
                                 )
-                            CaptureRectangleView(captureMenuViewModel: captureMenuViewModel, viewModel: viewModel)
+                            if captureMenuViewModel.captureModeOn {
+                                CaptureRectangleView(captureMenuViewModel: captureMenuViewModel, viewModel: viewModel)
+                            }
                         }
                         
                     }
