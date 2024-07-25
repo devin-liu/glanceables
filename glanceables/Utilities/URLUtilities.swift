@@ -40,4 +40,12 @@ struct URLUtilities {
         // If no invalid character is found, trim and return the whole title
         return title.trimmingCharacters(in: .whitespaces)
     }
+    
+    // Helper function to extract the domain from a hostname
+    static func extractDomain(from host: String) -> String? {
+        let components = host.components(separatedBy: ".")
+        guard components.count >= 2 else { return nil }
+        return components.suffix(2).joined(separator: ".")
+    }
+    
 }

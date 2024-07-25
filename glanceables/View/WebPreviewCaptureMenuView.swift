@@ -8,8 +8,12 @@ struct WebPreviewCaptureMenuView: View {
     var body: some View {
         ZStack {
             VStack{
-                AddURLFormView(viewModel: viewModel)
-                    .padding(10)
+                HStack{
+                    NavigationButtonsView(viewModel: viewModel)
+                        .padding(10)
+                    AddURLFormView(viewModel: viewModel)
+                        .padding(10)
+                }
                 
                 if let screenshot = $viewModel.screenShot.wrappedValue, captureMenuViewModel.showPreview {
                     Image(uiImage: screenshot)
@@ -34,7 +38,7 @@ struct WebPreviewCaptureMenuView: View {
                                         }
                                         .onEnded { _ in
                                             captureMenuViewModel.dragging = false
-                                            captureMenuViewModel.dragEnded = true                                                                                        
+                                            captureMenuViewModel.dragEnded = true
                                         }
                                 )
                             if captureMenuViewModel.captureModeOn {

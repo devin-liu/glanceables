@@ -5,6 +5,7 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
     @ObservedObject var viewModel: WebClipEditorViewModel
     @ObservedObject var captureMenuViewModel: DraggableWebCaptureViewModel
     
+    
     func makeUIView(context: Context) -> WKWebView {
         let webView = WKWebView()
         webView.navigationDelegate = context.coordinator
@@ -22,16 +23,12 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
         return webView
     }
     
-    func updateUIView(_ webView: WKWebView, context: Context) {
-        // First, check if webView.url is nil
-        if webView.url == nil {
-            // Safely unwrap the optional url
-            if let validURL = viewModel.validURL {
-                // Now you have a non-nil URL, create a URLRequest
-                let request = URLRequest(url: validURL)
-                webView.load(request)
-            }
+    func updateUIView(_ webView: WKWebView, context: Context) {        
+        if let validURL = viewModel.validURL, webView.url != validURL {
+            let request = URLRequest(url: validURL)
+            webView.load(request)
         }
+        
         // Call the screenshot capturing method on the coordinator
         context.coordinator.debouncedCaptureScreenshot()
     }
@@ -137,6 +134,10 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
                 let centerY = frame.height / 2 - rectHeight / 2
                 self.parent.viewModel.currentClipRect = CGRect(x: centerX, y: centerY, width: rectWidth, height: rectHeight)
             }
+            
+            if let newUrl = webView.url {
+                self.parent.viewModel.updateOrAddValidURL(newUrl)
+            }
         }
         
         func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
@@ -158,31 +159,11 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
                     self.parent.viewModel.currentClipRect = CGRect(x: centerX, y: centerY, width: rectWidth, height: rectHeight)
                 }
             }
-        }        
-        
-        // Helper function to extract the domain from a hostname
-        func extractDomain(from host: String) -> String? {
-            let components = host.components(separatedBy: ".")
-            guard components.count >= 2 else { return nil }
-            return components.suffix(2).joined(separator: ".")
-        }
-        
-        func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
-            // Extract the domain from the current URL
-            guard let validURL = self.parent.viewModel.validURL else { return }
-            let currentDomain = validURL.host.flatMap(extractDomain)
-            // Extract the domain from the navigation request URL
-            if let newUrl = navigationAction.request.url, let newHost = newUrl.host, let newDomain = extractDomain(from: newHost) {
-                // Update the parent.url only if the domains match
-                if newDomain == currentDomain {
-                    self.parent.viewModel.validURL = newUrl
-                } else {
-                    print("Domain mismatch. Current domain: \(currentDomain ?? "None"), New domain: \(newDomain)")
-                }
-            } else {
-                print("Invalid or no host found in new URL")
+            
+            if let newUrl = webView.url {
+                self.parent.viewModel.updateOrAddValidURL(newUrl)
             }
-            decisionHandler(.allow)
+            
         }
         
         func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
@@ -209,7 +190,7 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
         
         func userDidStopInteracting() {
             if let newUrl = self.webView?.url {
-                self.parent.viewModel.validURL = newUrl
+                self.parent.viewModel.updateOrAddValidURL(newUrl)
             }
             
         }

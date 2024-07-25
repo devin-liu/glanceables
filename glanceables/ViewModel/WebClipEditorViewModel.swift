@@ -6,9 +6,18 @@ class WebClipEditorViewModel: ObservableObject {
     @Published var showingURLModal = false
     @Published var webClips: [WebClip] = []
     @Published var urlString = ""
-    @Published var validURL:URL?
+    @Published var validURLs: [URL] = []  // Now storing an array of URLs
     @Published var isEditing = false
-    @Published var selectedURLIndex: Int? = nil
+    @Published var selectedValidURLIndex: Int? = nil {
+        didSet {
+            if let index = selectedValidURLIndex, validURLs.indices.contains(index) {
+                urlString = validURLs[index].absoluteString
+            } else {
+                urlString = ""  // Clear urlString if there's no valid URL selected
+            }
+        }
+    }
+    @Published var selectedWebClipIndex: Int? = nil
     @Published var currentClipRect: CGRect?
     @Published var isURLValid = true
     @Published var showValidationError = false
@@ -18,6 +27,13 @@ class WebClipEditorViewModel: ObservableObject {
     @Published var screenshotPath: String?
     
     private var userDefaultsViewModel = WebClipUserDefaultsViewModel.shared
+    
+    var validURL: URL? {
+        guard let index = selectedValidURLIndex, validURLs.indices.contains(index) else {
+            return nil
+        }
+        return validURLs[index]
+    }
     
     // Add a computed property to access a specific WebClip by ID
     func webClip(withId id: UUID) -> WebClip? {
@@ -56,7 +72,29 @@ class WebClipEditorViewModel: ObservableObject {
     func validateURL() {
         let (isValid, url) = URLUtilities.validateURL(from: urlString)
         isURLValid = isValid
-        validURL = url
+        if let url = url {
+            if validURLs.isEmpty {
+                validURLs.append(url)
+                selectedValidURLIndex = 0 // Initialize the index with the first URL
+            } else {
+                updateOrAddValidURL(url)
+            }
+        }
+    }
+    
+    func updateOrAddValidURL(_ newURL: URL) {
+        if let selectedIndex = selectedValidURLIndex,
+           let currentURL = validURL,
+           let newDomain = URLUtilities.extractDomain(from: newURL.absoluteString),
+           let currentDomain = URLUtilities.extractDomain(from: currentURL.absoluteString),
+           newDomain == currentDomain {
+            validURLs[selectedIndex] = newURL // Replace the URL at the current index if domains match
+        } else {
+            // There is no selected index or domains are not provided; skip domain checking
+            print("No selected index or domain provided; adding URL")
+            validURLs.append(newURL)
+            selectedValidURLIndex = validURLs.count - 1 // Update the index to the new URL if not set
+        }
     }
     
     func addWebClip(screenshot: UIImage?, capturedElements: [CapturedElement]?) {
@@ -112,13 +150,13 @@ class WebClipEditorViewModel: ObservableObject {
         showingURLModal = false
         urlString = ""
         isEditing = false
-        selectedURLIndex = nil
+        selectedWebClipIndex = nil
         isURLValid = true
     }
     
     func openEditForItem(item: WebClip) {
         if let index = webClips.firstIndex(where: { $0.id == item.id }) {
-            selectedURLIndex = index
+            selectedWebClipIndex = index
             urlString = webClips[index].url.absoluteURL.absoluteString
             isEditing = true
             showingURLModal = true
