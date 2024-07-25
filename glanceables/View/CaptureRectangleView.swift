@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct CaptureRectangleView: View {
-    @ObservedObject var captureMenuViewModel: WebPreviewCaptureMenuViewModel
+    @ObservedObject var captureMenuViewModel: DraggableWebCaptureViewModel
     @ObservedObject var viewModel: WebClipEditorViewModel
     
     var body: some View {
@@ -59,7 +59,7 @@ struct CaptureRectangleView_Previews: PreviewProvider {
     static var previews: some View {
         GeometryReader { geometry in
             let viewModel = WebClipEditorViewModel()
-            let captureMenuViewModel = WebPreviewCaptureMenuViewModel()
+            let captureMenuViewModel = DraggableWebCaptureViewModel()
             let screenWidth = geometry.size.width
             let screenHeight = geometry.size.height
             

@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct BlackMenuBarView: View {
-    @ObservedObject var captureViewModel = WebPreviewCaptureMenuViewModel.shared
+    @ObservedObject var captureViewModel = DraggableWebCaptureViewModel.shared
     @State private var searchText: String = ""
     @Binding var isShowingModal: Bool  // Use this Binding to control modal visibility from outside
     

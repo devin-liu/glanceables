@@ -3,14 +3,12 @@ import UniformTypeIdentifiers
 
 struct ContentView: View {
     @StateObject private var webClipEditorViewModel = WebClipEditorViewModel.shared
-    @StateObject private var captureMenuViewModel = WebPreviewCaptureMenuViewModel()
+    @StateObject private var captureMenuViewModel = DraggableWebCaptureViewModel()
     @State private var draggedItem: WebClip?
     
     var body: some View {
         VStack {
-            
             BlackMenuBarView(isShowingModal: $webClipEditorViewModel.showingURLModal)
-            
             ScrollView {
                 LazyVGrid(columns: [GridItem(.adaptive(minimum: 300))]) {
                     Text("Glanceables")

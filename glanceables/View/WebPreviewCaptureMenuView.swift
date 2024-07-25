@@ -3,7 +3,7 @@ import Combine
 
 struct WebPreviewCaptureMenuView: View {
     @ObservedObject var viewModel: WebClipEditorViewModel
-    @ObservedObject var captureMenuViewModel: WebPreviewCaptureMenuViewModel
+    @ObservedObject var captureMenuViewModel: DraggableWebCaptureViewModel
     
     var body: some View {
         ZStack {
@@ -86,7 +86,7 @@ struct WebPreviewCaptureMenuView_Previews: PreviewProvider {
     static var previews: some View {
         WebPreviewCaptureMenuView(
             viewModel: previewViewModel,
-            captureMenuViewModel: WebPreviewCaptureMenuViewModel()
+            captureMenuViewModel: DraggableWebCaptureViewModel()
         )
     }
 }
