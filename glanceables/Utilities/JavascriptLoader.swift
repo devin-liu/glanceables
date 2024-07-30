@@ -15,14 +15,12 @@ struct JavaScriptLoader {
     static func injectGetElementsFromSelectorsScript(webView: WKWebView, elementSelector: String) {
         let jsCode = """
         (function() {
-            function restoreElements() {
+            function restoreElement() {
                 try {
                     const elementSelector = "\(elementSelector)";
-                    const elements = document.querySelectorAll(elementSelector);
-                    const selectors = Array.from(elements).map(element => {
-                        return {selector: elementSelector, innerText: element.innerText, outerHTML: element.outerHTML};
-                    });
-                    
+                    const element = document.querySelector(elementSelector);
+                    const selectors =
+                        [{selector: elementSelector, innerText: element.innerText, outerHTML: element.outerHTML}]
                     window.webkit.messageHandlers.elementsFromSelectorsHandler.postMessage(JSON.stringify(selectors));
                 } catch (error) {
                     console.error('Error in script:', error);
@@ -33,9 +31,9 @@ struct JavaScriptLoader {
             function watchForElement() {
                 const elementSelector = "\(elementSelector)";
                 const observer = new MutationObserver((mutationsList, observer) => {
-                    const elements = document.querySelectorAll(elementSelector);
-                    if (elements.length > 0) {
-                        restoreElements();
+                    const element = document.querySelector(elementSelector);
+                    if (element) {
+                        restoreElement();
                         observer.disconnect(); // Stop observing once elements are found
                     }
                 });
@@ -56,4 +54,6 @@ struct JavaScriptLoader {
         
         webView.configuration.userContentController.addUserScript(WKUserScript(source: jsCode, injectionTime: .atDocumentEnd, forMainFrameOnly: false))
     }
+    
+    
 }
