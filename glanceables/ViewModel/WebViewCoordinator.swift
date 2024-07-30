@@ -114,8 +114,8 @@ class WebViewCoordinator: NSObject, WKNavigationDelegate, WKUIDelegate, UIScroll
         guard let webView = webView else { return }
         guard let item = self.parent.item else { return }
         
-        
         let configuration = WKSnapshotConfiguration()
+        
         if let clipRect = item.clipRect {
             // Adjust clipRect based on the current zoom scale and content offset
             let zoomScale = webView.scrollView.zoomScale

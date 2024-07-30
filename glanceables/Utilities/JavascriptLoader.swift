@@ -41,8 +41,8 @@ struct JavaScriptLoader {
                 observer.observe(document.body, { childList: true, subtree: true });
         
                 // Check if the elements are already present
-                const elements = document.querySelectorAll(elementSelector);
-                if (elements.length > 0) {
+                const element = document.querySelector(elementSelector);
+                if (element) {
                     restoreElements();
                     observer.disconnect();
                 }
@@ -55,5 +55,33 @@ struct JavaScriptLoader {
         webView.configuration.userContentController.addUserScript(WKUserScript(source: jsCode, injectionTime: .atDocumentEnd, forMainFrameOnly: false))
     }
     
-    
+    static func injectIsolateElementFromSelectorScript(webView: WKWebView, elementSelector: String) {
+        let jsCode = """
+            (function() {
+                function watchForElement() {
+                    const elementSelector = "\(elementSelector)";
+                    const observer = new MutationObserver((mutationsList, observer) => {
+                        const element = document.querySelector(elementSelector);
+                        if (element) {
+                            isolateElement("\(elementSelector)");
+                            observer.disconnect(); // Stop observing once elements are found
+                        }
+                    });
+            
+                    observer.observe(document.body, { childList: true, subtree: true });
+            
+                    // Check if the elements are already present
+                    const element = document.querySelector(elementSelector);
+                    if (element) {
+                        isolateElement("\(elementSelector)");
+                        observer.disconnect();
+                    }
+                }
+            
+                watchForElement();
+            })();
+            """
+        
+        webView.configuration.userContentController.addUserScript(WKUserScript(source: jsCode, injectionTime: .atDocumentEnd, forMainFrameOnly: false))
+    }
 }

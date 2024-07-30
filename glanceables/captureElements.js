@@ -100,7 +100,7 @@ function getElementsFromSelectors(selectors) {
 function isolateElement(selector) {
     // Select the target element
     const target = document.querySelector(selector);
-
+    
     // Hide all siblings of the target
     let sibling = target.parentNode.firstChild;
     while (sibling) {
@@ -109,14 +109,14 @@ function isolateElement(selector) {
         }
         sibling = sibling.nextSibling;
     }
-
+    
     // Traverse up the DOM tree and hide other branches not containing the target
     let ancestor = target.parentNode;
     while (ancestor && ancestor !== document.body) {
         // Hide all children of the ancestor, except the direct child that is an ancestor of the target
         Array.from(ancestor.children).forEach(child => {
             if (!child.contains(target)) {
-                child.style.display = 'none';
+                child.style.visibility = 'hidden';
             }
         });
         ancestor = ancestor.parentNode;
