@@ -1,7 +1,8 @@
 import SwiftUI
 import Combine
 
-class ContentViewModel: ObservableObject {
+class DashboardViewModel: ObservableObject {
+    static let shared = DashboardViewModel()  // Singleton instance
     @Published var showingURLModal: Bool = false
     @Published var draggedItem: WebClip?
     @Published var webClips: [WebClip] = []
@@ -18,6 +19,7 @@ class ContentViewModel: ObservableObject {
     
     func openEditForItem(item: WebClip) {
         webClipEditorViewModel.openEditForItem(item: item)
+        showingURLModal = true
     }
     
     func deleteItem(item: WebClip) {
@@ -29,5 +31,10 @@ class ContentViewModel: ObservableObject {
         webClips.move(fromOffsets: fromOffsets, toOffset: toOffset)
         // Update the main view model
         webClipEditorViewModel.webClips = webClips
+    }
+    
+    func resetModalView() {
+        webClipEditorViewModel.resetModalState()
+        showingURLModal = false
     }
 }

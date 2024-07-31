@@ -2,12 +2,12 @@ import SwiftUI
 import UniformTypeIdentifiers
 
 struct ContentView: View {
-    @StateObject private var contentViewModel = ContentViewModel()
+    @StateObject private var contentViewModel = DashboardViewModel.shared
     @StateObject private var captureMenuViewModel = DraggableWebCaptureViewModel()
     
     var body: some View {
         VStack {
-            BlackMenuBarView(isShowingModal: $contentViewModel.showingURLModal)
+            BlackMenuBarView(viewModel: contentViewModel)
             ScrollView {
                 LazyVGrid(columns: [GridItem(.adaptive(minimum: 300))]) {
                     Text("Glanceables")
@@ -30,7 +30,7 @@ struct ContentView: View {
             }
             .fullScreenCover(isPresented: $contentViewModel.showingURLModal) {
                 VStack{
-                    BlackMenuBarView(captureViewModel: captureMenuViewModel, isShowingModal: $contentViewModel.showingURLModal)
+                    BlackMenuBarView(viewModel: contentViewModel)
                     WebPreviewCaptureMenuView(
                         viewModel: WebClipEditorViewModel.shared,
                         captureMenuViewModel: captureMenuViewModel,

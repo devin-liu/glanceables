@@ -1,19 +1,17 @@
 import SwiftUI
 
 struct BlackMenuBarView: View {
-    @ObservedObject var captureViewModel = DraggableWebCaptureViewModel.shared
-    @State private var searchText: String = ""
-    @Binding var isShowingModal: Bool  // Use this Binding to control modal visibility from outside
+    @ObservedObject var viewModel = DashboardViewModel.shared
     
     var body: some View {
         HStack {
             Spacer()
-            if isShowingModal {
-                CaptureModeToggleView(viewModel: captureViewModel)
+            if viewModel.showingURLModal {
+                CaptureModeToggleView()
                     .padding(.trailing, 24)
             }
             Button(action: {
-                self.isShowingModal.toggle()  // Toggle the modal visibilityÏÏ
+                viewModel.showingURLModal.toggle()  // Toggle the modal visibility
             }) {
                 Image(systemName: "plus")
                     .font(.system(size: 40))
@@ -45,9 +43,10 @@ struct SearchBar: View {
 
 struct ParentView: View {
     @State private var showingAddURLModal = false
+    var viewModel = DashboardViewModel() // Ensure this matches the initialization requirements of your DashboardViewModel
     
     var body: some View {
-        BlackMenuBarView(isShowingModal: $showingAddURLModal)
+        BlackMenuBarView(viewModel: viewModel)
             .frame(maxHeight: .infinity, alignment: .top)
     }
 }

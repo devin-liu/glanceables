@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct CaptureModeToggleView: View {
-    @ObservedObject var viewModel: DraggableWebCaptureViewModel
+    @ObservedObject private var viewModel = DraggableWebCaptureViewModel.shared
     
     
     var body: some View {
@@ -20,7 +20,7 @@ struct CaptureModeToggleView: View {
                 .frame(width: 51, height: 31)  // Specific sizing for the toggle
         }
         .padding(.horizontal, 10)  // Horizontal padding
-        .padding(.vertical, 5)  // Vertical padding        
+        .padding(.vertical, 5)  // Vertical padding
         .cornerRadius(10)  // Optional: Rounded corners for the background
     }
 }
@@ -28,7 +28,7 @@ struct CaptureModeToggleView: View {
 // SwiftUI Preview
 struct CaptureModeToggleView_Previews: PreviewProvider {
     static var previews: some View {
-        CaptureModeToggleView(viewModel: DraggableWebCaptureViewModel())
+        CaptureModeToggleView()
             .previewLayout(.sizeThatFits)  // Uses minimal size that fits the content
     }
 }

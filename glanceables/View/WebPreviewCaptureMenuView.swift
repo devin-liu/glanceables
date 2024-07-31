@@ -5,6 +5,8 @@ struct WebPreviewCaptureMenuView: View {
     @ObservedObject var viewModel: WebClipEditorViewModel
     @ObservedObject var captureMenuViewModel: DraggableWebCaptureViewModel
     @ObservedObject var webPreviewCaptureMenuViewModel: WebPreviewCaptureMenuViewModel
+    @ObservedObject var dashboardViewModel = DashboardViewModel.shared
+    
     
     var body: some View {
         ZStack {
@@ -56,7 +58,7 @@ struct WebPreviewCaptureMenuView: View {
             VStack {
                 HStack {
                     Spacer()
-                    RedXButton(action: viewModel.resetModalState)
+                    RedXButton(action: dashboardViewModel.resetModalView)
                         .padding(.top, -20)
                         .padding(.trailing, -20)
                 }

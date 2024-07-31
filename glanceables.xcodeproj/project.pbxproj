@@ -18,7 +18,7 @@
 		036D58E72C3CC8460042D491 /* WebClipUserDefaultsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 036D58E62C3CC8460042D491 /* WebClipUserDefaultsViewModel.swift */; };
 		036F464E2C59C20C005E1377 /* AddURLFormViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 036F464D2C59C20C005E1377 /* AddURLFormViewModel.swift */; };
 		036F46502C59C28D005E1377 /* WebPreviewCaptureMenuViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 036F464F2C59C28D005E1377 /* WebPreviewCaptureMenuViewModel.swift */; };
-		036F46522C59C2D3005E1377 /* ContentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 036F46512C59C2D3005E1377 /* ContentViewModel.swift */; };
+		036F46522C59C2D3005E1377 /* DashboardViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 036F46512C59C2D3005E1377 /* DashboardViewModel.swift */; };
 		03778E402C35E740009CB9A1 /* captureElements.js in Resources */ = {isa = PBXBuildFile; fileRef = 03778E3E2C35E6FC009CB9A1 /* captureElements.js */; };
 		03778E422C36028F009CB9A1 /* CapturedElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03778E412C36028F009CB9A1 /* CapturedElement.swift */; };
 		0378B8672C096D850005BAE5 /* glanceablesApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0378B8662C096D850005BAE5 /* glanceablesApp.swift */; };
@@ -69,7 +69,7 @@
 		036D58E62C3CC8460042D491 /* WebClipUserDefaultsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebClipUserDefaultsViewModel.swift; sourceTree = "<group>"; };
 		036F464D2C59C20C005E1377 /* AddURLFormViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AddURLFormViewModel.swift; path = glanceables/ViewModel/AddURLFormViewModel.swift; sourceTree = SOURCE_ROOT; };
 		036F464F2C59C28D005E1377 /* WebPreviewCaptureMenuViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = WebPreviewCaptureMenuViewModel.swift; path = glanceables/ViewModel/WebPreviewCaptureMenuViewModel.swift; sourceTree = SOURCE_ROOT; };
-		036F46512C59C2D3005E1377 /* ContentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentViewModel.swift; sourceTree = "<group>"; };
+		036F46512C59C2D3005E1377 /* DashboardViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardViewModel.swift; sourceTree = "<group>"; };
 		03778E3E2C35E6FC009CB9A1 /* captureElements.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = captureElements.js; sourceTree = "<group>"; };
 		03778E412C36028F009CB9A1 /* CapturedElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapturedElement.swift; sourceTree = "<group>"; };
 		0378B8632C096D850005BAE5 /* glanceables.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = glanceables.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -215,7 +215,7 @@
 		03A8685E2C4EE5B300CCB79D /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
-				036F46512C59C2D3005E1377 /* ContentViewModel.swift */,
+				036F46512C59C2D3005E1377 /* DashboardViewModel.swift */,
 				036D58E62C3CC8460042D491 /* WebClipUserDefaultsViewModel.swift */,
 				03A868602C4F0FB300CCB79D /* WebViewCoordinator.swift */,
 				036D58E42C3C99300042D491 /* WebClipEditorViewModel.swift */,
@@ -368,7 +368,7 @@
 				038208E22C1BB40400606536 /* WebViewSnapshotRefresher.swift in Sources */,
 				03A868632C51FF0800CCB79D /* NavigationButtonsView.swift in Sources */,
 				03C5DAD92C2A4DB20061FA25 /* AddURLFormView.swift in Sources */,
-				036F46522C59C2D3005E1377 /* ContentViewModel.swift in Sources */,
+				036F46522C59C2D3005E1377 /* DashboardViewModel.swift in Sources */,
 				030062A72C0FE8A100B0242D /* WebPreviewCaptureMenuView.swift in Sources */,
 				03C5DAD12C23A76B0061FA25 /* ScreenshotUtils.swift in Sources */,
 				03A868612C4F0FB300CCB79D /* WebViewCoordinator.swift in Sources */,

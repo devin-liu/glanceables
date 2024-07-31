@@ -3,7 +3,6 @@ import SwiftUI
 
 class WebClipEditorViewModel: ObservableObject {
     static let shared = WebClipEditorViewModel()  // Singleton instance
-    @Published var showingURLModal = false
     @Published var webClips: [WebClip] = []
     @Published var urlString = ""
     @Published var validURLs: [URL] = []  // Now storing an array of URLs
@@ -49,16 +48,12 @@ class WebClipEditorViewModel: ObservableObject {
         loadURLs()
     }
     
-    func saveScreenShot(_ newScreenShot: UIImage){
+    func saveScreenShot(_ newScreenShot: UIImage) {
         screenShot = newScreenShot
     }
     
-    func saveOriginalSize(newOriginalSize: CGSize){
+    func saveOriginalSize(newOriginalSize: CGSize) {
         originalSize = newOriginalSize
-    }
-    
-    func toggleURLModal() {
-        showingURLModal.toggle()
     }
     
     func loadURLs() {
@@ -146,8 +141,8 @@ class WebClipEditorViewModel: ObservableObject {
         saveURLs()
     }
     
+//    TODO fix conflicting role with DashboardViewModel 
     func resetModalState() {
-        showingURLModal = false
         urlString = ""
         isEditing = false
         selectedWebClipIndex = nil
@@ -159,7 +154,6 @@ class WebClipEditorViewModel: ObservableObject {
             selectedWebClipIndex = index
             urlString = webClips[index].url.absoluteURL.absoluteString
             isEditing = true
-            showingURLModal = true
         }
     }
     
