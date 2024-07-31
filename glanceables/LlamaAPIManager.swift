@@ -30,7 +30,7 @@ class LlamaAPIManager: ObservableObject {
         let body: [String: Any] = [
             "model": "llama3",
             "prompt": prompt,
-            "options": ["num_ctx": 4096],
+            "options": ["num_ctx": 200],
             "format": "json",
             "stream": false,
         ]

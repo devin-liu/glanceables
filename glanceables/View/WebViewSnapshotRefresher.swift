@@ -46,7 +46,7 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
     }
     
     func injectGetElementsFromSelectorsScript(webView: WKWebView) {
-        guard let capturedElement = self.item?.capturedElements?.first else { return }
+        guard let capturedElement = self.item?.capturedElements?.last else { return }
         let elementSelector = capturedElement.selector
         JavaScriptLoader.injectGetElementsFromSelectorsScript(webView: webView, elementSelector: elementSelector)
     }
