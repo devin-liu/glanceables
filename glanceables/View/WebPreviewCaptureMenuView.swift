@@ -4,18 +4,19 @@ import Combine
 struct WebPreviewCaptureMenuView: View {
     @ObservedObject var viewModel: WebClipEditorViewModel
     @ObservedObject var captureMenuViewModel: DraggableWebCaptureViewModel
+    @ObservedObject var webPreviewCaptureMenuViewModel: WebPreviewCaptureMenuViewModel
     
     var body: some View {
         ZStack {
-            VStack{
-                HStack{
+            VStack {
+                HStack {
                     NavigationButtonsView(viewModel: viewModel)
                         .padding(10)
-                    AddURLFormView(viewModel: viewModel)
+                    AddURLFormView(viewModel: AddURLFormViewModel()) // Create a new instance or pass as needed
                         .padding(10)
                 }
                 
-                if let screenshot = $viewModel.screenShot.wrappedValue, captureMenuViewModel.showPreview {
+                if let screenshot = viewModel.screenShot, captureMenuViewModel.showPreview {
                     Image(uiImage: screenshot)
                         .frame(width: 300, height: 300)
                         .padding()
@@ -34,7 +35,8 @@ struct WebPreviewCaptureMenuView: View {
                                             captureMenuViewModel.endLocation = value.location
                                             captureMenuViewModel.dragging = true
                                             captureMenuViewModel.dragEnded = false
-                                            updateClipRect(endLocation: value.location, bounds: geometry.size)
+                                            webPreviewCaptureMenuViewModel.updateClipRect(endLocation: value.location, bounds: geometry.size)
+                                            viewModel.currentClipRect = webPreviewCaptureMenuViewModel.currentClipRect
                                         }
                                         .onEnded { _ in
                                             captureMenuViewModel.dragging = false
@@ -45,53 +47,37 @@ struct WebPreviewCaptureMenuView: View {
                                 CaptureRectangleView(captureMenuViewModel: captureMenuViewModel, viewModel: viewModel)
                             }
                         }
-                        
                     }
-                    
                 }
                 Spacer()
             }
             .background(Color(UIColor.secondarySystemBackground))
             .cornerRadius(10)
-            // Red 'X' Button Positioned Absolutely at the Top-Right
             VStack {
                 HStack {
-                    Spacer() // Push everything to the right
+                    Spacer()
                     RedXButton(action: viewModel.resetModalState)
-                        .padding(.top, -20) // Negative top padding to move the button outside
-                        .padding(.trailing, -20) // Negative top padding to move the button outside
+                        .padding(.top, -20)
+                        .padding(.trailing, -20)
                 }
-                Spacer() // Push everything to the top
+                Spacer()
             }
         }
-    }
-    
-    private func updateClipRect(endLocation: CGPoint, bounds: CGSize) {
-        let width = 300.0
-        let height = 300.0
-        
-        let centerX = endLocation.x
-        let centerY = endLocation.y
-        
-        let minX = max(0, min(centerX - width / 2, bounds.width - width))
-        let minY = max(0, min(centerY - height / 2, bounds.height - height))
-        
-        viewModel.currentClipRect = CGRect(x: minX, y: minY, width: width, height: height)
     }
 }
 
 struct WebPreviewCaptureMenuView_Previews: PreviewProvider {
     static var previewViewModel: WebClipEditorViewModel = {
         let model = WebClipEditorViewModel()
-        model.urlString = "https://news.ycombinator.com/"  // Set the URL string here
+        model.urlString = "https://news.ycombinator.com/"
         model.validateURL()
         return model
     }()
     static var previews: some View {
         WebPreviewCaptureMenuView(
             viewModel: previewViewModel,
-            captureMenuViewModel: DraggableWebCaptureViewModel()
+            captureMenuViewModel: DraggableWebCaptureViewModel(),
+            webPreviewCaptureMenuViewModel: WebPreviewCaptureMenuViewModel()
         )
     }
 }
-

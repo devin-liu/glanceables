@@ -2,13 +2,12 @@ import SwiftUI
 import UniformTypeIdentifiers
 
 struct ContentView: View {
-    @StateObject private var webClipEditorViewModel = WebClipEditorViewModel.shared
+    @StateObject private var contentViewModel = ContentViewModel()
     @StateObject private var captureMenuViewModel = DraggableWebCaptureViewModel()
-    @State private var draggedItem: WebClip?
     
     var body: some View {
         VStack {
-            BlackMenuBarView(isShowingModal: $webClipEditorViewModel.showingURLModal)
+            BlackMenuBarView(isShowingModal: $contentViewModel.showingURLModal)
             ScrollView {
                 LazyVGrid(columns: [GridItem(.adaptive(minimum: 300))]) {
                     Text("Glanceables")
@@ -17,7 +16,7 @@ struct ContentView: View {
                         .foregroundColor(Color.black)
                 }
                 LazyVGrid(columns: [GridItem(.adaptive(minimum: 300))]) {
-                    if webClipEditorViewModel.webClips.isEmpty {
+                    if contentViewModel.webClips.isEmpty {
                         emptyStateView
                     } else {
                         urlGrid
@@ -27,13 +26,18 @@ struct ContentView: View {
             .padding()
             .background(Color(.systemGray6).opacity(0.85))
             .onAppear {
-                webClipEditorViewModel.loadURLs()
+                contentViewModel.loadURLs()
             }
-            .fullScreenCover(isPresented: $webClipEditorViewModel.showingURLModal) {
+            .fullScreenCover(isPresented: $contentViewModel.showingURLModal) {
                 VStack{
-                    BlackMenuBarView(captureViewModel: captureMenuViewModel, isShowingModal:  $webClipEditorViewModel.showingURLModal)
-                    WebPreviewCaptureMenuView(viewModel: webClipEditorViewModel, captureMenuViewModel: captureMenuViewModel).padding(20)
-                        .background(Color(.systemGray6).opacity(0.85))
+                    BlackMenuBarView(captureViewModel: captureMenuViewModel, isShowingModal: $contentViewModel.showingURLModal)
+                    WebPreviewCaptureMenuView(
+                        viewModel: WebClipEditorViewModel.shared,
+                        captureMenuViewModel: captureMenuViewModel,
+                        webPreviewCaptureMenuViewModel: WebPreviewCaptureMenuViewModel()
+                    )
+                    .padding(20)
+                    .background(Color(.systemGray6).opacity(0.85))
                 }
             }
         }
@@ -42,7 +46,7 @@ struct ContentView: View {
     var emptyStateView: some View {
         VStack {
             Spacer()
-            CreateButtonView(isShowingModal: $webClipEditorViewModel.showingURLModal)
+            CreateButtonView(isShowingModal: $contentViewModel.showingURLModal)
                 .padding()
             Spacer()
         }
@@ -50,20 +54,19 @@ struct ContentView: View {
     }
     
     var urlGrid: some View {
-        ForEach(webClipEditorViewModel.webClips) { item in
+        ForEach(contentViewModel.webClips) { item in
             WebGridSingleSnapshotView(id: item.id)
                 .onDrag {
-                    self.draggedItem = item  // Ensure draggedItem is a @State or similar to hold the state
+                    self.contentViewModel.draggedItem = item
                     return NSItemProvider(object: item.url.absoluteString as NSString)
                 }
-                .onDrop(of: [UTType.text], delegate: DropViewDelegate(item: item, viewModel: $webClipEditorViewModel.webClips, draggedItem: $draggedItem))
-            
+                .onDrop(of: [UTType.text], delegate: DropViewDelegate(item: item, viewModel: $contentViewModel.webClips, draggedItem: $contentViewModel.draggedItem))
                 .contextMenu {
                     Button("Edit") {
-                        webClipEditorViewModel.openEditForItem(item: item)
+                        contentViewModel.openEditForItem(item: item)
                     }
                     Button("Delete") {
-                        webClipEditorViewModel.deleteItem(item: item)
+                        contentViewModel.deleteItem(item: item)
                     }
                 }
         }
@@ -97,4 +100,3 @@ struct ContentView_Previews: PreviewProvider {
         ContentView()
     }
 }
-

@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct AddURLFormView: View {
-    @ObservedObject var viewModel: WebClipEditorViewModel
+    @ObservedObject var viewModel: AddURLFormViewModel
     @State private var debounceWorkItem: DispatchWorkItem?
     
     var body: some View {
@@ -16,12 +16,12 @@ struct AddURLFormView: View {
                 })
             
             if viewModel.urlString != "" {
-                Button(action: clearTextField) {
+                Button(action: viewModel.clearTextField) {
                     Image(systemName: "xmark.circle.fill")
                         .foregroundColor(.gray)
                 }
-                .padding(.trailing, 10) // Slight padding before the right edge
-            }else{
+                .padding(.trailing, 10)
+            } else {
                 Image(systemName: "magnifyingglass")
                     .foregroundColor(.gray)
             }
@@ -30,15 +30,15 @@ struct AddURLFormView: View {
                     .foregroundColor(.red)
             }
         }
-        .multilineTextAlignment(.center)  // Centers the text inside the TextField
+        .multilineTextAlignment(.center)
         .frame(width: UIScreen.main.bounds.width * 0.7)
-        .padding(.vertical, 5)  // Adjust vertical padding to increase height
-        .padding(.horizontal, 20)  // Adjust horizontal padding for wider spacing
-        .background(Color(.systemGray5))  // Set the background color
-        .cornerRadius(10)  // Apply corner radius to smooth the edges
+        .padding(.vertical, 5)
+        .padding(.horizontal, 20)
+        .background(Color(.systemGray5))
+        .cornerRadius(10)
         .overlay(
             RoundedRectangle(cornerRadius: 10)
-                .stroke(Color(.systemGray3), lineWidth: 1)  // Apply a light gray border
+                .stroke(Color(.systemGray3), lineWidth: 1)
         )
         .onAppear {
             if !viewModel.urlString.isEmpty {
@@ -55,16 +55,12 @@ struct AddURLFormView: View {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.15, execute: debounceWorkItem!)
         viewModel.showValidationError = true
     }
-    
-    private func clearTextField() {
-        viewModel.urlString = ""
-    }
 }
 
 struct AddURLFormView_Previews: PreviewProvider {
     static var previews: some View {
-        VStack{
-            AddURLFormView(viewModel: WebClipEditorViewModel())
+        VStack {
+            AddURLFormView(viewModel: AddURLFormViewModel())
                 .previewLayout(.sizeThatFits)
                 .padding()
             
