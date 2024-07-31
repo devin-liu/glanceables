@@ -3,6 +3,7 @@ import SwiftUI
 struct CaptureRectangleView: View {
     @ObservedObject var captureMenuViewModel: DraggableWebCaptureViewModel
     @ObservedObject var viewModel: WebClipEditorViewModel
+    @ObservedObject var dashboardViewModel = DashboardViewModel.shared
     
     var body: some View {
         ZStack {
@@ -25,7 +26,7 @@ struct CaptureRectangleView: View {
                 }
             }
             if captureMenuViewModel.captureModeOn {
-                captureModeContent                
+                captureModeContent
             }
         }
     }
@@ -45,8 +46,24 @@ struct CaptureRectangleView: View {
     @ViewBuilder
     private var saveButtonOverlay: some View {
         if captureMenuViewModel.dragEnded {
-            SaveButtonView {                
-                viewModel.addWebClip(screenshot: viewModel.screenShot, capturedElements: captureMenuViewModel.capturedElements)
+            SaveButtonView {
+                // Check if a web clip is selected and if it's in editing mode
+                if let webClip = viewModel.selectedWebClip(), viewModel.isEditing {
+                    // Call updateWebClip function with correct parameters
+                    viewModel.updateWebClip(withId: webClip.id,
+                                            newURL: viewModel.validURL,
+                                            newClipRect: viewModel.currentClipRect,
+                                            newScreenshotPath: viewModel.screenShot.flatMap(ScreenshotUtils.saveScreenshotToLocalDirectory),
+                                            newPageTitle: viewModel.pageTitle,
+                                            newCapturedElements: captureMenuViewModel.capturedElements)
+                } else {
+                    // Add a new web clip if no web clip is selected or not in editing mode
+                    viewModel.addWebClip(screenshot: viewModel.screenShot,
+                                         capturedElements: captureMenuViewModel.capturedElements)
+                }
+                
+                // Reset the modal view state in dashboardViewModel
+                dashboardViewModel.resetModalView()
             }
             .offset(x: -10, y: -65)
         } else {

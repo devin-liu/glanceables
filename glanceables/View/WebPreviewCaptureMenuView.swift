@@ -6,15 +6,14 @@ struct WebPreviewCaptureMenuView: View {
     @ObservedObject var captureMenuViewModel: DraggableWebCaptureViewModel
     @ObservedObject var webPreviewCaptureMenuViewModel: WebPreviewCaptureMenuViewModel
     @ObservedObject var dashboardViewModel = DashboardViewModel.shared
-    
-    
+        
     var body: some View {
         ZStack {
             VStack {
                 HStack {
                     NavigationButtonsView(viewModel: viewModel)
                         .padding(10)
-                    AddURLFormView(viewModel: AddURLFormViewModel()) // Create a new instance or pass as needed
+                    AddURLFormView(viewModel: viewModel) // Create a new instance or pass as needed
                         .padding(10)
                 }
                 

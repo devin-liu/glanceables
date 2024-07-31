@@ -36,5 +36,6 @@ class DashboardViewModel: ObservableObject {
     func resetModalView() {
         webClipEditorViewModel.resetModalState()
         showingURLModal = false
+        loadURLs()
     }
 }

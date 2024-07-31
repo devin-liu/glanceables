@@ -34,15 +34,28 @@ class WebClipEditorViewModel: ObservableObject {
         return validURLs[index]
     }
     
+    func clearTextField() {
+        urlString = ""
+    }
+    
     // Add a computed property to access a specific WebClip by ID
     func webClip(withId id: UUID) -> WebClip? {
         return webClips.first(where: { $0.id == id })
     }
     
+    func selectedWebClip() -> WebClip? {
+        guard let index = selectedWebClipIndex, webClips.indices.contains(index) else {
+            return nil
+        }
+        return webClips[index]
+    }
+    
+    
     func imageForWebClip(withId id: UUID) -> UIImage? {
         guard let webClip = webClip(withId: id) else { return nil }
         return loadImage(from: webClip.screenshotPath)
     }
+    
     
     init() {
         loadURLs()
@@ -107,7 +120,6 @@ class WebClipEditorViewModel: ObservableObject {
         
         webClips.append(newWebClip)
         saveURLs()
-        resetModalState()
     }
     
     func updateWebClip(withId id: UUID, newURL: URL? = nil, newClipRect: CGRect? = nil, newScreenshotPath: String? = nil, newPageTitle: String? = nil, newCapturedElements: [CapturedElement]? = nil, newLlamaResult: LlamaResult? = nil) {
@@ -141,7 +153,6 @@ class WebClipEditorViewModel: ObservableObject {
         saveURLs()
     }
     
-//    TODO fix conflicting role with DashboardViewModel 
     func resetModalState() {
         urlString = ""
         isEditing = false

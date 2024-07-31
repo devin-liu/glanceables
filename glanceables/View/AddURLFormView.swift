@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct AddURLFormView: View {
-    @ObservedObject var viewModel: AddURLFormViewModel
+    @ObservedObject var viewModel: WebClipEditorViewModel
     @State private var debounceWorkItem: DispatchWorkItem?
     
     var body: some View {
@@ -60,7 +60,7 @@ struct AddURLFormView: View {
 struct AddURLFormView_Previews: PreviewProvider {
     static var previews: some View {
         VStack {
-            AddURLFormView(viewModel: AddURLFormViewModel())
+            AddURLFormView(viewModel: WebClipEditorViewModel())
                 .previewLayout(.sizeThatFits)
                 .padding()
             
