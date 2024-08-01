@@ -126,7 +126,7 @@ class WebClipEditorViewModel: ObservableObject {
         guard let index = webClips.firstIndex(where: { $0.id == id }) else {
             return
         }
-        
+                
         var webClip = webClips[index]
         
         // Update only if new values are provided
