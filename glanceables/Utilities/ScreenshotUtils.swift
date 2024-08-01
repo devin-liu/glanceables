@@ -18,7 +18,7 @@ struct ScreenshotUtils {
     static func saveScreenshotToFile(using webClip: WebClip, from screenshot: UIImage) -> String? {
         guard let data = screenshot.jpegData(compressionQuality: 1.0) else { return nil }
         let url = URL(fileURLWithPath: webClip.screenshotPath.unsafelyUnwrapped)
-
+        
         do {
             try data.write(to: url)
             return url.path
@@ -30,5 +30,12 @@ struct ScreenshotUtils {
     
     static func getDocumentsDirectory() -> URL {
         return FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+    }
+    
+    static func loadImage(from path: String?) -> UIImage? {
+        guard let path = path else { return nil }
+        let url = URL(fileURLWithPath: path)
+        guard let data = try? Data(contentsOf: url) else { return nil }
+        return UIImage(data: data)
     }
 }

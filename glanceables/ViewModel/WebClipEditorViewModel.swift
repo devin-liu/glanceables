@@ -53,7 +53,7 @@ class WebClipEditorViewModel: ObservableObject {
     
     func imageForWebClip(withId id: UUID) -> UIImage? {
         guard let webClip = webClip(withId: id) else { return nil }
-        return loadImage(from: webClip.screenshotPath)
+        return ScreenshotUtils.loadImage(from: webClip.screenshotPath)
     }
     
     
@@ -126,7 +126,7 @@ class WebClipEditorViewModel: ObservableObject {
         guard let index = webClips.firstIndex(where: { $0.id == id }) else {
             return
         }
-                
+        
         var webClip = webClips[index]
         
         // Update only if new values are provided
@@ -178,12 +178,5 @@ class WebClipEditorViewModel: ObservableObject {
             var updatedItem = webClip
             updatedItem.screenshotPath = newPath
         }
-    }
-    
-    func loadImage(from path: String?) -> UIImage? {
-        guard let path = path else { return nil }
-        let url = URL(fileURLWithPath: path)
-        guard let data = try? Data(contentsOf: url) else { return nil }
-        return UIImage(data: data)
-    }
+    }        
 }

@@ -69,7 +69,7 @@ struct ScreenshotView: View {
     
     var body: some View {
         ZStack(alignment: .top) {
-            if let screenshotPath = item?.screenshotPath, let image = viewModel.loadImage(from: screenshotPath) {
+            if let screenshotPath = item?.screenshotPath, let image = ScreenshotUtils.loadImage(from: screenshotPath) {
                 Image(uiImage: image)
                     .resizable()
                     .scaledToFit()
