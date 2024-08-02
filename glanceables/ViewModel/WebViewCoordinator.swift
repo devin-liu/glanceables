@@ -7,6 +7,7 @@ class WebViewCoordinator: NSObject, WKNavigationDelegate, WKUIDelegate, UIScroll
     var webView: WKWebView?
     var reloadSubscription: AnyCancellable?
     var pageTitle: String?
+    var innerText: String?
     
     private var screenshotTrigger = PassthroughSubject<Void, Never>()
     private var cancellables = Set<AnyCancellable>()
@@ -88,6 +89,7 @@ class WebViewCoordinator: NSObject, WKNavigationDelegate, WKUIDelegate, UIScroll
             let elements = try JSONDecoder().decode([HTMLElement].self, from: data)
             if let innerText = elements.last?.innerText {
                 print("InnerText result: ", innerText)
+                self.innerText = innerText
                 processElementsInnerText(innerText)
             }
             
@@ -139,7 +141,23 @@ class WebViewCoordinator: NSObject, WKNavigationDelegate, WKUIDelegate, UIScroll
                         self.parent.viewModel.updateWebClip(withId: item.id, newScreenshotPath: newScreenshotPath)
                     }
                 }
+                self.handleNewSnapshot(image)
             }
+        }
+    }
+    
+    private func handleNewSnapshot(_ image: UIImage) {
+        guard let innerText = self.innerText,
+              let pageTitle = self.pageTitle else {
+            print("Required data is missing; pageTitle or innerText is nil.")
+            return
+        }
+        
+        if SnapshotTimelineManager.shared.snapshots.isEmpty ||
+            (SnapshotTimelineManager.shared.snapshots.last?.innerText != innerText) {
+            SnapshotTimelineManager.shared.addSnapshotIfNeeded(newSnapshot: image, innerText: innerText, for: self.parent.item!)
+                NotificationManager.shared.sendNotification(title: pageTitle, body: innerText)
+            
         }
     }
 }

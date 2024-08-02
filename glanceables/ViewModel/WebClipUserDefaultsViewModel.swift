@@ -70,9 +70,13 @@ class WebClipUserDefaultsViewModel {
             dict["htmlElements"] = try? JSONEncoder().encode(htmlElements).base64EncodedString()
         }
         
+        // Encode Snapshots
+        if let snapshots = item.snapshots {
+            dict["snapshots"] = try? JSONEncoder().encode(snapshots).base64EncodedString()
+        }
+        
         return dict
     }
-    
     
     private func decodeWebViewItem(dict: [String: Any]) -> WebClip? {
         guard let idString = dict["id"] as? String,
@@ -103,8 +107,14 @@ class WebClipUserDefaultsViewModel {
             htmlElements = try? JSONDecoder().decode([HTMLElement].self, from: elementsData)
         }
         
-        return WebClip(id: id, url: url, clipRect: clipRect, originalSize: originalSize, screenshotPath: screenshotPath, screenshot: screenshot, scrollY: scrollY, pageTitle: pageTitle, capturedElements: capturedElements, htmlElements: htmlElements)
+        var snapshots: [SnapshotTimelineModel]?
+        if let snapshotsString = dict["snapshots"] as? String, let snapshotsData = Data(base64Encoded: snapshotsString) {
+            snapshots = try? JSONDecoder().decode([SnapshotTimelineModel].self, from: snapshotsData)
+        }
+        
+        return WebClip(id: id, url: url, clipRect: clipRect, originalSize: originalSize, screenshotPath: screenshotPath, screenshot: screenshot, scrollY: scrollY, pageTitle: pageTitle, capturedElements: capturedElements, htmlElements: htmlElements, snapshots: snapshots)
     }
+
     
     
     private func decodeRect(dict: [String: Any]?) -> CGRect? {

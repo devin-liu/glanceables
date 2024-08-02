@@ -59,7 +59,7 @@ struct CaptureRectangleView: View {
                 } else {
                     // Add a new web clip if no web clip is selected or not in editing mode
                     viewModel.addWebClip(screenshot: viewModel.screenShot,
-                                         capturedElements: captureMenuViewModel.capturedElements)
+                                         capturedElements: captureMenuViewModel.capturedElements, snapshots: nil)
                 }
                 
                 // Reset the modal view state in dashboardViewModel

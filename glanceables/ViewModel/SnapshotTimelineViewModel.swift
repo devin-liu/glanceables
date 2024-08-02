@@ -12,8 +12,8 @@ class SnapshotTimelineViewModel: ObservableObject {
         snapshotTimeline = SnapshotTimelineManager.shared.fetchSnapshots()
     }
 
-    func updateIfNeeded(newSnapshot: UIImage, innerText: String) {
-        SnapshotTimelineManager.shared.addSnapshotIfNeeded(newSnapshot: newSnapshot, innerText: innerText)
+    func updateIfNeeded(newSnapshot: UIImage, innerText: String, for webClip: WebClip) {
+        SnapshotTimelineManager.shared.addSnapshotIfNeeded(newSnapshot: newSnapshot, innerText: innerText, for: webClip)
         fetchTimeline()
     }
 }

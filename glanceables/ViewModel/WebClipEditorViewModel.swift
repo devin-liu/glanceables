@@ -105,7 +105,7 @@ class WebClipEditorViewModel: ObservableObject {
         }
     }
     
-    func addWebClip(screenshot: UIImage?, capturedElements: [CapturedElement]?) {
+    func addWebClip(screenshot: UIImage?, capturedElements: [CapturedElement]?, snapshots: [SnapshotTimelineModel]?) {
         guard isURLValid, validURL != nil else { return }
         
         let newWebClip = WebClip(
@@ -115,7 +115,8 @@ class WebClipEditorViewModel: ObservableObject {
             originalSize: originalSize,
             screenshotPath: screenshot.flatMap(ScreenshotUtils.saveScreenshotToLocalDirectory) ?? "",
             pageTitle: pageTitle,
-            capturedElements: capturedElements
+            capturedElements: capturedElements,
+            snapshots:snapshots
         )
         
         webClips.append(newWebClip)
