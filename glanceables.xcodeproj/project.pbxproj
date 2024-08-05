@@ -16,7 +16,6 @@
 		03553FE32C41F6A800FCB4CC /* WebClipSelectorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03553FE22C41F6A800FCB4CC /* WebClipSelectorViewModel.swift */; };
 		036D58E52C3C99300042D491 /* WebClipManagerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 036D58E42C3C99300042D491 /* WebClipManagerViewModel.swift */; };
 		036D58E72C3CC8460042D491 /* WebClipUserDefaultsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 036D58E62C3CC8460042D491 /* WebClipUserDefaultsViewModel.swift */; };
-		036F46502C59C28D005E1377 /* WebPreviewCaptureMenuViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 036F464F2C59C28D005E1377 /* WebPreviewCaptureMenuViewModel.swift */; };
 		036F46522C59C2D3005E1377 /* DashboardViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 036F46512C59C2D3005E1377 /* DashboardViewModel.swift */; };
 		036F46562C5AE066005E1377 /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 036F46552C5AE066005E1377 /* NotificationManager.swift */; };
 		036F46582C5AE087005E1377 /* NotificationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 036F46572C5AE087005E1377 /* NotificationViewModel.swift */; };
@@ -74,7 +73,6 @@
 		0355A06E2C17DA8B005BBAF3 /* glanceablesTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = glanceablesTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		036D58E42C3C99300042D491 /* WebClipManagerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebClipManagerViewModel.swift; sourceTree = "<group>"; };
 		036D58E62C3CC8460042D491 /* WebClipUserDefaultsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebClipUserDefaultsViewModel.swift; sourceTree = "<group>"; };
-		036F464F2C59C28D005E1377 /* WebPreviewCaptureMenuViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = WebPreviewCaptureMenuViewModel.swift; path = glanceables/ViewModel/WebPreviewCaptureMenuViewModel.swift; sourceTree = SOURCE_ROOT; };
 		036F46512C59C2D3005E1377 /* DashboardViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardViewModel.swift; sourceTree = "<group>"; };
 		036F46552C5AE066005E1377 /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
 		036F46572C5AE087005E1377 /* NotificationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationViewModel.swift; sourceTree = "<group>"; };
@@ -216,7 +214,6 @@
 				03C5DAD42C2647E20061FA25 /* CaptureModeToggleView.swift */,
 				03A868502C4865C900CCB79D /* CaptureRectangleView.swift */,
 				030062A62C0FE8A100B0242D /* WebClipBrowserMenuView.swift */,
-				036F464F2C59C28D005E1377 /* WebPreviewCaptureMenuViewModel.swift */,
 				0378B8762C096DB00005BAE5 /* WebGridSingleSnapshotView.swift */,
 				030062982C0A833200B0242D /* CreateButtonView.swift */,
 				03A868522C48692A00CCB79D /* SaveButtonView.swift */,
@@ -378,7 +375,6 @@
 				03C5DAD32C24F0CF0061FA25 /* URLUtilities.swift in Sources */,
 				036F46582C5AE087005E1377 /* NotificationViewModel.swift in Sources */,
 				03A868552C48871000CCB79D /* LlamaAPIManager.swift in Sources */,
-				036F46502C59C28D005E1377 /* WebPreviewCaptureMenuViewModel.swift in Sources */,
 				03C5DAD52C2647E20061FA25 /* CaptureModeToggleView.swift in Sources */,
 				0300629D2C0D229800B0242D /* BlackMenuBarView.swift in Sources */,
 				038DAC282C6182140000EA6A /* BlackEditMenuBarView.swift in Sources */,
