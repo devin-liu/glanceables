@@ -10,9 +10,7 @@ struct BlackMenuBarView: View {
                 CaptureModeToggleView()
                     .padding(.trailing, 24)
             }
-            Button(action: {
-                viewModel.showingURLModal.toggle()  // Toggle the modal visibility
-            }) {
+            NavigationLink(destination: WebClipCreatorView(contentViewModel: viewModel)) {
                 Image(systemName: "plus")
                     .font(.system(size: 40))
                     .foregroundColor(.white)

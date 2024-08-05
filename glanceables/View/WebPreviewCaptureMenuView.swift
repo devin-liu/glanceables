@@ -2,11 +2,12 @@ import SwiftUI
 import Combine
 
 struct WebPreviewCaptureMenuView: View {
+    @Environment(\.presentationMode) var presentationMode
     @ObservedObject var viewModel: WebClipEditorViewModel
     @ObservedObject var captureMenuViewModel: DraggableWebCaptureViewModel
     @ObservedObject var webPreviewCaptureMenuViewModel: WebPreviewCaptureMenuViewModel
     @ObservedObject var dashboardViewModel = DashboardViewModel.shared
-        
+    
     var body: some View {
         ZStack {
             VStack {
@@ -45,7 +46,7 @@ struct WebPreviewCaptureMenuView: View {
                                         }
                                 )
                             if captureMenuViewModel.captureModeOn {
-                                CaptureRectangleView(captureMenuViewModel: captureMenuViewModel, viewModel: viewModel)
+                                CaptureRectangleView(captureMenuViewModel: captureMenuViewModel, webClipEditor: viewModel)
                             }
                         }
                     }
@@ -57,9 +58,11 @@ struct WebPreviewCaptureMenuView: View {
             VStack {
                 HStack {
                     Spacer()
-                    RedXButton(action: dashboardViewModel.resetModalView)
-                        .padding(.top, -20)
-                        .padding(.trailing, -20)
+                    RedXButton(action: {
+                        self.presentationMode.wrappedValue.dismiss()
+                    })
+                    .padding(.top, -20)
+                    .padding(.trailing, -20)
                 }
                 Spacer()
             }

@@ -2,42 +2,31 @@ import SwiftUI
 import UniformTypeIdentifiers
 
 struct ContentView: View {
-    @StateObject private var contentViewModel = DashboardViewModel.shared
-    @StateObject private var captureMenuViewModel = DraggableWebCaptureViewModel()
+    @StateObject private var contentViewModel = DashboardViewModel.shared    
     
     var body: some View {
-        VStack {
-            BlackMenuBarView(viewModel: contentViewModel)
-            ScrollView {
-                LazyVGrid(columns: [GridItem(.adaptive(minimum: 300))]) {
-                    Text("Glanceables")
-                        .font(.system(.largeTitle, design: .rounded))
-                        .fontWeight(.medium)
-                        .foregroundColor(Color.black)
-                }
-                LazyVGrid(columns: [GridItem(.adaptive(minimum: 300))]) {
-                    if contentViewModel.webClips.isEmpty {
-                        emptyStateView
-                    } else {
-                        urlGrid
+        NavigationStack{
+            VStack {
+                BlackMenuBarView(viewModel: contentViewModel)
+                ScrollView {
+                    LazyVGrid(columns: [GridItem(.adaptive(minimum: 300))]) {
+                        Text("Glanceables")
+                            .font(.system(.largeTitle, design: .rounded))
+                            .fontWeight(.medium)
+                            .foregroundColor(Color.black)
+                    }
+                    LazyVGrid(columns: [GridItem(.adaptive(minimum: 300))]) {
+                        if contentViewModel.webClips.isEmpty {
+                            emptyStateView
+                        } else {
+                            urlGrid
+                        }
                     }
                 }
-            }
-            .padding()
-            .background(Color(.systemGray6).opacity(0.85))
-            .onAppear {
-                contentViewModel.loadURLs()
-            }
-            .fullScreenCover(isPresented: $contentViewModel.showingURLModal) {
-                VStack{
-                    BlackMenuBarView(viewModel: contentViewModel)
-                    WebPreviewCaptureMenuView(
-                        viewModel: WebClipEditorViewModel.shared,
-                        captureMenuViewModel: captureMenuViewModel,
-                        webPreviewCaptureMenuViewModel: WebPreviewCaptureMenuViewModel()
-                    )
-                    .padding(20)
-                    .background(Color(.systemGray6).opacity(0.85))
+                .padding()
+                .background(Color(.systemGray6).opacity(0.85))
+                .onAppear {
+                    contentViewModel.loadURLs()
                 }
             }
         }

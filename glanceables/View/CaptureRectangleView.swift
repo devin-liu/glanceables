@@ -1,8 +1,9 @@
 import SwiftUI
 
 struct CaptureRectangleView: View {
+    @Environment(\.presentationMode) var presentationMode
     @ObservedObject var captureMenuViewModel: DraggableWebCaptureViewModel
-    @ObservedObject var viewModel: WebClipEditorViewModel
+    @ObservedObject var webClipEditor: WebClipEditorViewModel
     @ObservedObject var dashboardViewModel = DashboardViewModel.shared
     
     var body: some View {
@@ -15,7 +16,7 @@ struct CaptureRectangleView: View {
                         path.addRect(CGRect(origin: .zero, size: geometry.size))
                         
                         // Subtract the clip rectangle if it exists
-                        if let clipRect = viewModel.currentClipRect {
+                        if let clipRect = webClipEditor.currentClipRect {
                             path.addRect(clipRect)
                         }
                     }
@@ -34,7 +35,7 @@ struct CaptureRectangleView: View {
     
     @ViewBuilder
     private var captureModeContent: some View {
-        if let clipRect = viewModel.currentClipRect {
+        if let clipRect = webClipEditor.currentClipRect {
             Rectangle()
                 .stroke(style: StrokeStyle(lineWidth: 2, lineCap: .round, lineJoin: .round, dash: [10, 5]))
                 .frame(width: clipRect.width, height: clipRect.height)
@@ -48,22 +49,23 @@ struct CaptureRectangleView: View {
         if captureMenuViewModel.dragEnded {
             SaveButtonView {
                 // Check if a web clip is selected and if it's in editing mode
-                if let webClip = viewModel.selectedWebClip(), viewModel.isEditing {
+                if let webClip = webClipEditor.selectedWebClip(), webClipEditor.isEditing {
                     // Call updateWebClip function with correct parameters
-                    viewModel.updateWebClip(withId: webClip.id,
-                                            newURL: viewModel.validURL,
-                                            newClipRect: viewModel.currentClipRect,
-                                            newScreenshotPath: viewModel.screenShot.flatMap(ScreenshotUtils.saveScreenshotToLocalDirectory),
-                                            newPageTitle: viewModel.pageTitle,
+                    webClipEditor.updateWebClip(withId: webClip.id,
+                                            newURL: webClipEditor.validURL,
+                                            newClipRect: webClipEditor.currentClipRect,
+                                            newScreenshotPath: webClipEditor.screenShot.flatMap(ScreenshotUtils.saveScreenshotToLocalDirectory),
+                                            newPageTitle: webClipEditor.pageTitle,
                                             newCapturedElements: captureMenuViewModel.capturedElements)
                 } else {
                     // Add a new web clip if no web clip is selected or not in editing mode
-                    viewModel.addWebClip(screenshot: viewModel.screenShot,
+                    webClipEditor.addWebClip(screenshot: webClipEditor.screenShot,
                                          capturedElements: captureMenuViewModel.capturedElements, snapshots: nil)
                 }
                 
-                // Reset the modal view state in dashboardViewModel
-                dashboardViewModel.resetModalView()
+                
+                self.presentationMode.wrappedValue.dismiss()
+                
             }
             .offset(x: -10, y: -65)
         } else {
@@ -90,7 +92,7 @@ struct CaptureRectangleView_Previews: PreviewProvider {
             
             return CaptureRectangleView(
                 captureMenuViewModel: captureMenuViewModel,
-                viewModel: viewModel
+                webClipEditor: viewModel
             )
             .frame(width: screenWidth, height: screenHeight)
         }
