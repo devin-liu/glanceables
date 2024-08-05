@@ -3,7 +3,7 @@ import WebKit
 import Combine
 
 struct WebViewSnapshotRefresher: UIViewRepresentable {
-    @ObservedObject var viewModel = WebClipEditorViewModel.shared
+    @ObservedObject var viewModel = WebClipManagerViewModel.shared
     @ObservedObject var llamaAPIManager = LlamaAPIManager()
     let id: UUID
     var reloadTrigger: PassthroughSubject<Void, Never> // Add a reload trigger

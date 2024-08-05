@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct AddURLFormView: View {
-    @ObservedObject var viewModel: WebClipEditorViewModel
+    @ObservedObject var viewModel: WebClipManagerViewModel
     @State private var debounceWorkItem: DispatchWorkItem?
     
     var body: some View {
@@ -52,7 +52,7 @@ struct AddURLFormView: View {
         debounceWorkItem = DispatchWorkItem {
             viewModel.validateURL()
         }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.15, execute: debounceWorkItem!)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3, execute: debounceWorkItem!)
         viewModel.showValidationError = true
     }
 }
@@ -60,7 +60,7 @@ struct AddURLFormView: View {
 struct AddURLFormView_Previews: PreviewProvider {
     static var previews: some View {
         VStack {
-            AddURLFormView(viewModel: WebClipEditorViewModel())
+            AddURLFormView(viewModel: WebClipManagerViewModel())
                 .previewLayout(.sizeThatFits)
                 .padding()
             

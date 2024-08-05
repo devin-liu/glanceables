@@ -6,7 +6,7 @@ class DashboardViewModel: ObservableObject {
     @Published var draggedItem: WebClip?
     @Published var webClips: [WebClip] = []
     
-    private let webClipEditorViewModel = WebClipEditorViewModel.shared
+    private let webClipEditorViewModel = WebClipManagerViewModel.shared
     private var cancellables: Set<AnyCancellable> = []  // Storage for Combine subscribers
     
     init() {

@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct NavigationButtonsView: View {
-    @ObservedObject var viewModel: WebClipEditorViewModel  // Use the ViewModel
+    @ObservedObject var viewModel: WebClipManagerViewModel  // Use the ViewModel
     
     var body: some View {
         HStack {
@@ -61,6 +61,6 @@ struct NavigationButtonsView: View {
 // Example Preview (Assuming you have the ViewModel setup)
 struct NavigationButtonsView_Previews: PreviewProvider {
     static var previews: some View {
-        NavigationButtonsView(viewModel: WebClipEditorViewModel.shared)
+        NavigationButtonsView(viewModel: WebClipManagerViewModel.shared)
     }
 }

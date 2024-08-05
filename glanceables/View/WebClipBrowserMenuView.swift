@@ -1,11 +1,10 @@
 import SwiftUI
 import Combine
 
-struct WebPreviewCaptureMenuView: View {
+struct WebClipBrowserMenuView: View {
     @Environment(\.presentationMode) var presentationMode
-    @ObservedObject var viewModel: WebClipEditorViewModel
-    @ObservedObject var captureMenuViewModel: DraggableWebCaptureViewModel
-    @ObservedObject var webPreviewCaptureMenuViewModel: WebPreviewCaptureMenuViewModel
+    @ObservedObject var viewModel: WebClipManagerViewModel
+    @ObservedObject var captureMenuViewModel: WebClipSelectorViewModel    
     @ObservedObject var dashboardViewModel = DashboardViewModel.shared
     
     var body: some View {
@@ -37,8 +36,8 @@ struct WebPreviewCaptureMenuView: View {
                                             captureMenuViewModel.endLocation = value.location
                                             captureMenuViewModel.dragging = true
                                             captureMenuViewModel.dragEnded = false
-                                            webPreviewCaptureMenuViewModel.updateClipRect(endLocation: value.location, bounds: geometry.size)
-                                            viewModel.currentClipRect = webPreviewCaptureMenuViewModel.currentClipRect
+                                            captureMenuViewModel.updateClipRect(endLocation: value.location, bounds: geometry.size)
+                                            viewModel.currentClipRect = captureMenuViewModel.currentClipRect
                                         }
                                         .onEnded { _ in
                                             captureMenuViewModel.dragging = false
@@ -71,17 +70,16 @@ struct WebPreviewCaptureMenuView: View {
 }
 
 struct WebPreviewCaptureMenuView_Previews: PreviewProvider {
-    static var previewViewModel: WebClipEditorViewModel = {
-        let model = WebClipEditorViewModel()
+    static var previewViewModel: WebClipManagerViewModel = {
+        let model = WebClipManagerViewModel()
         model.urlString = "https://news.ycombinator.com/"
         model.validateURL()
         return model
     }()
     static var previews: some View {
-        WebPreviewCaptureMenuView(
+        WebClipBrowserMenuView(
             viewModel: previewViewModel,
-            captureMenuViewModel: DraggableWebCaptureViewModel(),
-            webPreviewCaptureMenuViewModel: WebPreviewCaptureMenuViewModel()
+            captureMenuViewModel: WebClipSelectorViewModel()            
         )
     }
 }

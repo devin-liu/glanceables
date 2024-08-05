@@ -1,9 +1,9 @@
 import SwiftUI
 import Combine
 
-class DraggableWebCaptureViewModel: ObservableObject {
-    static let shared = DraggableWebCaptureViewModel()  // Singleton instance
-    
+class WebClipSelectorViewModel: ObservableObject {
+    static let shared = WebClipSelectorViewModel()  // Singleton instance
+    @Published var currentClipRect: CGRect?
     @Published var userInteracting: Bool = false
     @Published var scrollY: Double = 0
     @Published var capturedElements: [CapturedElement]?
@@ -14,7 +14,7 @@ class DraggableWebCaptureViewModel: ObservableObject {
     @Published var showPreview: Bool = false
     @Published var captureModeOn: Bool = true
     
-    func updateClipRect(endLocation: CGPoint, bounds: CGSize) -> CGRect {
+    func updateClipRect(endLocation: CGPoint, bounds: CGSize) {
         let width = 300.0
         let height = 300.0
         
@@ -24,6 +24,6 @@ class DraggableWebCaptureViewModel: ObservableObject {
         let minX = max(0, min(centerX - width / 2, bounds.width - width))
         let minY = max(0, min(centerY - height / 2, bounds.height - height))
         
-        return CGRect(x: minX, y: minY, width: width, height: height)
+        currentClipRect = CGRect(x: minX, y: minY, width: width, height: height)
     }
 }

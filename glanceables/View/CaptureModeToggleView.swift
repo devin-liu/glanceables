@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct CaptureModeToggleView: View {
-    @ObservedObject private var viewModel = DraggableWebCaptureViewModel.shared
+    @ObservedObject private var viewModel = WebClipSelectorViewModel.shared
     
     
     var body: some View {

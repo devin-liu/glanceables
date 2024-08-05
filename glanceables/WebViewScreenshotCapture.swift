@@ -2,8 +2,8 @@ import SwiftUI
 import WebKit
 
 struct WebViewScreenshotCapture: UIViewRepresentable {
-    @ObservedObject var viewModel: WebClipEditorViewModel
-    @ObservedObject var captureMenuViewModel: DraggableWebCaptureViewModel
+    @ObservedObject var viewModel: WebClipManagerViewModel
+    @ObservedObject var captureMenuViewModel: WebClipSelectorViewModel
     
     
     func makeUIView(context: Context) -> WKWebView {

@@ -1,16 +1,15 @@
 import SwiftUI
 
 struct WebClipCreatorView: View {
-    @StateObject private var captureMenuViewModel = DraggableWebCaptureViewModel()
+    @StateObject private var captureMenuViewModel = WebClipSelectorViewModel()
     
     var body: some View {
         VStack{
             BlackEditMenuBarView()
             VStack{
-                WebPreviewCaptureMenuView(
-                    viewModel: WebClipEditorViewModel.shared,
-                    captureMenuViewModel: captureMenuViewModel,
-                    webPreviewCaptureMenuViewModel: WebPreviewCaptureMenuViewModel()
+                WebClipBrowserMenuView(
+                    viewModel: WebClipManagerViewModel.shared,
+                    captureMenuViewModel: captureMenuViewModel
                 )
             }.padding(20)
         }

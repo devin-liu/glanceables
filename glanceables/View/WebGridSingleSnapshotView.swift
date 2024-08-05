@@ -8,7 +8,7 @@ struct WebGridSingleSnapshotView: View {
     @State private var rotationAngle: Double = 0  // State variable for rotation angle
     @State private var reloadTrigger = PassthroughSubject<Void, Never>() // Local reload trigger
     
-    @ObservedObject private var viewModel = WebClipEditorViewModel.shared
+    @ObservedObject private var viewModel = WebClipManagerViewModel.shared
     let id: UUID
     
     private var item: WebClip? {
@@ -65,7 +65,7 @@ struct WebGridSingleSnapshotView: View {
 
 struct ScreenshotView: View {
     let item: WebClip?
-    let viewModel: WebClipEditorViewModel
+    let viewModel: WebClipManagerViewModel
     
     var body: some View {
         ZStack(alignment: .top) {

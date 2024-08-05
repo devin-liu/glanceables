@@ -1,8 +1,8 @@
 import Foundation
 import SwiftUI
 
-class WebClipEditorViewModel: ObservableObject {
-    static let shared = WebClipEditorViewModel()  // Singleton instance
+class WebClipManagerViewModel: ObservableObject {
+    static let shared = WebClipManagerViewModel()  // Singleton instance
     @Published var webClips: [WebClip] = []
     @Published var urlString = ""
     @Published var validURLs: [URL] = []  // Now storing an array of URLs

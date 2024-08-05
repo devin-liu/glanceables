@@ -1,14 +1,14 @@
 import SwiftUI
 
 struct WebClipEditorView: View {
-    @StateObject private var captureMenuViewModel = DraggableWebCaptureViewModel()
+    @StateObject private var captureMenuViewModel = WebClipSelectorViewModel()
     var webClip: WebClip  // This holds the web clip data to edit
     
     var body: some View {
         WebClipCreatorView()
         .onAppear {
-            WebClipEditorViewModel.shared.openEditForItem(webClip)
-            WebClipEditorViewModel.shared.validateURL()
+            WebClipManagerViewModel.shared.openEditForItem(webClip)
+            WebClipManagerViewModel.shared.validateURL()
         }
     }
 }
