@@ -161,7 +161,7 @@ class WebClipEditorViewModel: ObservableObject {
         isURLValid = true
     }
     
-    func openEditForItem(item: WebClip) {
+    func openEditForItem(_ item: WebClip) {
         if let index = webClips.firstIndex(where: { $0.id == item.id }) {
             selectedWebClipIndex = index
             urlString = webClips[index].url.absoluteURL.absoluteString

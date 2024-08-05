@@ -17,7 +17,7 @@ class DashboardViewModel: ObservableObject {
     }
     
     func openEditForItem(item: WebClip) {
-        webClipEditorViewModel.openEditForItem(item: item)
+        webClipEditorViewModel.openEditForItem(item)
     }
     
     func deleteItem(item: WebClip) {

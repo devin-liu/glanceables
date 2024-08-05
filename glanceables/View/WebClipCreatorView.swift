@@ -20,7 +20,7 @@ struct WebClipCreatorView: View {
 }
 
 struct WebClipCreatorView_Previews: PreviewProvider {
-    static var previews: some View {        
+    static var previews: some View {
         WebClipCreatorView()
     }
 }
