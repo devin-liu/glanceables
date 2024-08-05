@@ -2,7 +2,7 @@ import SwiftUI
 import UniformTypeIdentifiers
 
 struct ContentView: View {
-    @StateObject private var contentViewModel = DashboardViewModel.shared    
+    @StateObject private var contentViewModel = DashboardViewModel.shared
     
     var body: some View {
         NavigationStack{
@@ -35,7 +35,7 @@ struct ContentView: View {
     var emptyStateView: some View {
         VStack {
             Spacer()
-            CreateButtonView(isShowingModal: $contentViewModel.showingURLModal)
+            CreateButtonView()
                 .padding()
             Spacer()
         }

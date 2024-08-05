@@ -3,7 +3,6 @@ import Combine
 
 class DashboardViewModel: ObservableObject {
     static let shared = DashboardViewModel()  // Singleton instance
-    @Published var showingURLModal: Bool = false
     @Published var draggedItem: WebClip?
     @Published var webClips: [WebClip] = []
     
@@ -19,7 +18,6 @@ class DashboardViewModel: ObservableObject {
     
     func openEditForItem(item: WebClip) {
         webClipEditorViewModel.openEditForItem(item: item)
-        showingURLModal = true
     }
     
     func deleteItem(item: WebClip) {
@@ -34,8 +32,7 @@ class DashboardViewModel: ObservableObject {
     }
     
     func resetModalView() {
-        webClipEditorViewModel.resetModalState()
-        showingURLModal = false
+        webClipEditorViewModel.resetModalState()        
         loadURLs()
     }
 }

@@ -1,7 +1,6 @@
 import SwiftUI
 
 struct WebClipCreatorView: View {
-    @ObservedObject var contentViewModel: DashboardViewModel
     @StateObject private var captureMenuViewModel = DraggableWebCaptureViewModel()
     
     var body: some View {
@@ -21,9 +20,7 @@ struct WebClipCreatorView: View {
 }
 
 struct WebClipCreatorView_Previews: PreviewProvider {
-    static var previews: some View {
-        // Create a sample instance of DashboardViewModel if it has a shared instance or initializers
-        let sampleDashboardViewModel = DashboardViewModel.shared // Assuming a shared instance is available
-        WebClipCreatorView(contentViewModel: sampleDashboardViewModel)
+    static var previews: some View {        
+        WebClipCreatorView()
     }
 }

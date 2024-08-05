@@ -5,12 +5,8 @@ struct BlackMenuBarView: View {
     
     var body: some View {
         HStack {
-            Spacer()
-            if viewModel.showingURLModal {
-                CaptureModeToggleView()
-                    .padding(.trailing, 24)
-            }
-            NavigationLink(destination: WebClipCreatorView(contentViewModel: viewModel)) {
+            Spacer()            
+            NavigationLink(destination: WebClipCreatorView()) {
                 Image(systemName: "plus")
                     .font(.system(size: 40))
                     .foregroundColor(.white)

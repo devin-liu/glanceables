@@ -1,12 +1,8 @@
 import SwiftUI
 
 struct CreateButtonView: View {
-    @Binding var isShowingModal: Bool // Add a binding property
-
     var body: some View {
-        Button(action: {
-            isShowingModal.toggle() // Action to show modal
-        }) {
+        NavigationLink(destination: WebClipCreatorView()) {
             VStack {
                 ZStack {
                     Rectangle()
@@ -24,7 +20,7 @@ struct CreateButtonView: View {
                 .background(Color.black.opacity(0.3))
                 .cornerRadius(24)
                 .shadow(radius: 6)
-
+                
                 Text("Create Your First Glanceable")
                     .font(.system(.footnote, design: .rounded)) // Use dynamic type with style
                     .fontWeight(.medium)
@@ -34,31 +30,10 @@ struct CreateButtonView: View {
     }
 }
 
-
 struct CreateButtonView_Previews: PreviewProvider {
     static var previews: some View {
-        // Use a state wrapper in your preview environment
-        StatefulPreviewWrapper(false) { isShowingModal in
-            VStack {
-                CreateButtonView(isShowingModal: isShowingModal)
-                    .previewLayout(.sizeThatFits)
-                    .padding()
-            }
-        }
-    }
-}
-
-/// Helper struct to provide a mutable state for previews
-struct StatefulPreviewWrapper<Value, Content: View>: View {
-    @State private var value: Value
-    let content: (Binding<Value>) -> Content
-    
-    init(_ initialValue: Value, @ViewBuilder content: @escaping (Binding<Value>) -> Content) {
-        _value = State(initialValue: initialValue)
-        self.content = content
-    }
-
-    var body: some View {
-        content($value)
+        CreateButtonView()
+            .previewLayout(.sizeThatFits) // Adjust this to match the context you want to preview in
+            .padding()
     }
 }
