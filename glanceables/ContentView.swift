@@ -51,7 +51,7 @@ struct ContentView: View {
                 }
                 .onDrop(of: [UTType.text], delegate: DropViewDelegate(item: item, viewModel: $contentViewModel.webClips, draggedItem: $contentViewModel.draggedItem))
                 .contextMenu {
-                    NavigationLink(destination: WebClipEditorView(webClip: item)) {                        
+                    NavigationLink(destination: WebClipEditorView(webClip: item)) {
                         Text("Edit")
                     }
                     Button("Delete") {
