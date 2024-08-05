@@ -52,18 +52,16 @@ struct CaptureRectangleView: View {
                 if let webClip = webClipEditor.selectedWebClip(), webClipEditor.isEditing {
                     // Call updateWebClip function with correct parameters
                     webClipEditor.updateWebClip(withId: webClip.id,
-                                            newURL: webClipEditor.validURL,
-                                            newClipRect: webClipEditor.currentClipRect,
-                                            newScreenshotPath: webClipEditor.screenShot.flatMap(ScreenshotUtils.saveScreenshotToLocalDirectory),
-                                            newPageTitle: webClipEditor.pageTitle,
-                                            newCapturedElements: captureMenuViewModel.capturedElements)
+                                                newURL: webClipEditor.validURL,
+                                                newClipRect: webClipEditor.currentClipRect,
+                                                newScreenshotPath: webClipEditor.screenShot.flatMap(ScreenshotUtils.saveScreenshotToLocalDirectory),
+                                                newPageTitle: webClipEditor.pageTitle,
+                                                newCapturedElements: captureMenuViewModel.capturedElements)
                 } else {
                     // Add a new web clip if no web clip is selected or not in editing mode
                     webClipEditor.addWebClip(screenshot: webClipEditor.screenShot,
-                                         capturedElements: captureMenuViewModel.capturedElements, snapshots: nil)
+                                             capturedElements: captureMenuViewModel.capturedElements, snapshots: nil)
                 }
-                
-                
                 self.presentationMode.wrappedValue.dismiss()
                 
             }

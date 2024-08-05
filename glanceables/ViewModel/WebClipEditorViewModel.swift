@@ -127,39 +127,32 @@ class WebClipEditorViewModel: ObservableObject {
         guard let index = webClips.firstIndex(where: { $0.id == id }) else {
             return
         }
-        
-        var webClip = webClips[index]
+        var updatedWebClip = webClips[index]
         
         // Update only if new values are provided
         if let newURL = newURL {
-            webClip.url = newURL
+            updatedWebClip.url = newURL
         }
         if let newClipRect = newClipRect {
-            webClip.clipRect = newClipRect
+            updatedWebClip.clipRect = newClipRect
         }
         if let newScreenshotPath = newScreenshotPath {
-            webClip.screenshotPath = newScreenshotPath
+            updatedWebClip.screenshotPath = newScreenshotPath
         }
         if let newPageTitle = newPageTitle {
-            webClip.pageTitle = newPageTitle
+            updatedWebClip.pageTitle = newPageTitle
         }
         if let newCapturedElements = newCapturedElements {
-            webClip.capturedElements = newCapturedElements
+            updatedWebClip.capturedElements = newCapturedElements
         }
         if let newLlamaResult = newLlamaResult {
-            webClip.llamaResult = newLlamaResult
+            updatedWebClip.llamaResult = newLlamaResult
         }
         
-        webClips[index] = webClip
+        webClips[index] = updatedWebClip
         saveURLs()
-    }
-    
-    func resetModalState() {
-        urlString = ""
-        isEditing = false
-        selectedWebClipIndex = nil
-        isURLValid = true
-    }
+        loadURLs()
+    }       
     
     func openEditForItem(_ item: WebClip) {
         if let index = webClips.firstIndex(where: { $0.id == item.id }) {
@@ -179,5 +172,5 @@ class WebClipEditorViewModel: ObservableObject {
             var updatedItem = webClip
             updatedItem.screenshotPath = newPath
         }
-    }        
+    }
 }

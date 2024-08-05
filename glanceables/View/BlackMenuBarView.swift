@@ -36,7 +36,6 @@ struct SearchBar: View {
 }
 
 struct ParentView: View {
-    @State private var showingAddURLModal = false
     var viewModel = DashboardViewModel() // Ensure this matches the initialization requirements of your DashboardViewModel
     
     var body: some View {

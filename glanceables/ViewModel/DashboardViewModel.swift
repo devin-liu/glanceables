@@ -7,12 +7,24 @@ class DashboardViewModel: ObservableObject {
     @Published var webClips: [WebClip] = []
     
     private let webClipEditorViewModel = WebClipEditorViewModel.shared
+    private var cancellables: Set<AnyCancellable> = []  // Storage for Combine subscribers
     
     init() {
+        setupSubscriptions()
         loadURLs()
     }
     
+    func setupSubscriptions() {
+        // Subscribe to changes in webClips from the editor VM
+        webClipEditorViewModel.$webClips
+            .sink { [weak self] updatedClips in
+                self?.webClips = updatedClips
+            }
+            .store(in: &cancellables)
+    }
+    
     func loadURLs() {
+        // Initial load from webClipEditorViewModel
         webClips = webClipEditorViewModel.webClips
     }
     
@@ -21,18 +33,11 @@ class DashboardViewModel: ObservableObject {
     }
     
     func deleteItem(item: WebClip) {
-        webClipEditorViewModel.deleteItem(item: item)
-        loadURLs() // Refresh the local list after deletion
+        webClipEditorViewModel.deleteItem(item: item)        
     }
     
     func moveItem(fromOffsets: IndexSet, toOffset: Int) {
         webClips.move(fromOffsets: fromOffsets, toOffset: toOffset)
-        // Update the main view model
         webClipEditorViewModel.webClips = webClips
-    }
-    
-    func resetModalView() {
-        webClipEditorViewModel.resetModalState()        
-        loadURLs()
-    }
+    }        
 }
