@@ -155,9 +155,7 @@ class WebViewCoordinator: NSObject, WKNavigationDelegate, WKUIDelegate, UIScroll
         
         if SnapshotTimelineManager.shared.snapshots.isEmpty ||
             (SnapshotTimelineManager.shared.snapshots.last?.innerText != innerText) {
-            SnapshotTimelineManager.shared.addSnapshotIfNeeded(newSnapshot: image, innerText: innerText, for: self.parent.item!)
-                NotificationManager.shared.sendNotification(title: pageTitle, body: innerText)
-            
+            SnapshotTimelineManager.shared.addSnapshotIfNeeded(newSnapshot: image, innerText: innerText, for: self.parent.item!)                        
         }
     }
 }

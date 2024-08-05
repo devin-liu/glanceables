@@ -13,8 +13,7 @@ class NotificationManager {
         }
     }
     
-    func sendNotification(title: String, body: String) {
-        print("sending notification")
+    func sendNotification(title: String, body: String) {        
         let content = UNMutableNotificationContent()
         content.title = title
         content.body = body
