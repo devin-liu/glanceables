@@ -34,11 +34,26 @@ class WebClip: ObservableObject, Identifiable, Equatable {
     }
     
     func addSnapshotIfNeeded(newSnapshot: UIImage, innerText: String) {
-        if let lastSnapshot = snapshots.last, lastSnapshot.innerText == innerText {
-            return  // Do not add snapshot if innerText is unchanged
+        print("addSnapshotIfNeeded ", innerText)
+        // Always save the first snapshot
+        if let screenshotPath = screenshotPath {
+            if snapshots.isEmpty {
+                appendSnapshot(screenshotPath: screenshotPath, innerText: innerText)                
+                return
+            }
+            
+            // Add snapshot if innerText is changed
+            if let lastSnapshot = snapshots.last, lastSnapshot.innerText != innerText {
+                appendSnapshot(screenshotPath: screenshotPath, innerText: innerText)
+            }
         }
-        let newSnapshotModel = SnapshotTimelineModel(timestamp: Date(), innerText: innerText, snapshotImage: newSnapshot)
+    }
+    
+    private func appendSnapshot(screenshotPath: String, innerText: String) {
+        let newSnapshotModel = SnapshotTimelineModel(timestamp: Date(), innerText: innerText, snapshotImagePath: screenshotPath)
         snapshots.append(newSnapshotModel)
+        
+        // Send notification
         if let title = pageTitle {
             NotificationManager.shared.sendNotification(title: title, body: innerText)
         }

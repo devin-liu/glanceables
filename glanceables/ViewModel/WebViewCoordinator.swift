@@ -8,6 +8,7 @@ class WebViewCoordinator: NSObject, WKNavigationDelegate, WKUIDelegate, UIScroll
     var reloadSubscription: AnyCancellable?
     var pageTitle: String?
     var innerText: String?
+    var conciseText: String?
     
     private var screenshotTrigger = PassthroughSubject<Void, Never>()
     private var cancellables = Set<AnyCancellable>()
@@ -52,7 +53,7 @@ class WebViewCoordinator: NSObject, WKNavigationDelegate, WKUIDelegate, UIScroll
         // Subscribe to the reload trigger
         self.reloadSubscription = self.parent.reloadTrigger.sink {
             webView.reload()
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 60) {
                 self.captureScreenshot()
             }
         }
@@ -77,6 +78,7 @@ class WebViewCoordinator: NSObject, WKNavigationDelegate, WKUIDelegate, UIScroll
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
         if message.name == "elementsFromSelectorsHandler", let messageBody = message.body as? String {
             parseElementsFromSelectors(messageBody)
+            captureScreenshot()
         }
     }
     
@@ -105,6 +107,7 @@ class WebViewCoordinator: NSObject, WKNavigationDelegate, WKUIDelegate, UIScroll
             switch result {
             case .success(let result):
                 self.parent.viewModel.updateWebClip(withId: self.parent.webClip.id, newLlamaResult: LlamaResult(conciseText: result))
+                self.conciseText = result
                 print("Generated result: \(result)")
                 // Do something with the generated filename, e.g., update UI or model
             case .failure(let error):
@@ -137,26 +140,21 @@ class WebViewCoordinator: NSObject, WKNavigationDelegate, WKUIDelegate, UIScroll
         
         webView.takeSnapshot(with: configuration) { image, error in
             if let image = image {
-                if let newScreenshotPath = ScreenshotUtils.saveScreenshotToFile(using: webClip, from: image) {
-                    let item = self.parent.webClip
-                    self.parent.viewModel.updateWebClip(withId: item.id, newScreenshotPath: newScreenshotPath)
-                    
-                }
+                self.parent.viewModel.saveScreenShot(image)
                 self.handleNewSnapshot(image)
             }
         }
     }
     
     private func handleNewSnapshot(_ image: UIImage) {
-         guard let innerText = self.innerText else {
-             print("Required data is missing; pageTitle or innerText is nil.")
-             return
-         }
-         
+        guard let innerText = self.innerText else {
+            print("Required data is missing; pageTitle or innerText is nil.")
+            return
+        }
         let snapshots = self.parent.webClip.snapshots
         if snapshots.isEmpty ||
-             (snapshots.last?.innerText != innerText) {
-            self.parent.webClip.addSnapshotIfNeeded(newSnapshot: image, innerText: innerText)
-         }
-     }
+            (snapshots.last?.innerText != innerText) {
+            self.parent.viewModel.updateWebClip(withId: self.parent.webClip.id, newInnerText: innerText)
+        }
+    }
 }

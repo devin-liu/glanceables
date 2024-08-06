@@ -114,7 +114,6 @@ class WebClipUserDefaultsRepository: WebClipRepositoryProtocol {
         if let snapshotsString = dict["snapshots"] as? String, let snapshotsData = Data(base64Encoded: snapshotsString) {
             snapshots = try? JSONDecoder().decode([SnapshotTimelineModel].self, from: snapshotsData)
         }
-        
         return WebClip(id: id, url: url, clipRect: clipRect, originalSize: originalSize, screenshotPath: screenshotPath, screenshot: screenshot, scrollY: scrollY, pageTitle: pageTitle, capturedElements: capturedElements, htmlElements: htmlElements, snapshots: snapshots)
     }
     

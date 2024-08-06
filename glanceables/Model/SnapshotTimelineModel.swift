@@ -5,19 +5,21 @@ struct SnapshotTimelineModel: Identifiable, Codable {
     let timestamp: Date
     let innerText: String
     let outerHTML: String?
-    let snapshotImage: UIImage
+    let snapshotImagePath: String
+    let snapshotImage: UIImage?
     let conciseText: String?
 
     enum CodingKeys: String, CodingKey {
-        case id, timestamp, innerText, outerHTML, snapshotImage, conciseText
+        case id, timestamp, innerText, outerHTML, snapshotImagePath, conciseText
     }
 
-    init(id: UUID = UUID(), timestamp: Date, innerText: String, outerHTML: String? = nil, snapshotImage: UIImage, conciseText: String? = nil) {
+    init(id: UUID = UUID(), timestamp: Date, innerText: String, outerHTML: String? = nil, snapshotImagePath: String, conciseText: String? = nil) {
         self.id = id
         self.timestamp = timestamp
         self.innerText = innerText
         self.outerHTML = outerHTML
-        self.snapshotImage = snapshotImage
+        self.snapshotImagePath = snapshotImagePath
+        self.snapshotImage = UIImage(contentsOfFile: snapshotImagePath) // Initialize UIImage from local path
         self.conciseText = conciseText
     }
 
@@ -26,12 +28,9 @@ struct SnapshotTimelineModel: Identifiable, Codable {
         id = try container.decode(UUID.self, forKey: .id)
         timestamp = try container.decode(Date.self, forKey: .timestamp)
         innerText = try container.decode(String.self, forKey: .innerText)
-        outerHTML = try container.decode(String.self, forKey: .outerHTML)
-        let imageData = try container.decode(Data.self, forKey: .snapshotImage)
-        guard let image = UIImage(data: imageData) else {
-            throw DecodingError.dataCorruptedError(forKey: .snapshotImage, in: container, debugDescription: "Cannot decode image data")
-        }
-        snapshotImage = image
+        outerHTML = try container.decodeIfPresent(String.self, forKey: .outerHTML)
+        snapshotImagePath = try container.decode(String.self, forKey: .snapshotImagePath)
+        snapshotImage = UIImage(contentsOfFile: snapshotImagePath) // Initialize UIImage from local path during decoding
         conciseText = try container.decodeIfPresent(String.self, forKey: .conciseText)
     }
 
@@ -40,11 +39,8 @@ struct SnapshotTimelineModel: Identifiable, Codable {
         try container.encode(id, forKey: .id)
         try container.encode(timestamp, forKey: .timestamp)
         try container.encode(innerText, forKey: .innerText)
-        try container.encode(outerHTML, forKey: .outerHTML)
-        guard let imageData = snapshotImage.pngData() else {
-            throw EncodingError.invalidValue(snapshotImage, EncodingError.Context(codingPath: [CodingKeys.snapshotImage], debugDescription: "Cannot encode image"))
-        }
-        try container.encode(imageData, forKey: .snapshotImage)
+        try container.encodeIfPresent(outerHTML, forKey: .outerHTML)
+        try container.encode(snapshotImagePath, forKey: .snapshotImagePath)
         try container.encodeIfPresent(conciseText, forKey: .conciseText)
     }
 }

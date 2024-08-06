@@ -60,8 +60,7 @@ class WebClipManagerViewModel: ObservableObject {
         }
         return webClips[index]
     }
-    
-    
+        
     func imageForWebClip(withId id: UUID) -> UIImage? {
         guard let webClip = webClip(withId: id) else { return nil }
         return ScreenshotUtils.loadImage(from: webClip.screenshotPath)
@@ -171,6 +170,18 @@ class WebClipManagerViewModel: ObservableObject {
         if let newInnerText = newInnerText, let newSnapshot = screenShot {
             updatedWebClip.addSnapshotIfNeeded(newSnapshot: newSnapshot, innerText: newInnerText)
         }
+        
+//        TODO debug why the snapshots are not persisting to UI state or backend
+//        InnerText result:  $159.95
+//        add snapshot
+//        addSnapshotIfNeeded  $159.95
+//        appendSnapshot empty
+//        Generated result: $159.95
+//        Required data is missing; pageTitle or innerText is nil.
+//        Generated result: Walking routes: 4-5 minutes, 0.9-1.0 miles via Dolores St, Guerrero St, or combo.
+//        add snapshot
+//        addSnapshotIfNeeded  $159.95
+//        appendSnapshot empty
         
         repository.updateWebClip(updatedWebClip)
         loadWebClips()

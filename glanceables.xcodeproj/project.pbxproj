@@ -17,7 +17,6 @@
 		036D58E52C3C99300042D491 /* WebClipManagerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 036D58E42C3C99300042D491 /* WebClipManagerViewModel.swift */; };
 		036F46522C59C2D3005E1377 /* DashboardViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 036F46512C59C2D3005E1377 /* DashboardViewModel.swift */; };
 		036F46562C5AE066005E1377 /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 036F46552C5AE066005E1377 /* NotificationManager.swift */; };
-		036F46582C5AE087005E1377 /* NotificationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 036F46572C5AE087005E1377 /* NotificationViewModel.swift */; };
 		036F465C2C5AE85F005E1377 /* SnapshotTimelineModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 036F465B2C5AE85F005E1377 /* SnapshotTimelineModel.swift */; };
 		03778E402C35E740009CB9A1 /* captureElements.js in Resources */ = {isa = PBXBuildFile; fileRef = 03778E3E2C35E6FC009CB9A1 /* captureElements.js */; };
 		03778E422C36028F009CB9A1 /* CapturedElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03778E412C36028F009CB9A1 /* CapturedElement.swift */; };
@@ -73,7 +72,6 @@
 		036D58E42C3C99300042D491 /* WebClipManagerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebClipManagerViewModel.swift; sourceTree = "<group>"; };
 		036F46512C59C2D3005E1377 /* DashboardViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardViewModel.swift; sourceTree = "<group>"; };
 		036F46552C5AE066005E1377 /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
-		036F46572C5AE087005E1377 /* NotificationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationViewModel.swift; sourceTree = "<group>"; };
 		036F465B2C5AE85F005E1377 /* SnapshotTimelineModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotTimelineModel.swift; sourceTree = "<group>"; };
 		03778E3E2C35E6FC009CB9A1 /* captureElements.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = captureElements.js; sourceTree = "<group>"; };
 		03778E412C36028F009CB9A1 /* CapturedElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapturedElement.swift; sourceTree = "<group>"; };
@@ -237,7 +235,6 @@
 			isa = PBXGroup;
 			children = (
 				036F46512C59C2D3005E1377 /* DashboardViewModel.swift */,
-				036F46572C5AE087005E1377 /* NotificationViewModel.swift */,
 				03A868602C4F0FB300CCB79D /* WebViewCoordinator.swift */,
 				036D58E42C3C99300042D491 /* WebClipManagerViewModel.swift */,
 				03553FE22C41F6A800FCB4CC /* WebClipSelectorViewModel.swift */,
@@ -376,7 +373,6 @@
 				0378B8692C096D850005BAE5 /* ContentView.swift in Sources */,
 				038208E02C1BB3F400606536 /* WebViewScreenshotCapture.swift in Sources */,
 				03C5DAD32C24F0CF0061FA25 /* URLUtilities.swift in Sources */,
-				036F46582C5AE087005E1377 /* NotificationViewModel.swift in Sources */,
 				038DAC2F2C61C9710000EA6A /* WebClipRepositoryProtocol.swift in Sources */,
 				03A868552C48871000CCB79D /* LlamaAPIManager.swift in Sources */,
 				03C5DAD52C2647E20061FA25 /* CaptureModeToggleView.swift in Sources */,
