@@ -11,7 +11,7 @@ The Glanceables project is designed to streamline the browsing experience on mac
 
 1. **ContentView**:
 
-   - Acts as the main interface where users interact with the application. It integrates various views and handles the navigation between different parts of the application. Holds the dashboard, webclip menu, and notifications manager. 
+   - Acts as the main interface where users interact with the application. It integrates various views and handles the navigation between different parts of the application. Holds the dashboard, webclip menu, and notifications manager.
 
 2. **Web Capture System**:
 
@@ -44,17 +44,26 @@ The Glanceables project is designed to streamline the browsing experience on mac
 - **NavigationButtonsView**: Contains navigation buttons for the UI.
 - **CaptureRectangleView**: Manages the functionality to capture specific areas of the webpage.
 
+### Repository
+
+- **WebClipRepositoryProtocol.swift**: Defines the protocol for web clip data handling.
+- **WebClipUserDefaultsRepository.swift**: Implementation of the WebClip repository using User Defaults for storage.
+
 ### ViewModels
 
 - **DashboardViewModel**: Manages data and state for the dashboard.
-- **WebClipEditorViewModel**: Handles the logic for editing web clips.
+- **WebClipManagerViewModel.swift**: Manages the lifecycle and operations of web clips.
+- **WebViewCoordinator.swift**: Coordinates web views and their interactions within the app.
 
 ### Models
 
-- **UserDefaults**: Manages user preferences stored across sessions.
 - **WebClip**: Represents the data model for a web clip.
+- **SnapshotTimelineModel.swift**: Manages the timeline of captured web snapshots for historical views.
+- **UserDefaults**: Manages user preferences stored across sessions.
 
 ### Utilities
 
-- **ScreenshotUtils**: Utility functions for handling screenshots.
-- **LlamaAPIManager**: Manages API calls for specific functionalities.
+- **JavascriptLoader.swift**: Loads and manages JavaScript for dynamic interaction within webviews.
+- **NotificationManager.swift**: Manages all notifications to alert users about changes or updates.
+- **URLUtilities.swift**: Helper functions for URL validation and manipulation.
+- **UserDefaults.swift**: Manages the storage of user settings and preferences.
