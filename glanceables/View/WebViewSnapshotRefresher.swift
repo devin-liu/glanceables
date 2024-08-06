@@ -6,7 +6,6 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
     @ObservedObject var viewModel = WebClipManagerViewModel.shared
     @ObservedObject var llamaAPIManager = LlamaAPIManager()
     
-    var reloadTrigger: PassthroughSubject<Void, Never> // Add a reload trigger
     var webClip: WebClip
     
     func makeUIView(context: Context) -> WKWebView {
@@ -19,7 +18,7 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
         
         context.coordinator.webView = webView
         injectGetElementsFromSelectorsScript(webView: webView)
-                
+        
         let request = URLRequest(url: webClip.url)
         webView.load(request)        
         

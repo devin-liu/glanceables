@@ -9,27 +9,34 @@ class WebViewCoordinator: NSObject, WKNavigationDelegate, WKUIDelegate, UIScroll
     var pageTitle: String?
     var llamaResult: LlamaResult?
     
-    private var screenshotTrigger = PassthroughSubject<Void, Never>()
     private var cancellables = Set<AnyCancellable>()
+    private lazy var schedulerViewModel: SchedulerViewModel = {
+        SchedulerViewModel(interval: 60.0, actions: [
+            { [weak self] in
+                DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+                    self?.captureScreenshot()
+                }
+            },
+            { [weak self] in
+                self?.webView?.reload()
+                DispatchQueue.main.asyncAfter(deadline: .now() + 60) {
+                    self?.captureScreenshot()
+                }
+            }
+        ])
+    }()
     
     init(_ parent: WebViewSnapshotRefresher) {
         self.parent = parent
         super.init()
         self.pageTitle = parent.viewModel.pageTitle
         
-        // Configure the throttle for screenshotTrigger
-        screenshotTrigger
-            .throttle(for: .seconds(60), scheduler: RunLoop.main, latest: true)
-            .sink { [weak self] in
-                DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
-                    self?.captureScreenshot()
-                }
-            }
-            .store(in: &cancellables)
+        // Initialize schedulerViewModel after super.init()
+        schedulerViewModel.startScheduler()
     }
     
     deinit {
-        reloadSubscription?.cancel()
+        schedulerViewModel.stopScheduler()
     }
     
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
@@ -46,16 +53,8 @@ class WebViewCoordinator: NSObject, WKNavigationDelegate, WKUIDelegate, UIScroll
                 self.restoreScrollPosition(capturedElements, in: webView)
             }
             // Capture a screenshot
-            self.screenshotTrigger.send(())
-        }
-        
-        // Subscribe to the reload trigger
-        self.reloadSubscription = self.parent.reloadTrigger.sink {
-            webView.reload()
-            DispatchQueue.main.asyncAfter(deadline: .now() + 60) {
-                self.captureScreenshot()
-            }
-        }
+            self.schedulerViewModel.triggerScreenshot()
+        }                
     }
     
     // Method to restore the scroll position for captured elements

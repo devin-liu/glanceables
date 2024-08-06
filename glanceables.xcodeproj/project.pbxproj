@@ -42,6 +42,8 @@
 		03A8685B2C4B312E00CCB79D /* LlamaResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03A8685A2C4B312E00CCB79D /* LlamaResult.swift */; };
 		03A868612C4F0FB300CCB79D /* WebViewCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03A868602C4F0FB300CCB79D /* WebViewCoordinator.swift */; };
 		03A868632C51FF0800CCB79D /* NavigationButtonsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03A868622C51FF0800CCB79D /* NavigationButtonsView.swift */; };
+		03B798572C62E9A400E431E4 /* SchedulerManagerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03B798562C62E9A400E431E4 /* SchedulerManagerViewModel.swift */; };
+		03B798592C62EA5600E431E4 /* SchedulerModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03B798582C62EA5600E431E4 /* SchedulerModel.swift */; };
 		03C5DAD12C23A76B0061FA25 /* ScreenshotUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03C5DAD02C23A76B0061FA25 /* ScreenshotUtils.swift */; };
 		03C5DAD32C24F0CF0061FA25 /* URLUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03C5DAD22C24F0CF0061FA25 /* URLUtilities.swift */; };
 		03C5DAD52C2647E20061FA25 /* CaptureModeToggleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03C5DAD42C2647E20061FA25 /* CaptureModeToggleView.swift */; };
@@ -98,6 +100,8 @@
 		03A8685A2C4B312E00CCB79D /* LlamaResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LlamaResult.swift; sourceTree = "<group>"; };
 		03A868602C4F0FB300CCB79D /* WebViewCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewCoordinator.swift; sourceTree = "<group>"; };
 		03A868622C51FF0800CCB79D /* NavigationButtonsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationButtonsView.swift; sourceTree = "<group>"; };
+		03B798562C62E9A400E431E4 /* SchedulerManagerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SchedulerManagerViewModel.swift; sourceTree = "<group>"; };
+		03B798582C62EA5600E431E4 /* SchedulerModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SchedulerModel.swift; sourceTree = "<group>"; };
 		03C5DAD02C23A76B0061FA25 /* ScreenshotUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ScreenshotUtils.swift; path = glanceables/Utilities/ScreenshotUtils.swift; sourceTree = SOURCE_ROOT; };
 		03C5DAD22C24F0CF0061FA25 /* URLUtilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLUtilities.swift; sourceTree = "<group>"; };
 		03C5DAD42C2647E20061FA25 /* CaptureModeToggleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureModeToggleView.swift; sourceTree = "<group>"; };
@@ -204,6 +208,7 @@
 				03A8685A2C4B312E00CCB79D /* LlamaResult.swift */,
 				030062B32C112BD100B0242D /* WebClip.swift */,
 				036F465B2C5AE85F005E1377 /* SnapshotTimelineModel.swift */,
+				03B798582C62EA5600E431E4 /* SchedulerModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -238,6 +243,7 @@
 				03A868602C4F0FB300CCB79D /* WebViewCoordinator.swift */,
 				036D58E42C3C99300042D491 /* WebClipManagerViewModel.swift */,
 				03553FE22C41F6A800FCB4CC /* WebClipSelectorViewModel.swift */,
+				03B798562C62E9A400E431E4 /* SchedulerManagerViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -399,6 +405,8 @@
 				0378B8672C096D850005BAE5 /* glanceablesApp.swift in Sources */,
 				030062B42C112BD100B0242D /* WebClip.swift in Sources */,
 				03A868532C48692A00CCB79D /* SaveButtonView.swift in Sources */,
+				03B798572C62E9A400E431E4 /* SchedulerManagerViewModel.swift in Sources */,
+				03B798592C62EA5600E431E4 /* SchedulerModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

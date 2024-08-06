@@ -13,7 +13,7 @@ struct WebGridSingleSnapshotView: View {
     
     var body: some View {
         VStack {
-            ScreenshotView(item: item, viewModel: viewModel, reloadTrigger: reloadTrigger)
+            ScreenshotView(item: item, viewModel: viewModel)
                 .padding(10)
             
             PageTitleView(title: item.pageTitle ?? "Loading...")
@@ -22,7 +22,7 @@ struct WebGridSingleSnapshotView: View {
             ConciseTextView(text: item.snapshots.last?.conciseText ?? item.snapshots.last?.innerText ?? " ")
                 .padding()
             
-            RefreshView(rotationAngle: $rotationAngle, lastRefreshDate: $lastRefreshDate, reloadTrigger: reloadTrigger)
+            RefreshIconView(rotationAngle: $rotationAngle, lastRefreshDate: $lastRefreshDate, reloadTrigger: reloadTrigger)
                 .padding()
                 .contentShape(Rectangle())
                 .onTapGesture {
@@ -62,7 +62,6 @@ struct WebGridSingleSnapshotView: View {
 struct ScreenshotView: View {
     @ObservedObject var item: WebClip
     let viewModel: WebClipManagerViewModel
-    var reloadTrigger: PassthroughSubject<Void, Never> // Add a reload trigger
     
     var body: some View {
         ZStack(alignment: .top) {
@@ -70,7 +69,7 @@ struct ScreenshotView: View {
                 AsyncImageView(imagePath: screenshotPath)
             }
             ScrollView {
-                WebViewSnapshotRefresher(reloadTrigger: reloadTrigger, webClip: item)
+                WebViewSnapshotRefresher(webClip: item)
                     .frame(width: item.originalSize?.width, height: 600)
                     .edgesIgnoringSafeArea(.all)
             }
@@ -101,7 +100,7 @@ struct ConciseTextView: View {
     }
 }
 
-struct RefreshView: View {
+struct RefreshIconView: View {
     @Binding var rotationAngle: Double
     @Binding var lastRefreshDate: Date
     let reloadTrigger: PassthroughSubject<Void, Never>
