@@ -92,8 +92,8 @@ class WebClip: ObservableObject, Identifiable, Equatable {
         
         persistSnapshots()
         
-        // Send notification
-        if let title = pageTitle {
+        // Check if the appended snapshot is not the first one and then send a notification
+        if snapshots.count > 1, let title = pageTitle {
             NotificationManager.shared.sendNotification(title: title, body: innerText)
         }
     }
