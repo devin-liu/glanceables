@@ -4,22 +4,20 @@ import UIKit  // Needed for CGSize and CGRect
 class WebClipUserDefaultsViewModel {
     static let shared = WebClipUserDefaultsViewModel()  // Singleton instance
     
-    private let userDefaultsManager = UserDefaultsManager.shared  // Assuming UserDefaultsManager also uses a singleton pattern
-    
     func saveWebViewItems(_ items: [WebClip]) {
         let itemsData = items.map { encodeWebViewItem($0) }
-        userDefaultsManager.saveItems(itemsData)
+        UserDefaultsManager.saveWebClips(itemsData)
     }
     
     func loadWebViewItems() -> [WebClip] {
-        let itemsData = userDefaultsManager.loadItems()
+        let itemsData = UserDefaultsManager.loadWebClips()
         return itemsData.compactMap { decodeWebViewItem(dict: $0) }
     }
     
     func deleteWebViewItem(_ item: WebClip) {
         let items = loadWebViewItems()
         if let index = items.firstIndex(where: { $0.id == item.id }) {
-            userDefaultsManager.deleteItem(at: index)
+            UserDefaultsManager.deleteWebClip(at: index)
         }
     }
     
@@ -27,7 +25,7 @@ class WebClipUserDefaultsViewModel {
         let items = loadWebViewItems()
         if let index = items.firstIndex(where: { $0.id == item.id }) {
             let itemData = encodeWebViewItem(item)
-            userDefaultsManager.updateItem(itemData, at: index)
+            UserDefaultsManager.updateWebClip(itemData, at: index)
         }
     }
     
@@ -113,9 +111,7 @@ class WebClipUserDefaultsViewModel {
         }
         
         return WebClip(id: id, url: url, clipRect: clipRect, originalSize: originalSize, screenshotPath: screenshotPath, screenshot: screenshot, scrollY: scrollY, pageTitle: pageTitle, capturedElements: capturedElements, htmlElements: htmlElements, snapshots: snapshots)
-    }
-
-    
+    }    
     
     private func decodeRect(dict: [String: Any]?) -> CGRect? {
         guard let dict = dict,

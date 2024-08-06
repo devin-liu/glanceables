@@ -6,8 +6,6 @@ struct CapturedElement: Codable {
     let selector: String
 }
 
-
-
 struct HTMLElement: Codable {
     let outerHTML: String
     let innerText: String

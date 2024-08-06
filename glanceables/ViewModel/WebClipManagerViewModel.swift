@@ -58,7 +58,7 @@ class WebClipManagerViewModel: ObservableObject {
     
     
     init() {
-        loadURLs()
+        loadWebClips()
     }
     
     func saveScreenShot(_ newScreenShot: UIImage) {
@@ -69,11 +69,11 @@ class WebClipManagerViewModel: ObservableObject {
         originalSize = newOriginalSize
     }
     
-    func loadURLs() {
+    func loadWebClips() {
         webClips = userDefaultsViewModel.loadWebViewItems()
     }
     
-    func saveURLs() {
+    func saveWebClips() {
         userDefaultsViewModel.saveWebViewItems(webClips)
     }
     
@@ -120,7 +120,7 @@ class WebClipManagerViewModel: ObservableObject {
         )
         
         webClips.append(newWebClip)
-        saveURLs()
+        saveWebClips()
     }
     
     func updateWebClip(withId id: UUID, newURL: URL? = nil, newClipRect: CGRect? = nil, newScreenshotPath: String? = nil, newPageTitle: String? = nil, newCapturedElements: [CapturedElement]? = nil, newLlamaResult: LlamaResult? = nil) {
@@ -150,9 +150,10 @@ class WebClipManagerViewModel: ObservableObject {
         }
         
         webClips[index] = updatedWebClip
-        saveURLs()
-        loadURLs()
-    }       
+        saveWebClips()
+        loadWebClips()
+    }
+       
     
     func openEditForItem(_ item: WebClip) {
         if let index = webClips.firstIndex(where: { $0.id == item.id }) {
@@ -164,7 +165,7 @@ class WebClipManagerViewModel: ObservableObject {
     
     func deleteItem(item: WebClip) {
         userDefaultsViewModel.deleteWebViewItem(item)
-        loadURLs()
+        loadWebClips()
     }
     
     private func updateScreenshotPath(_ id: UUID, _ newPath: String) {
