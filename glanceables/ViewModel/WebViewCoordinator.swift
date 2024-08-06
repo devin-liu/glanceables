@@ -35,13 +35,13 @@ class WebViewCoordinator: NSObject, WKNavigationDelegate, WKUIDelegate, UIScroll
         let simplifiedPageTitle = URLUtilities.simplifyPageTitle(webView.title ?? "No Title")
         self.pageTitle = simplifiedPageTitle
         
-        if let capturedElements = self.parent.item?.capturedElements  {
+        if let capturedElements = self.parent.webClip.capturedElements  {
             self.restoreScrollPosition(capturedElements, in: webView)
         }
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.1) {
             // Restore scroll positions based on captured elements
-            if let capturedElements = self.parent.item?.capturedElements  {
+            if let capturedElements = self.parent.webClip.capturedElements  {
                 self.restoreScrollPosition(capturedElements, in: webView)
             }
             // Capture a screenshot
@@ -103,7 +103,7 @@ class WebViewCoordinator: NSObject, WKNavigationDelegate, WKUIDelegate, UIScroll
         self.parent.llamaAPIManager.analyzeInnerText(innerText: innerText) { result in
             switch result {
             case .success(let result):
-                self.parent.viewModel.updateWebClip(withId: self.parent.id, newLlamaResult: LlamaResult(conciseText: result))
+                self.parent.viewModel.updateWebClip(withId: self.parent.webClip.id, newLlamaResult: LlamaResult(conciseText: result))
                 print("Generated result: \(result)")
                 // Do something with the generated filename, e.g., update UI or model
             case .failure(let error):
@@ -114,11 +114,11 @@ class WebViewCoordinator: NSObject, WKNavigationDelegate, WKUIDelegate, UIScroll
     
     func captureScreenshot() {
         guard let webView = webView else { return }
-        guard let item = self.parent.item else { return }
+        let webClip = self.parent.webClip
         
         let configuration = WKSnapshotConfiguration()
         
-        if let clipRect = item.clipRect {
+        if let clipRect = webClip.clipRect {
             // Adjust clipRect based on the current zoom scale and content offset
             let zoomScale = webView.scrollView.zoomScale
             let offsetX = webView.scrollView.contentOffset.x
@@ -136,10 +136,10 @@ class WebViewCoordinator: NSObject, WKNavigationDelegate, WKUIDelegate, UIScroll
         
         webView.takeSnapshot(with: configuration) { image, error in
             if let image = image {
-                if let newScreenshotPath = ScreenshotUtils.saveScreenshotToFile(using: item, from: image) {
-                    if let item = self.parent.item {
-                        self.parent.viewModel.updateWebClip(withId: item.id, newScreenshotPath: newScreenshotPath)
-                    }
+                if let newScreenshotPath = ScreenshotUtils.saveScreenshotToFile(using: webClip, from: image) {
+                    let item = self.parent.webClip
+                    self.parent.viewModel.updateWebClip(withId: item.id, newScreenshotPath: newScreenshotPath)
+                    
                 }
                 self.handleNewSnapshot(image)
             }
@@ -155,7 +155,7 @@ class WebViewCoordinator: NSObject, WKNavigationDelegate, WKUIDelegate, UIScroll
         
         if SnapshotTimelineManager.shared.snapshots.isEmpty ||
             (SnapshotTimelineManager.shared.snapshots.last?.innerText != innerText) {
-            SnapshotTimelineManager.shared.addSnapshotIfNeeded(newSnapshot: image, innerText: innerText, for: self.parent.item!)                        
+            SnapshotTimelineManager.shared.addSnapshotIfNeeded(newSnapshot: image, innerText: innerText, for: self.parent.webClip)
         }
     }
 }

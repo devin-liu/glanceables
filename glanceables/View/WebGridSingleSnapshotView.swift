@@ -70,7 +70,7 @@ struct ScreenshotView: View {
                 AsyncImageView(imagePath: screenshotPath)
             }
             ScrollView {
-                WebViewSnapshotRefresher(id: item.id, reloadTrigger: reloadTrigger)
+                WebViewSnapshotRefresher(reloadTrigger: reloadTrigger, webClip: item)
                     .frame(width: item.originalSize?.width, height: 600)
                     .edgesIgnoringSafeArea(.all)
             }
