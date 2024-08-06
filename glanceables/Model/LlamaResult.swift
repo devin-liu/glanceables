@@ -1,9 +1,11 @@
 import Foundation
 
 struct LlamaResult {
-    let conciseText: String?
-
-    init(conciseText: String?) {
+    let innerText: String?
+    let conciseText: String?    
+    
+    init(innerText: String, conciseText: String?) {
+        self.innerText = innerText
         self.conciseText = conciseText
     }
 }

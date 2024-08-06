@@ -8,20 +8,22 @@ struct CaptureRectangleView: View {
     
     var body: some View {
         ZStack {            
-            if captureMenuViewModel.dragEnded && captureMenuViewModel.captureModeOn {
+            if captureMenuViewModel.dragEnded {
                 // Gray overlay
                 GeometryReader { geometry in
-                    Path { path in
-                        // Full screen rectangle
-                        path.addRect(CGRect(origin: .zero, size: geometry.size))
-                        
-                        // Subtract the clip rectangle if it exists
-                        if let clipRect = webClipManager.currentClipRect {
-                            path.addRect(clipRect)
+                    if captureMenuViewModel.captureModeOn {
+                        Path { path in
+                            // Full screen rectangle
+                            path.addRect(CGRect(origin: .zero, size: geometry.size))
+                            
+                            // Subtract the clip rectangle if it exists
+                            if let clipRect = webClipManager.currentClipRect {
+                                path.addRect(clipRect)
+                            }
                         }
+                        .fill(Color.gray.opacity(0.5), style: FillStyle(eoFill: true))                    
+                        .edgesIgnoringSafeArea(.all)
                     }
-                    .fill(Color.gray.opacity(0.5), style: FillStyle(eoFill: true))                    
-                    .edgesIgnoringSafeArea(.all)
                 }
             }
             if captureMenuViewModel.captureModeOn {

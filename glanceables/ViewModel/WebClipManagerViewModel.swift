@@ -71,14 +71,23 @@ class WebClipManagerViewModel: ObservableObject {
         loadWebClips()
     }
     
-    func saveScreenShot(_ newScreenShot: UIImage) {
+    func saveScreenShot(_ newScreenShot: UIImage, toClip:WebClip?=nil) -> String? {
         screenShot = newScreenShot
         if isEditing, let selectedClip = selectedWebClip() {
             if let newScreenshotPath = ScreenshotUtils.saveScreenshotToFile(using: selectedClip, from: newScreenShot) {
                 updateWebClip(withId: selectedClip.id, newScreenshotPath: newScreenshotPath)
+                return newScreenshotPath
             }
         }
+        if let toClip = toClip {
+            if let newScreenshotPath = ScreenshotUtils.saveScreenshotToFile(using: toClip, from: newScreenShot) {
+                updateWebClip(withId: toClip.id, newScreenshotPath: newScreenshotPath)
+                return newScreenshotPath
+            }
+        }
+        return nil
     }
+    
     
     func saveOriginalSize(newOriginalSize: CGSize) {
         originalSize = newOriginalSize
@@ -132,12 +141,7 @@ class WebClipManagerViewModel: ObservableObject {
             pageTitle: pageTitle,
             capturedElements: capturedElements,
             snapshots:snapshots
-        )
-        
-        // Add an initial snapshot if a screenshot exists
-        if let screenshot = screenshot, let initialText = pageTitle { // Assuming the innerText for the snapshot is the pageTitle or some initial text
-            newWebClip.addSnapshotIfNeeded(newSnapshot: screenshot, innerText: initialText)
-        }
+        )                
         
         webClips.append(newWebClip)
         saveWebClips()
@@ -164,34 +168,10 @@ class WebClipManagerViewModel: ObservableObject {
         if let newCapturedElements = newCapturedElements {
             updatedWebClip.capturedElements = newCapturedElements
         }
-        if let newLlamaResult = newLlamaResult {
-            updatedWebClip.llamaResult = newLlamaResult
-        }
-        if let newInnerText = newInnerText, let newSnapshot = screenShot {
-            
-            if let newLlamaResult = newLlamaResult {
-                updatedWebClip.addSnapshotIfNeeded(newSnapshot: newSnapshot, innerText: newInnerText, newLlamaResult: newLlamaResult)
-            }else{
-                updatedWebClip.addSnapshotIfNeeded(newSnapshot: newSnapshot, innerText: newInnerText)
-            }
-        }
-        
-        //        TODO debug why the snapshots are not persisting to UI state or backend
-        //        InnerText result:  $159.95
-        //        add snapshot
-        //        addSnapshotIfNeeded  $159.95
-        //        appendSnapshot empty
-        //        Generated result: $159.95
-        //        Required data is missing; pageTitle or innerText is nil.
-        //        Generated result: Walking routes: 4-5 minutes, 0.9-1.0 miles via Dolores St, Guerrero St, or combo.
-        //        add snapshot
-        //        addSnapshotIfNeeded  $159.95
-        //        appendSnapshot empty
         
         repository.updateWebClip(updatedWebClip)
         loadWebClips()
     }
-    
     
     //    func openEditForItem(_ item: WebClip) {
     //        guard let index = webClips.firstIndex(where: { $0.id == item.id }) else { return }
@@ -201,7 +181,6 @@ class WebClipManagerViewModel: ObservableObject {
     //    }
     
     func openEditForItem(_ item: WebClip) {
-        print("openEditForItem")
         guard let index = webClips.firstIndex(where: { $0.id == item.id }) else { return }
         selectedWebClipIndex = index
         print("openEditForItem selectedWebClipIndex", selectedWebClipIndex)

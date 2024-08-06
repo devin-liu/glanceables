@@ -7,7 +7,6 @@ class WebViewCoordinator: NSObject, WKNavigationDelegate, WKUIDelegate, UIScroll
     var webView: WKWebView?
     var reloadSubscription: AnyCancellable?
     var pageTitle: String?
-    var innerText: String?
     var llamaResult: LlamaResult?
     
     private var screenshotTrigger = PassthroughSubject<Void, Never>()
@@ -92,7 +91,6 @@ class WebViewCoordinator: NSObject, WKNavigationDelegate, WKUIDelegate, UIScroll
             let elements = try JSONDecoder().decode([HTMLElement].self, from: data)
             if let innerText = elements.last?.innerText {
                 print("InnerText result: ", innerText)
-                self.innerText = innerText
                 processElementsInnerText(innerText)
             }
             
@@ -106,13 +104,13 @@ class WebViewCoordinator: NSObject, WKNavigationDelegate, WKUIDelegate, UIScroll
         self.parent.llamaAPIManager.analyzeInnerText(innerText: innerText) { result in
             switch result {
             case .success(let result):
-                let newLlamaResult = LlamaResult(conciseText: result)
-                self.parent.viewModel.updateWebClip(withId: self.parent.webClip.id, newLlamaResult: newLlamaResult)
-                self.llamaResult = newLlamaResult
+                self.parent.viewModel.updateWebClip(withId: self.parent.webClip.id, newLlamaResult: result)
                 print("Generated result: \(result)")
+                self.parent.webClip.queueSnapshotUpdate(innerText: innerText, conciseText: result.conciseText)
                 // Do something with the generated filename, e.g., update UI or model
             case .failure(let error):
                 print("Error interpreting changes: \(error.localizedDescription)")
+                self.parent.webClip.queueSnapshotUpdate(innerText: innerText, conciseText: innerText)
             }
         }
     }
@@ -141,21 +139,11 @@ class WebViewCoordinator: NSObject, WKNavigationDelegate, WKUIDelegate, UIScroll
         
         webView.takeSnapshot(with: configuration) { image, error in
             if let image = image {
-                self.parent.viewModel.saveScreenShot(image)
-                self.handleNewSnapshot(image)
+                let newSnapshot = self.parent.viewModel.saveScreenShot(image, toClip: self.parent.webClip)
+                if newSnapshot != nil {
+                    self.parent.webClip.queueSnapshotUpdate(newSnapshot: newSnapshot)
+                }
             }
-        }
-    }
-    
-    private func handleNewSnapshot(_ image: UIImage) {
-        guard let innerText = self.innerText else {
-            print("Required data is missing; pageTitle or innerText is nil.")
-            return
-        }
-        let snapshots = self.parent.webClip.snapshots
-        if snapshots.isEmpty ||
-            (snapshots.last?.innerText != innerText) {
-            self.parent.viewModel.updateWebClip(withId: self.parent.webClip.id, newLlamaResult: llamaResult, newInnerText: innerText)
         }
     }
 }

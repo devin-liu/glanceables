@@ -26,7 +26,6 @@ struct WebClipEditorView_Previews: PreviewProvider {
             pageTitle: "Hacker News",
             capturedElements: [],
             htmlElements: [],
-            llamaResult: nil,
             snapshots: []
         )
         WebClipEditorView(webClip: sampleWebClip)

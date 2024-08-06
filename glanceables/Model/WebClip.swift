@@ -11,10 +11,10 @@ class WebClip: ObservableObject, Identifiable, Equatable {
     @Published var pageTitle: String?
     var capturedElements: [CapturedElement]?
     var htmlElements: [HTMLElement]?
-    var llamaResult: LlamaResult?
     @Published var snapshots: [SnapshotTimelineModel] = []
+    private var pendingUpdates: [SnapshotUpdate] = []
     
-    init(id: UUID, url: URL, clipRect: CGRect? = nil, originalSize: CGSize? = nil, screenshotPath: String? = nil, screenshot: UIImage? = nil, scrollY: Double? = nil, pageTitle: String? = nil, capturedElements: [CapturedElement]? = nil, htmlElements: [HTMLElement]? = nil, llamaResult: LlamaResult? = nil, snapshots: [SnapshotTimelineModel]? = nil) {
+    init(id: UUID, url: URL, clipRect: CGRect? = nil, originalSize: CGSize? = nil, screenshotPath: String? = nil, screenshot: UIImage? = nil, scrollY: Double? = nil, pageTitle: String? = nil, capturedElements: [CapturedElement]? = nil, htmlElements: [HTMLElement]? = nil, snapshots: [SnapshotTimelineModel]? = nil) {
         self.id = id
         self.url = url
         self.clipRect = clipRect
@@ -25,7 +25,6 @@ class WebClip: ObservableObject, Identifiable, Equatable {
         self.pageTitle = pageTitle
         self.capturedElements = capturedElements
         self.htmlElements = htmlElements
-        self.llamaResult = llamaResult
         self.snapshots = snapshots ?? []
     }
     
@@ -33,22 +32,57 @@ class WebClip: ObservableObject, Identifiable, Equatable {
         return lhs.id == rhs.id && lhs.url == rhs.url
     }
     
-    func addSnapshotIfNeeded(newSnapshot: UIImage, innerText: String, newLlamaResult: LlamaResult? = nil) {
-        print("addSnapshotIfNeeded ", innerText, newLlamaResult)
-        // Always save the first snapshot
+    func queueSnapshotUpdate(newSnapshot: String? = nil, innerText: String? = nil, conciseText: String? = nil) {
+        let update = SnapshotUpdate(newSnapshot: newSnapshot, innerText: innerText, conciseText: conciseText)        
+        pendingUpdates.append(update)
+        processPendingUpdates()
+    }
+    
+    private func processPendingUpdates() {
+        // Initialize a dictionary to keep track of the first occurrence of each update component
+        var fieldsDictionary: [String: String] = [:]
         
-        let conciseText = newLlamaResult?.conciseText
+        // Iterate over all pending updates to merge them
+        for update in pendingUpdates {
+            // Collect only the first non-nil occurrence of each field
+            if let innerText = update.innerText, fieldsDictionary["innerText"] == nil {
+                fieldsDictionary["innerText"] = innerText
+            }
+            if let conciseText = update.conciseText, fieldsDictionary["conciseText"] == nil {
+                fieldsDictionary["conciseText"] = conciseText
+            }
+            if let newSnapshot = update.newSnapshot, fieldsDictionary["newSnapshot"] == nil {
+                fieldsDictionary["newSnapshot"] = newSnapshot
+            }
+        }
         
-        if let screenshotPath = screenshotPath {
-            if snapshots.isEmpty {
-                appendSnapshot(screenshotPath: screenshotPath, innerText: innerText, conciseText: conciseText)
-                return
-            }
-            
-            // Add snapshot if innerText is changed
-            if let lastSnapshot = snapshots.last, lastSnapshot.innerText != innerText {
-                appendSnapshot(screenshotPath: screenshotPath, innerText: innerText, conciseText: conciseText)
-            }
+        // Track if a valid update was processed
+        var updateProcessed = false
+        
+        // Check if we have collected all necessary fields
+        if let innerText = fieldsDictionary["innerText"],
+           let conciseText = fieldsDictionary["conciseText"],
+           let newSnapshot = fieldsDictionary["newSnapshot"] {
+            // If all required fields are present, process the update
+            addSnapshotIfNeeded(screenshotPath: newSnapshot, innerText: innerText, conciseText: conciseText)
+            updateProcessed = true
+        }
+        
+        // Clear the pending updates list only if a valid update was processed
+        if updateProcessed {
+            pendingUpdates.removeAll()
+        }
+    }
+
+    func addSnapshotIfNeeded(screenshotPath: String, innerText: String, conciseText: String? = nil) {
+        if snapshots.isEmpty {
+            appendSnapshot(screenshotPath: screenshotPath, innerText: innerText, conciseText: conciseText)
+            return
+        }
+        
+        // Add snapshot if innerText is changed
+        if let lastSnapshot = snapshots.last, lastSnapshot.innerText != innerText {
+            appendSnapshot(screenshotPath: screenshotPath, innerText: innerText, conciseText: conciseText)
         }
     }
     
