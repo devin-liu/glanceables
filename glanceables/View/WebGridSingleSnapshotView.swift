@@ -70,11 +70,7 @@ struct ScreenshotView: View {
     var body: some View {
         ZStack(alignment: .top) {
             if let screenshotPath = item?.screenshotPath, let image = ScreenshotUtils.loadImage(from: screenshotPath) {
-                Image(uiImage: image)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(height: 300)
-                    .cornerRadius(24)
+                AsyncImageView(imagePath: screenshotPath)
             }
             
             ScrollView {
@@ -138,5 +134,60 @@ struct RefreshView: View {
         formatter.maximumUnitCount = 1
         formatter.unitsStyle = .full
         return formatter.string(from: interval) ?? "Just now"
+    }
+}
+
+
+struct AsyncImageView: View {
+    @StateObject private var imageLoader: ImageLoader
+    let placeholder: Image
+    
+    // Updated to accept a file path as a String instead of a URL
+    init(imagePath: String, placeholder: Image = Image(systemName: "photo")) {
+        _imageLoader = StateObject(wrappedValue: ImageLoader(imagePath: imagePath))
+        self.placeholder = placeholder
+    }
+
+    var body: some View {
+        ZStack {
+            if let image = imageLoader.image {
+                Image(uiImage: image)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(height: 300)
+                    .cornerRadius(24)
+            } else {
+                placeholder
+                    .resizable()
+                    .scaledToFit()
+            }
+        }
+        .onAppear {
+            imageLoader.load()
+        }
+    }
+}
+
+
+class ImageLoader: ObservableObject {
+    @Published var image: UIImage?
+    private let imagePath: String
+    
+    init(imagePath: String) {
+        self.imagePath = imagePath
+    }
+    
+    func load() {
+        DispatchQueue.global(qos: .background).async {
+            if let data = FileManager.default.contents(atPath: self.imagePath),
+               let image = UIImage(data: data) {
+                DispatchQueue.main.async {
+                    self.image = image
+                }
+            } else {
+                // Log error or handle the scenario where the image could not be loaded
+                print("Failed to load image from path: \(self.imagePath)")
+            }
+        }
     }
 }

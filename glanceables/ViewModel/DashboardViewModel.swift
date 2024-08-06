@@ -6,38 +6,29 @@ class DashboardViewModel: ObservableObject {
     @Published var draggedItem: WebClip?
     @Published var webClips: [WebClip] = []
     
-    private let webClipEditorViewModel = WebClipManagerViewModel.shared
-    private var cancellables: Set<AnyCancellable> = []  // Storage for Combine subscribers
+    private var subscriptions = Set<AnyCancellable>()
+    private let webClipManagerViewModel = WebClipManagerViewModel.shared
     
     init() {
-        setupSubscriptions()
-        loadURLs()
+        setupBindings()
     }
     
-    func setupSubscriptions() {
-        // Subscribe to changes in webClips from the editor VM
-        webClipEditorViewModel.$webClips
-            .sink { [weak self] updatedClips in
-                self?.webClips = updatedClips
-            }
-            .store(in: &cancellables)
-    }
-    
-    func loadURLs() {
-        // Initial load from webClipEditorViewModel
-        webClips = webClipEditorViewModel.webClips
+    private func setupBindings() {
+        webClipManagerViewModel.webClipsPublisher
+            .receive(on: RunLoop.main)  // Ensure UI updates are on the main thread
+            .assign(to: \.webClips, on: self)
+            .store(in: &subscriptions)
     }
     
     func openEditForItem(item: WebClip) {
-        webClipEditorViewModel.openEditForItem(item)
+        webClipManagerViewModel.openEditForItem(item)
     }
     
     func deleteItem(item: WebClip) {
-        webClipEditorViewModel.deleteItem(item: item)        
+        webClipManagerViewModel.deleteItem(item: item)
     }
     
     func moveItem(fromOffsets: IndexSet, toOffset: Int) {
-        webClips.move(fromOffsets: fromOffsets, toOffset: toOffset)
-        webClipEditorViewModel.webClips = webClips
-    }        
+        webClipManagerViewModel.moveItem(fromOffsets: fromOffsets, toOffset: toOffset)
+    }
 }

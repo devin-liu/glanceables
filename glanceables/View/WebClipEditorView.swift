@@ -7,8 +7,7 @@ struct WebClipEditorView: View {
     var body: some View {
         WebClipCreatorView()
         .onAppear {
-            WebClipManagerViewModel.shared.openEditForItem(webClip)
-            WebClipManagerViewModel.shared.validateURL()
+            WebClipManagerViewModel.shared.openEditForItem(webClip)            
         }
     }
 }

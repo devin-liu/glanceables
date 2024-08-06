@@ -2,12 +2,12 @@ import SwiftUI
 import UniformTypeIdentifiers
 
 struct ContentView: View {
-    @StateObject private var contentViewModel = DashboardViewModel.shared
+    @StateObject private var dashboard = DashboardViewModel.shared
     
     var body: some View {
         NavigationStack{
             VStack {
-                BlackMenuBarView(viewModel: contentViewModel)
+                BlackMenuBarView(viewModel: dashboard)
                 ScrollView {
                     LazyVGrid(columns: [GridItem(.adaptive(minimum: 300))]) {
                         Text("Glanceables")
@@ -16,7 +16,7 @@ struct ContentView: View {
                             .foregroundColor(Color.black)
                     }
                     LazyVGrid(columns: [GridItem(.adaptive(minimum: 300))]) {
-                        if contentViewModel.webClips.isEmpty {
+                        if dashboard.webClips.isEmpty {
                             emptyStateView
                         } else {
                             urlGrid
@@ -25,9 +25,6 @@ struct ContentView: View {
                 }
                 .padding()
                 .background(Color(.systemGray6).opacity(0.85))
-                .onAppear {
-                    contentViewModel.loadURLs()
-                }
             }
         }
     }
@@ -43,19 +40,19 @@ struct ContentView: View {
     }
     
     var urlGrid: some View {
-        ForEach(contentViewModel.webClips) { item in
+        ForEach(dashboard.webClips) { item in
             WebGridSingleSnapshotView(id: item.id)
                 .onDrag {
-                    self.contentViewModel.draggedItem = item
+                    self.dashboard.draggedItem = item
                     return NSItemProvider(object: item.url.absoluteString as NSString)
                 }
-                .onDrop(of: [UTType.text], delegate: DropViewDelegate(item: item, viewModel: $contentViewModel.webClips, draggedItem: $contentViewModel.draggedItem))
+                .onDrop(of: [UTType.text], delegate: DropViewDelegate(item: item, viewModel: $dashboard.webClips, draggedItem: $dashboard.draggedItem))
                 .contextMenu {
                     NavigationLink(destination: WebClipEditorView(webClip: item)) {
                         Text("Edit")
                     }
                     Button("Delete") {
-                        contentViewModel.deleteItem(item: item)
+                        dashboard.deleteItem(item: item)
                     }
                 }
         }

@@ -1,9 +1,10 @@
 import Foundation
 import SwiftUI
+import Combine
 
 class WebClipManagerViewModel: ObservableObject {
     static let shared = WebClipManagerViewModel()  // Singleton instance
-    @Published var webClips: [WebClip] = []
+    @Published private var webClips: [WebClip] = []
     @Published var urlString = ""
     @Published var validURLs: [URL] = []  // Now storing an array of URLs
     @Published var isEditing = false
@@ -24,6 +25,16 @@ class WebClipManagerViewModel: ObservableObject {
     @Published var pageTitle: String?
     @Published var screenShot: UIImage?
     @Published var screenshotPath: String?
+    
+    // Expose read-only access through a computed property
+    var readOnlyWebClips: [WebClip] {
+        return webClips
+    }
+    
+    // Add a publisher for read-only access
+    var webClipsPublisher: AnyPublisher<[WebClip], Never> {
+        $webClips.eraseToAnyPublisher()
+    }
     
     private var repository = WebClipUserDefaultsRepository.shared
     
@@ -149,19 +160,18 @@ class WebClipManagerViewModel: ObservableObject {
             updatedWebClip.llamaResult = newLlamaResult
         }
         
-        webClips[index] = updatedWebClip
-        saveWebClips()
+        repository.updateWebClip(updatedWebClip)
         loadWebClips()
     }
-       
+    
     
     func openEditForItem(_ item: WebClip) {
-        if let index = webClips.firstIndex(where: { $0.id == item.id }) {
-            selectedWebClipIndex = index
-            urlString = webClips[index].url.absoluteURL.absoluteString
-            isEditing = true
-        }
+        guard let index = webClips.firstIndex(where: { $0.id == item.id }) else { return }
+        selectedWebClipIndex = index
+        urlString = webClips[index].url.absoluteString
+        isEditing = true
     }
+    
     
     func deleteItem(item: WebClip) {
         repository.deleteWebClip(item)
@@ -173,5 +183,10 @@ class WebClipManagerViewModel: ObservableObject {
             var updatedItem = webClip
             updatedItem.screenshotPath = newPath
         }
+    }
+    
+    func moveItem(fromOffsets: IndexSet, toOffset: Int) {
+        webClips.move(fromOffsets: fromOffsets, toOffset: toOffset)
+        saveWebClips() // Persist the new order in the repository
     }
 }
