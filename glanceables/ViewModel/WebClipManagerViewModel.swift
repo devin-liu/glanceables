@@ -80,7 +80,7 @@ class WebClipManagerViewModel: ObservableObject {
             }
         }
     }
-        
+    
     func saveOriginalSize(newOriginalSize: CGSize) {
         originalSize = newOriginalSize
     }
@@ -135,16 +135,21 @@ class WebClipManagerViewModel: ObservableObject {
             snapshots:snapshots
         )
         
+        // Add an initial snapshot if a screenshot exists
+        if let screenshot = screenshot, let initialText = pageTitle { // Assuming the innerText for the snapshot is the pageTitle or some initial text
+            newWebClip.addSnapshotIfNeeded(newSnapshot: screenshot, innerText: initialText)
+        }
+        
         webClips.append(newWebClip)
         saveWebClips()
     }
     
-    func updateWebClip(withId id: UUID, newURL: URL? = nil, newClipRect: CGRect? = nil, newScreenshotPath: String? = nil, newPageTitle: String? = nil, newCapturedElements: [CapturedElement]? = nil, newLlamaResult: LlamaResult? = nil) {
+    func updateWebClip(withId id: UUID, newURL: URL? = nil, newClipRect: CGRect? = nil, newScreenshotPath: String? = nil, newPageTitle: String? = nil, newCapturedElements: [CapturedElement]? = nil, newLlamaResult: LlamaResult? = nil, newInnerText: String? = nil) {
         guard let index = webClips.firstIndex(where: { $0.id == id }) else {
             return
         }
         let updatedWebClip = webClips[index]
-                
+        
         if let newURL = newURL {
             updatedWebClip.url = newURL
         }
@@ -162,6 +167,9 @@ class WebClipManagerViewModel: ObservableObject {
         }
         if let newLlamaResult = newLlamaResult {
             updatedWebClip.llamaResult = newLlamaResult
+        }
+        if let newInnerText = newInnerText, let newSnapshot = screenShot {
+            updatedWebClip.addSnapshotIfNeeded(newSnapshot: newSnapshot, innerText: newInnerText)
         }
         
         repository.updateWebClip(updatedWebClip)

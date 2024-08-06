@@ -12,7 +12,7 @@ class WebClip: ObservableObject, Identifiable, Equatable {
     var capturedElements: [CapturedElement]?
     var htmlElements: [HTMLElement]?
     var llamaResult: LlamaResult?
-    var snapshots: [SnapshotTimelineModel]?
+    @Published var snapshots: [SnapshotTimelineModel] = []
     
     init(id: UUID, url: URL, clipRect: CGRect? = nil, originalSize: CGSize? = nil, screenshotPath: String? = nil, screenshot: UIImage? = nil, scrollY: Double? = nil, pageTitle: String? = nil, capturedElements: [CapturedElement]? = nil, htmlElements: [HTMLElement]? = nil, llamaResult: LlamaResult? = nil, snapshots: [SnapshotTimelineModel]? = nil) {
         self.id = id
@@ -26,10 +26,21 @@ class WebClip: ObservableObject, Identifiable, Equatable {
         self.capturedElements = capturedElements
         self.htmlElements = htmlElements
         self.llamaResult = llamaResult
-        self.snapshots = snapshots
+        self.snapshots = snapshots ?? []
     }
     
     static func ==(lhs: WebClip, rhs: WebClip) -> Bool {
         return lhs.id == rhs.id && lhs.url == rhs.url
+    }
+    
+    func addSnapshotIfNeeded(newSnapshot: UIImage, innerText: String) {
+        if let lastSnapshot = snapshots.last, lastSnapshot.innerText == innerText {
+            return  // Do not add snapshot if innerText is unchanged
+        }
+        let newSnapshotModel = SnapshotTimelineModel(timestamp: Date(), innerText: innerText, snapshotImage: newSnapshot)
+        snapshots.append(newSnapshotModel)
+        if let title = pageTitle {
+            NotificationManager.shared.sendNotification(title: title, body: innerText)
+        }
     }
 }

@@ -5,19 +5,19 @@ class WebClipUserDefaultsRepository: WebClipRepositoryProtocol {
     static let shared = WebClipUserDefaultsRepository()
     private let userDefaults = UserDefaults.standard
     private let webClipKey = "savedURLs"
-
+    
     // Load all WebClips from UserDefaults.
     func loadWebClips() -> [WebClip] {
         let itemsData = UserDefaults.standard.array(forKey: webClipKey) as? [[String: Any]] ?? []
         return itemsData.compactMap { decodeWebViewItem(dict: $0) }
     }
-
+    
     // Save an array of WebClips to UserDefaults.
     func saveWebClips(_ webClips: [WebClip]) {
         let itemsData = webClips.map { encodeWebViewItem($0) }
         UserDefaults.standard.set(itemsData, forKey: webClipKey)
     }
-
+    
     // Delete a specific WebClip from UserDefaults.
     func deleteWebClip(_ webClip: WebClip) {
         var webClips = loadWebClips()
@@ -26,7 +26,7 @@ class WebClipUserDefaultsRepository: WebClipRepositoryProtocol {
             saveWebClips(webClips)
         }
     }
-
+    
     // Update a specific WebClip in UserDefaults.
     func updateWebClip(_ webClip: WebClip) {
         var webClips = loadWebClips()
@@ -35,7 +35,7 @@ class WebClipUserDefaultsRepository: WebClipRepositoryProtocol {
             saveWebClips(webClips)
         }
     }
-
+    
     private func encodeWebViewItem(_ item: WebClip) -> [String: Any] {
         var dict = [String: Any]()
         dict["id"] = item.id.uuidString
@@ -76,9 +76,7 @@ class WebClipUserDefaultsRepository: WebClipRepositoryProtocol {
         }
         
         // Encode Snapshots
-        if let snapshots = item.snapshots {
-            dict["snapshots"] = try? JSONEncoder().encode(snapshots).base64EncodedString()
-        }
+        dict["snapshots"] = try? JSONEncoder().encode(item.snapshots).base64EncodedString()
         
         return dict
     }

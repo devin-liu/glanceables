@@ -19,8 +19,6 @@
 		036F46562C5AE066005E1377 /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 036F46552C5AE066005E1377 /* NotificationManager.swift */; };
 		036F46582C5AE087005E1377 /* NotificationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 036F46572C5AE087005E1377 /* NotificationViewModel.swift */; };
 		036F465C2C5AE85F005E1377 /* SnapshotTimelineModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 036F465B2C5AE85F005E1377 /* SnapshotTimelineModel.swift */; };
-		036F465E2C5AE88E005E1377 /* SnapshotTimelineManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 036F465D2C5AE88E005E1377 /* SnapshotTimelineManager.swift */; };
-		036F46602C5AE8A7005E1377 /* SnapshotTimelineViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 036F465F2C5AE8A7005E1377 /* SnapshotTimelineViewModel.swift */; };
 		03778E402C35E740009CB9A1 /* captureElements.js in Resources */ = {isa = PBXBuildFile; fileRef = 03778E3E2C35E6FC009CB9A1 /* captureElements.js */; };
 		03778E422C36028F009CB9A1 /* CapturedElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03778E412C36028F009CB9A1 /* CapturedElement.swift */; };
 		0378B8672C096D850005BAE5 /* glanceablesApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0378B8662C096D850005BAE5 /* glanceablesApp.swift */; };
@@ -77,8 +75,6 @@
 		036F46552C5AE066005E1377 /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
 		036F46572C5AE087005E1377 /* NotificationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationViewModel.swift; sourceTree = "<group>"; };
 		036F465B2C5AE85F005E1377 /* SnapshotTimelineModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotTimelineModel.swift; sourceTree = "<group>"; };
-		036F465D2C5AE88E005E1377 /* SnapshotTimelineManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotTimelineManager.swift; sourceTree = "<group>"; };
-		036F465F2C5AE8A7005E1377 /* SnapshotTimelineViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotTimelineViewModel.swift; sourceTree = "<group>"; };
 		03778E3E2C35E6FC009CB9A1 /* captureElements.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = captureElements.js; sourceTree = "<group>"; };
 		03778E412C36028F009CB9A1 /* CapturedElement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CapturedElement.swift; sourceTree = "<group>"; };
 		0378B8632C096D850005BAE5 /* glanceables.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = glanceables.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -245,7 +241,6 @@
 				03A868602C4F0FB300CCB79D /* WebViewCoordinator.swift */,
 				036D58E42C3C99300042D491 /* WebClipManagerViewModel.swift */,
 				03553FE22C41F6A800FCB4CC /* WebClipSelectorViewModel.swift */,
-				036F465F2C5AE8A7005E1377 /* SnapshotTimelineViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -258,7 +253,6 @@
 				03C5DAD02C23A76B0061FA25 /* ScreenshotUtils.swift */,
 				03A868582C489B3100CCB79D /* JavascriptLoader.swift */,
 				03C5DAD22C24F0CF0061FA25 /* URLUtilities.swift */,
-				036F465D2C5AE88E005E1377 /* SnapshotTimelineManager.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -381,8 +375,6 @@
 				038DAC262C617A3F0000EA6A /* WebClipCreatorView.swift in Sources */,
 				0378B8692C096D850005BAE5 /* ContentView.swift in Sources */,
 				038208E02C1BB3F400606536 /* WebViewScreenshotCapture.swift in Sources */,
-				036F465E2C5AE88E005E1377 /* SnapshotTimelineManager.swift in Sources */,
-				036F46602C5AE8A7005E1377 /* SnapshotTimelineViewModel.swift in Sources */,
 				03C5DAD32C24F0CF0061FA25 /* URLUtilities.swift in Sources */,
 				036F46582C5AE087005E1377 /* NotificationViewModel.swift in Sources */,
 				038DAC2F2C61C9710000EA6A /* WebClipRepositoryProtocol.swift in Sources */,

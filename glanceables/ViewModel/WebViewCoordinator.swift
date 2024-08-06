@@ -15,6 +15,7 @@ class WebViewCoordinator: NSObject, WKNavigationDelegate, WKUIDelegate, UIScroll
     init(_ parent: WebViewSnapshotRefresher) {
         self.parent = parent
         super.init()
+        self.pageTitle = parent.viewModel.pageTitle
         
         // Configure the throttle for screenshotTrigger
         screenshotTrigger
@@ -147,15 +148,15 @@ class WebViewCoordinator: NSObject, WKNavigationDelegate, WKUIDelegate, UIScroll
     }
     
     private func handleNewSnapshot(_ image: UIImage) {
-        guard let innerText = self.innerText,
-              let pageTitle = self.pageTitle else {
-            print("Required data is missing; pageTitle or innerText is nil.")
-            return
-        }
-        
-        if SnapshotTimelineManager.shared.snapshots.isEmpty ||
-            (SnapshotTimelineManager.shared.snapshots.last?.innerText != innerText) {
-            SnapshotTimelineManager.shared.addSnapshotIfNeeded(newSnapshot: image, innerText: innerText, for: self.parent.webClip)
-        }
-    }
+         guard let innerText = self.innerText else {
+             print("Required data is missing; pageTitle or innerText is nil.")
+             return
+         }
+         
+        let snapshots = self.parent.webClip.snapshots
+        if snapshots.isEmpty ||
+             (snapshots.last?.innerText != innerText) {
+            self.parent.webClip.addSnapshotIfNeeded(newSnapshot: image, innerText: innerText)
+         }
+     }
 }
