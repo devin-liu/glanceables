@@ -15,7 +15,6 @@
 		030062B42C112BD100B0242D /* WebClip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 030062B32C112BD100B0242D /* WebClip.swift */; };
 		03553FE32C41F6A800FCB4CC /* WebClipSelectorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03553FE22C41F6A800FCB4CC /* WebClipSelectorViewModel.swift */; };
 		036D58E52C3C99300042D491 /* WebClipManagerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 036D58E42C3C99300042D491 /* WebClipManagerViewModel.swift */; };
-		036D58E72C3CC8460042D491 /* WebClipUserDefaultsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 036D58E62C3CC8460042D491 /* WebClipUserDefaultsViewModel.swift */; };
 		036F46522C59C2D3005E1377 /* DashboardViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 036F46512C59C2D3005E1377 /* DashboardViewModel.swift */; };
 		036F46562C5AE066005E1377 /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 036F46552C5AE066005E1377 /* NotificationManager.swift */; };
 		036F46582C5AE087005E1377 /* NotificationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 036F46572C5AE087005E1377 /* NotificationViewModel.swift */; };
@@ -36,6 +35,8 @@
 		038DAC282C6182140000EA6A /* BlackEditMenuBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 038DAC272C6182140000EA6A /* BlackEditMenuBarView.swift */; };
 		038DAC2A2C618AE20000EA6A /* WebClipEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 038DAC292C618AE20000EA6A /* WebClipEditorView.swift */; };
 		038DAC2C2C61A0950000EA6A /* ChangeFeedbackFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 038DAC2B2C61A0950000EA6A /* ChangeFeedbackFormView.swift */; };
+		038DAC2F2C61C9710000EA6A /* WebClipRepositoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 038DAC2E2C61C9710000EA6A /* WebClipRepositoryProtocol.swift */; };
+		038DAC312C61C97D0000EA6A /* WebClipUserDefaultsRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 038DAC302C61C97D0000EA6A /* WebClipUserDefaultsRepository.swift */; };
 		03A868512C4865C900CCB79D /* CaptureRectangleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03A868502C4865C900CCB79D /* CaptureRectangleView.swift */; };
 		03A868532C48692A00CCB79D /* SaveButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03A868522C48692A00CCB79D /* SaveButtonView.swift */; };
 		03A868552C48871000CCB79D /* LlamaAPIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03A868542C48871000CCB79D /* LlamaAPIManager.swift */; };
@@ -72,7 +73,6 @@
 		0355A0672C17D741005BBAF3 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Platforms/iPhoneOS.platform/Developer/Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		0355A06E2C17DA8B005BBAF3 /* glanceablesTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = glanceablesTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		036D58E42C3C99300042D491 /* WebClipManagerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebClipManagerViewModel.swift; sourceTree = "<group>"; };
-		036D58E62C3CC8460042D491 /* WebClipUserDefaultsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebClipUserDefaultsViewModel.swift; sourceTree = "<group>"; };
 		036F46512C59C2D3005E1377 /* DashboardViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardViewModel.swift; sourceTree = "<group>"; };
 		036F46552C5AE066005E1377 /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
 		036F46572C5AE087005E1377 /* NotificationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationViewModel.swift; sourceTree = "<group>"; };
@@ -94,6 +94,8 @@
 		038DAC272C6182140000EA6A /* BlackEditMenuBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlackEditMenuBarView.swift; sourceTree = "<group>"; };
 		038DAC292C618AE20000EA6A /* WebClipEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebClipEditorView.swift; sourceTree = "<group>"; };
 		038DAC2B2C61A0950000EA6A /* ChangeFeedbackFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeFeedbackFormView.swift; sourceTree = "<group>"; };
+		038DAC2E2C61C9710000EA6A /* WebClipRepositoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebClipRepositoryProtocol.swift; sourceTree = "<group>"; };
+		038DAC302C61C97D0000EA6A /* WebClipUserDefaultsRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebClipUserDefaultsRepository.swift; sourceTree = "<group>"; };
 		03A868502C4865C900CCB79D /* CaptureRectangleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureRectangleView.swift; sourceTree = "<group>"; };
 		03A868522C48692A00CCB79D /* SaveButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaveButtonView.swift; sourceTree = "<group>"; };
 		03A868542C48871000CCB79D /* LlamaAPIManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LlamaAPIManager.swift; sourceTree = "<group>"; };
@@ -167,6 +169,7 @@
 			isa = PBXGroup;
 			children = (
 				03DF92F42C40B98A00625AEB /* glanceables.entitlements */,
+				038DAC2D2C61C9600000EA6A /* Repository */,
 				03A8685D2C4EE54200CCB79D /* View */,
 				03A8685F2C4EE63500CCB79D /* Utilities */,
 				03A868542C48871000CCB79D /* LlamaAPIManager.swift */,
@@ -189,6 +192,15 @@
 				0378B86F2C096D860005BAE5 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		038DAC2D2C61C9600000EA6A /* Repository */ = {
+			isa = PBXGroup;
+			children = (
+				038DAC2E2C61C9710000EA6A /* WebClipRepositoryProtocol.swift */,
+				038DAC302C61C97D0000EA6A /* WebClipUserDefaultsRepository.swift */,
+			);
+			path = Repository;
 			sourceTree = "<group>";
 		};
 		03A8685C2C4EE50600CCB79D /* Model */ = {
@@ -230,7 +242,6 @@
 			children = (
 				036F46512C59C2D3005E1377 /* DashboardViewModel.swift */,
 				036F46572C5AE087005E1377 /* NotificationViewModel.swift */,
-				036D58E62C3CC8460042D491 /* WebClipUserDefaultsViewModel.swift */,
 				03A868602C4F0FB300CCB79D /* WebViewCoordinator.swift */,
 				036D58E42C3C99300042D491 /* WebClipManagerViewModel.swift */,
 				03553FE22C41F6A800FCB4CC /* WebClipSelectorViewModel.swift */,
@@ -374,13 +385,13 @@
 				036F46602C5AE8A7005E1377 /* SnapshotTimelineViewModel.swift in Sources */,
 				03C5DAD32C24F0CF0061FA25 /* URLUtilities.swift in Sources */,
 				036F46582C5AE087005E1377 /* NotificationViewModel.swift in Sources */,
+				038DAC2F2C61C9710000EA6A /* WebClipRepositoryProtocol.swift in Sources */,
 				03A868552C48871000CCB79D /* LlamaAPIManager.swift in Sources */,
 				03C5DAD52C2647E20061FA25 /* CaptureModeToggleView.swift in Sources */,
 				0300629D2C0D229800B0242D /* BlackMenuBarView.swift in Sources */,
 				038DAC282C6182140000EA6A /* BlackEditMenuBarView.swift in Sources */,
 				036D58E52C3C99300042D491 /* WebClipManagerViewModel.swift in Sources */,
 				030062992C0A833200B0242D /* CreateButtonView.swift in Sources */,
-				036D58E72C3CC8460042D491 /* WebClipUserDefaultsViewModel.swift in Sources */,
 				0300629B2C0D209400B0242D /* UserDefaults.swift in Sources */,
 				03C5DAD72C264BE00061FA25 /* RedXButton.swift in Sources */,
 				03A868572C48880600CCB79D /* Response.swift in Sources */,
@@ -395,6 +406,7 @@
 				030062A72C0FE8A100B0242D /* WebClipBrowserMenuView.swift in Sources */,
 				038DAC2A2C618AE20000EA6A /* WebClipEditorView.swift in Sources */,
 				03C5DAD12C23A76B0061FA25 /* ScreenshotUtils.swift in Sources */,
+				038DAC312C61C97D0000EA6A /* WebClipUserDefaultsRepository.swift in Sources */,
 				03A868612C4F0FB300CCB79D /* WebViewCoordinator.swift in Sources */,
 				0378B8672C096D850005BAE5 /* glanceablesApp.swift in Sources */,
 				030062B42C112BD100B0242D /* WebClip.swift in Sources */,

@@ -25,7 +25,7 @@ class WebClipManagerViewModel: ObservableObject {
     @Published var screenShot: UIImage?
     @Published var screenshotPath: String?
     
-    private var userDefaultsViewModel = WebClipUserDefaultsViewModel.shared
+    private var repository = WebClipUserDefaultsRepository.shared
     
     var validURL: URL? {
         guard let index = selectedValidURLIndex, validURLs.indices.contains(index) else {
@@ -70,11 +70,11 @@ class WebClipManagerViewModel: ObservableObject {
     }
     
     func loadWebClips() {
-        webClips = userDefaultsViewModel.loadWebViewItems()
+        webClips = repository.loadWebClips()
     }
     
     func saveWebClips() {
-        userDefaultsViewModel.saveWebViewItems(webClips)
+        repository.saveWebClips(webClips)
     }
     
     func validateURL() {
@@ -164,7 +164,7 @@ class WebClipManagerViewModel: ObservableObject {
     }
     
     func deleteItem(item: WebClip) {
-        userDefaultsViewModel.deleteWebViewItem(item)
+        repository.deleteWebClip(item)
         loadWebClips()
     }
     

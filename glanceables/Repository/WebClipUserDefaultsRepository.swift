@@ -1,34 +1,41 @@
 import Foundation
 import UIKit  // Needed for CGSize and CGRect
 
-class WebClipUserDefaultsViewModel {
-    static let shared = WebClipUserDefaultsViewModel()  // Singleton instance
-    
-    func saveWebViewItems(_ items: [WebClip]) {
-        let itemsData = items.map { encodeWebViewItem($0) }
-        UserDefaultsManager.saveWebClips(itemsData)
-    }
-    
-    func loadWebViewItems() -> [WebClip] {
-        let itemsData = UserDefaultsManager.loadWebClips()
+class WebClipUserDefaultsRepository: WebClipRepositoryProtocol {
+    static let shared = WebClipUserDefaultsRepository()
+    private let userDefaults = UserDefaults.standard
+    private let webClipKey = "savedURLs"
+
+    // Load all WebClips from UserDefaults.
+    func loadWebClips() -> [WebClip] {
+        let itemsData = UserDefaults.standard.array(forKey: webClipKey) as? [[String: Any]] ?? []
         return itemsData.compactMap { decodeWebViewItem(dict: $0) }
     }
-    
-    func deleteWebViewItem(_ item: WebClip) {
-        let items = loadWebViewItems()
-        if let index = items.firstIndex(where: { $0.id == item.id }) {
-            UserDefaultsManager.deleteWebClip(at: index)
+
+    // Save an array of WebClips to UserDefaults.
+    func saveWebClips(_ webClips: [WebClip]) {
+        let itemsData = webClips.map { encodeWebViewItem($0) }
+        UserDefaults.standard.set(itemsData, forKey: webClipKey)
+    }
+
+    // Delete a specific WebClip from UserDefaults.
+    func deleteWebClip(_ webClip: WebClip) {
+        var webClips = loadWebClips()
+        if let index = webClips.firstIndex(where: { $0.id == webClip.id }) {
+            webClips.remove(at: index)
+            saveWebClips(webClips)
         }
     }
-    
-    func updateWebViewItem(_ item: WebClip) {
-        let items = loadWebViewItems()
-        if let index = items.firstIndex(where: { $0.id == item.id }) {
-            let itemData = encodeWebViewItem(item)
-            UserDefaultsManager.updateWebClip(itemData, at: index)
+
+    // Update a specific WebClip in UserDefaults.
+    func updateWebClip(_ webClip: WebClip) {
+        var webClips = loadWebClips()
+        if let index = webClips.firstIndex(where: { $0.id == webClip.id }) {
+            webClips[index] = webClip
+            saveWebClips(webClips)
         }
     }
-    
+
     private func encodeWebViewItem(_ item: WebClip) -> [String: Any] {
         var dict = [String: Any]()
         dict["id"] = item.id.uuidString
@@ -111,7 +118,7 @@ class WebClipUserDefaultsViewModel {
         }
         
         return WebClip(id: id, url: url, clipRect: clipRect, originalSize: originalSize, screenshotPath: screenshotPath, screenshot: screenshot, scrollY: scrollY, pageTitle: pageTitle, capturedElements: capturedElements, htmlElements: htmlElements, snapshots: snapshots)
-    }    
+    }
     
     private func decodeRect(dict: [String: Any]?) -> CGRect? {
         guard let dict = dict,
