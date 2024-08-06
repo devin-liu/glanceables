@@ -4,7 +4,7 @@ import Combine
 struct WebClipBrowserMenuView: View {
     @Environment(\.presentationMode) var presentationMode
     @ObservedObject var viewModel: WebClipManagerViewModel
-    @ObservedObject var captureMenuViewModel: WebClipSelectorViewModel    
+    @ObservedObject var captureMenuViewModel = WebClipSelectorViewModel.shared
     @ObservedObject var dashboardViewModel = DashboardViewModel.shared
     
     var body: some View {
@@ -45,7 +45,7 @@ struct WebClipBrowserMenuView: View {
                                         }
                                 )
                             if captureMenuViewModel.captureModeOn {
-                                CaptureRectangleView(captureMenuViewModel: captureMenuViewModel, webClipEditor: viewModel)
+                                CaptureRectangleView(captureMenuViewModel: captureMenuViewModel, webClipManager: viewModel)
                             }
                         }
                     }

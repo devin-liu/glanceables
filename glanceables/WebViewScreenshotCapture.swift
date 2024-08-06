@@ -3,7 +3,7 @@ import WebKit
 
 struct WebViewScreenshotCapture: UIViewRepresentable {
     @ObservedObject var viewModel: WebClipManagerViewModel
-    @ObservedObject var captureMenuViewModel: WebClipSelectorViewModel
+    @ObservedObject var captureMenuViewModel = WebClipSelectorViewModel.shared
     
     func makeUIView(context: Context) -> WKWebView {
         let webView = WKWebView()

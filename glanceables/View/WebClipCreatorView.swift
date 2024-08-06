@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct WebClipCreatorView: View {
-    @StateObject private var captureMenuViewModel = WebClipSelectorViewModel()
+    @StateObject private var captureMenuViewModel = WebClipSelectorViewModel.shared
     
     var body: some View {
         VStack{
