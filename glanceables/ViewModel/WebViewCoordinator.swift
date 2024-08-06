@@ -89,7 +89,7 @@ class WebViewCoordinator: NSObject, WKNavigationDelegate, WKUIDelegate, UIScroll
         
         do {
             let elements = try JSONDecoder().decode([HTMLElement].self, from: data)
-            if let innerText = elements.last?.innerText {
+            if let innerText = elements.first?.innerText {
                 print("InnerText result: ", innerText)
                 processElementsInnerText(innerText)
             }

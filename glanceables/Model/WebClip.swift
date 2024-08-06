@@ -33,7 +33,7 @@ class WebClip: ObservableObject, Identifiable, Equatable {
     }
     
     func queueSnapshotUpdate(newSnapshot: String? = nil, innerText: String? = nil, conciseText: String? = nil) {
-        let update = SnapshotUpdate(newSnapshot: newSnapshot, innerText: innerText, conciseText: conciseText)        
+        let update = SnapshotUpdate(newSnapshot: newSnapshot, innerText: innerText, conciseText: conciseText)
         pendingUpdates.append(update)
         processPendingUpdates()
     }
@@ -90,9 +90,18 @@ class WebClip: ObservableObject, Identifiable, Equatable {
         let newSnapshotModel = SnapshotTimelineModel(timestamp: Date(), innerText: innerText, snapshotImagePath: screenshotPath, conciseText: conciseText)
         snapshots.append(newSnapshotModel)
         
+        persistSnapshots()
+        
         // Send notification
         if let title = pageTitle {
             NotificationManager.shared.sendNotification(title: title, body: innerText)
         }
     }
+}
+
+
+extension WebClip {
+    func persistSnapshots() {
+        WebClipUserDefaultsRepository.shared.updateWebClip(self)
+    }    
 }
