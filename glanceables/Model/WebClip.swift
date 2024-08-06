@@ -73,7 +73,7 @@ class WebClip: ObservableObject, Identifiable, Equatable {
             pendingUpdates.removeAll()
         }
     }
-
+    
     func addSnapshotIfNeeded(screenshotPath: String, innerText: String, conciseText: String? = nil) {
         if snapshots.isEmpty {
             appendSnapshot(screenshotPath: screenshotPath, innerText: innerText, conciseText: conciseText)
@@ -103,5 +103,5 @@ class WebClip: ObservableObject, Identifiable, Equatable {
 extension WebClip {
     func persistSnapshots() {
         WebClipUserDefaultsRepository.shared.updateWebClip(self)
-    }    
+    }
 }

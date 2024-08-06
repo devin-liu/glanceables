@@ -7,7 +7,7 @@ struct CaptureRectangleView: View {
     @ObservedObject var dashboardViewModel = DashboardViewModel.shared
     
     var body: some View {
-        ZStack {            
+        ZStack {
             if captureMenuViewModel.dragEnded {
                 // Gray overlay
                 GeometryReader { geometry in
@@ -21,7 +21,7 @@ struct CaptureRectangleView: View {
                                 path.addRect(clipRect)
                             }
                         }
-                        .fill(Color.gray.opacity(0.5), style: FillStyle(eoFill: true))                    
+                        .fill(Color.gray.opacity(0.5), style: FillStyle(eoFill: true))
                         .edgesIgnoringSafeArea(.all)
                     }
                 }

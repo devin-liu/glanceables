@@ -141,7 +141,7 @@ class WebClipManagerViewModel: ObservableObject {
             pageTitle: pageTitle,
             capturedElements: capturedElements,
             snapshots:snapshots
-        )                
+        )
         
         webClips.append(newWebClip)
         saveWebClips()
@@ -173,17 +173,9 @@ class WebClipManagerViewModel: ObservableObject {
         loadWebClips()
     }
     
-    //    func openEditForItem(_ item: WebClip) {
-    //        guard let index = webClips.firstIndex(where: { $0.id == item.id }) else { return }
-    //        selectedWebClipIndex = index
-    //        urlString = webClips[index].url.absoluteString
-    //        isEditing = true
-    //    }
-    
     func openEditForItem(_ item: WebClip) {
         guard let index = webClips.firstIndex(where: { $0.id == item.id }) else { return }
         selectedWebClipIndex = index
-        print("openEditForItem selectedWebClipIndex", selectedWebClipIndex)
         urlString = webClips[index].url.absoluteString
         isEditing = true
     }
