@@ -6,9 +6,11 @@ struct WebClipEditorView: View {
     
     var body: some View {
         WebClipCreatorView()
-        .onAppear {
-            WebClipManagerViewModel.shared.openEditForItem(webClip)            
-        }
+            .onAppear {
+                WebClipManagerViewModel.shared.openEditForItem(webClip)            
+            }.onDisappear {
+                WebClipManagerViewModel.shared.reset()
+            }
     }
 }
 

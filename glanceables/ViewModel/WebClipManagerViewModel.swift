@@ -60,7 +60,7 @@ class WebClipManagerViewModel: ObservableObject {
         }
         return webClips[index]
     }
-        
+    
     func imageForWebClip(withId id: UUID) -> UIImage? {
         guard let webClip = webClip(withId: id) else { return nil }
         return ScreenshotUtils.loadImage(from: webClip.screenshotPath)
@@ -171,26 +171,35 @@ class WebClipManagerViewModel: ObservableObject {
             updatedWebClip.addSnapshotIfNeeded(newSnapshot: newSnapshot, innerText: newInnerText)
         }
         
-//        TODO debug why the snapshots are not persisting to UI state or backend
-//        InnerText result:  $159.95
-//        add snapshot
-//        addSnapshotIfNeeded  $159.95
-//        appendSnapshot empty
-//        Generated result: $159.95
-//        Required data is missing; pageTitle or innerText is nil.
-//        Generated result: Walking routes: 4-5 minutes, 0.9-1.0 miles via Dolores St, Guerrero St, or combo.
-//        add snapshot
-//        addSnapshotIfNeeded  $159.95
-//        appendSnapshot empty
+        //        TODO debug why the snapshots are not persisting to UI state or backend
+        //        InnerText result:  $159.95
+        //        add snapshot
+        //        addSnapshotIfNeeded  $159.95
+        //        appendSnapshot empty
+        //        Generated result: $159.95
+        //        Required data is missing; pageTitle or innerText is nil.
+        //        Generated result: Walking routes: 4-5 minutes, 0.9-1.0 miles via Dolores St, Guerrero St, or combo.
+        //        add snapshot
+        //        addSnapshotIfNeeded  $159.95
+        //        appendSnapshot empty
         
         repository.updateWebClip(updatedWebClip)
         loadWebClips()
     }
     
     
+    //    func openEditForItem(_ item: WebClip) {
+    //        guard let index = webClips.firstIndex(where: { $0.id == item.id }) else { return }
+    //        selectedWebClipIndex = index
+    //        urlString = webClips[index].url.absoluteString
+    //        isEditing = true
+    //    }
+    
     func openEditForItem(_ item: WebClip) {
+        print("openEditForItem")
         guard let index = webClips.firstIndex(where: { $0.id == item.id }) else { return }
         selectedWebClipIndex = index
+        print("openEditForItem selectedWebClipIndex", selectedWebClipIndex)
         urlString = webClips[index].url.absoluteString
         isEditing = true
     }
@@ -204,5 +213,20 @@ class WebClipManagerViewModel: ObservableObject {
     func moveItem(fromOffsets: IndexSet, toOffset: Int) {
         webClips.move(fromOffsets: fromOffsets, toOffset: toOffset)
         saveWebClips() // Persist the new order in the repository
+    }
+    
+    func reset() {
+        urlString = ""
+        validURLs.removeAll()
+        selectedValidURLIndex = nil
+        selectedWebClipIndex = nil
+        currentClipRect = nil
+        isURLValid = true
+        showValidationError = false
+        originalSize = nil
+        pageTitle = nil
+        screenShot = nil
+        screenshotPath = nil
+        
     }
 }
