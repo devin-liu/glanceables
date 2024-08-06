@@ -41,7 +41,7 @@ struct ContentView: View {
     
     var urlGrid: some View {
         ForEach(dashboard.webClips) { item in
-            WebGridSingleSnapshotView(id: item.id)
+            WebGridSingleSnapshotView(item: item)
                 .onDrag {
                     self.dashboard.draggedItem = item
                     return NSItemProvider(object: item.url.absoluteString as NSString)

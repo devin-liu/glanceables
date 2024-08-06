@@ -5,7 +5,6 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
     @ObservedObject var viewModel: WebClipManagerViewModel
     @ObservedObject var captureMenuViewModel: WebClipSelectorViewModel
     
-    
     func makeUIView(context: Context) -> WKWebView {
         let webView = WKWebView()
         webView.navigationDelegate = context.coordinator
@@ -23,14 +22,11 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
         return webView
     }
     
-    func updateUIView(_ webView: WKWebView, context: Context) {        
+    func updateUIView(_ webView: WKWebView, context: Context) {
         if let validURL = viewModel.validURL, webView.url != validURL {
             let request = URLRequest(url: validURL)
             webView.load(request)
         }
-        
-        // Call the screenshot capturing method on the coordinator
-        context.coordinator.debouncedCaptureScreenshot()
     }
     
     func makeCoordinator() -> Coordinator {
@@ -146,8 +142,6 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
                 
                 self.parent.viewModel.pageTitle = simplifiedPageTitle
                 
-                self.captureScreenshot()
-                
                 self.parent.viewModel.saveOriginalSize(newOriginalSize: webView.scrollView.contentSize)
                 
                 // Initialize clipRect in the center of the WebView frame
@@ -192,6 +186,7 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
             if let newUrl = self.webView?.url {
                 self.parent.viewModel.updateOrAddValidURL(newUrl)
             }
+            self.captureScreenshot()
             
         }
         
@@ -241,22 +236,6 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
             }
         }
         
-        func debouncedCaptureScreenshot() {
-            // Cancel the previous work item if it was scheduled
-            screenshotCaptureWorkItem?.cancel()
-            
-            // Create a new work item to capture the screenshot
-            screenshotCaptureWorkItem = DispatchWorkItem { [weak self] in
-                self?.captureScreenshot()
-            }
-            
-            // Schedule the new work item after 0.2 seconds
-            if let workItem = screenshotCaptureWorkItem {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.2, execute: workItem)
-            }
-        }
-        
-        
         func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
             self.parent.captureMenuViewModel.userInteracting = true
         }
@@ -273,7 +252,6 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
         
         private func captureScreenshot() {
             guard let webView = webView else { return }
-            
             let configuration = WKSnapshotConfiguration()
             if let clipRect = parent.viewModel.currentClipRect {
                 // Capture the current screenshot that the user sees

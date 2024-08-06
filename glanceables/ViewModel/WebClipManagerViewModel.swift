@@ -74,8 +74,13 @@ class WebClipManagerViewModel: ObservableObject {
     
     func saveScreenShot(_ newScreenShot: UIImage) {
         screenShot = newScreenShot
+        if isEditing, let selectedClip = selectedWebClip() {
+            if let newScreenshotPath = ScreenshotUtils.saveScreenshotToFile(using: selectedClip, from: newScreenShot) {
+                updateWebClip(withId: selectedClip.id, newScreenshotPath: newScreenshotPath)
+            }
+        }
     }
-    
+        
     func saveOriginalSize(newOriginalSize: CGSize) {
         originalSize = newOriginalSize
     }
@@ -138,9 +143,8 @@ class WebClipManagerViewModel: ObservableObject {
         guard let index = webClips.firstIndex(where: { $0.id == id }) else {
             return
         }
-        var updatedWebClip = webClips[index]
-        
-        // Update only if new values are provided
+        let updatedWebClip = webClips[index]
+                
         if let newURL = newURL {
             updatedWebClip.url = newURL
         }
@@ -176,13 +180,6 @@ class WebClipManagerViewModel: ObservableObject {
     func deleteItem(item: WebClip) {
         repository.deleteWebClip(item)
         loadWebClips()
-    }
-    
-    private func updateScreenshotPath(_ id: UUID, _ newPath: String) {
-        if let webClip = webClip(withId: id) {
-            var updatedItem = webClip
-            updatedItem.screenshotPath = newPath
-        }
     }
     
     func moveItem(fromOffsets: IndexSet, toOffset: Int) {

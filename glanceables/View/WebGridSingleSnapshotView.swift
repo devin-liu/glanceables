@@ -9,21 +9,17 @@ struct WebGridSingleSnapshotView: View {
     @State private var reloadTrigger = PassthroughSubject<Void, Never>() // Local reload trigger
     
     @ObservedObject private var viewModel = WebClipManagerViewModel.shared
-    let id: UUID
-    
-    private var item: WebClip? {
-        return viewModel.webClip(withId: id)
-    }
+    @ObservedObject var item: WebClip
     
     var body: some View {
         VStack {
-            ScreenshotView(item: item, viewModel: viewModel)
+            ScreenshotView(item: item, viewModel: viewModel, reloadTrigger: reloadTrigger)
                 .padding(10)
             
-            PageTitleView(title: item?.pageTitle ?? "Loading...")
+            PageTitleView(title: item.pageTitle ?? "Loading...")
                 .padding()
             
-            ConciseTextView(text: item?.llamaResult?.conciseText ?? " ")
+            ConciseTextView(text: item.llamaResult?.conciseText ?? " ")
                 .padding()
             
             RefreshView(rotationAngle: $rotationAngle, lastRefreshDate: $lastRefreshDate, reloadTrigger: reloadTrigger)
@@ -64,27 +60,26 @@ struct WebGridSingleSnapshotView: View {
 }
 
 struct ScreenshotView: View {
-    let item: WebClip?
+    @ObservedObject var item: WebClip
     let viewModel: WebClipManagerViewModel
+    var reloadTrigger: PassthroughSubject<Void, Never> // Add a reload trigger
     
     var body: some View {
         ZStack(alignment: .top) {
-            if let screenshotPath = item?.screenshotPath, let image = ScreenshotUtils.loadImage(from: screenshotPath) {
+            if let screenshotPath = item.screenshotPath {
                 AsyncImageView(imagePath: screenshotPath)
             }
-            
             ScrollView {
-                if let id = item?.id, let originalSize = item?.originalSize {
-                    WebViewSnapshotRefresher(id: id, reloadTrigger: PassthroughSubject<Void, Never>())
-                        .frame(width: originalSize.width, height: 600)
-                        .edgesIgnoringSafeArea(.all)
-                }
+                WebViewSnapshotRefresher(id: item.id, reloadTrigger: reloadTrigger)
+                    .frame(width: item.originalSize?.width, height: 600)
+                    .edgesIgnoringSafeArea(.all)
             }
             .opacity(0)  // Make the ScrollView invisible
             .frame(width: 0, height: 0)  // Make the ScrollView occupy no space
         }
     }
 }
+
 
 struct PageTitleView: View {
     let title: String
@@ -147,7 +142,7 @@ struct AsyncImageView: View {
         _imageLoader = StateObject(wrappedValue: ImageLoader(imagePath: imagePath))
         self.placeholder = placeholder
     }
-
+    
     var body: some View {
         ZStack {
             if let image = imageLoader.image {
