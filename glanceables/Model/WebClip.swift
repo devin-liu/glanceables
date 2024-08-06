@@ -33,24 +33,27 @@ class WebClip: ObservableObject, Identifiable, Equatable {
         return lhs.id == rhs.id && lhs.url == rhs.url
     }
     
-    func addSnapshotIfNeeded(newSnapshot: UIImage, innerText: String) {
-        print("addSnapshotIfNeeded ", innerText)
+    func addSnapshotIfNeeded(newSnapshot: UIImage, innerText: String, newLlamaResult: LlamaResult? = nil) {
+        print("addSnapshotIfNeeded ", innerText, newLlamaResult)
         // Always save the first snapshot
+        
+        let conciseText = newLlamaResult?.conciseText
+        
         if let screenshotPath = screenshotPath {
             if snapshots.isEmpty {
-                appendSnapshot(screenshotPath: screenshotPath, innerText: innerText)                
+                appendSnapshot(screenshotPath: screenshotPath, innerText: innerText, conciseText: conciseText)
                 return
             }
             
             // Add snapshot if innerText is changed
             if let lastSnapshot = snapshots.last, lastSnapshot.innerText != innerText {
-                appendSnapshot(screenshotPath: screenshotPath, innerText: innerText)
+                appendSnapshot(screenshotPath: screenshotPath, innerText: innerText, conciseText: conciseText)
             }
         }
     }
     
-    private func appendSnapshot(screenshotPath: String, innerText: String) {
-        let newSnapshotModel = SnapshotTimelineModel(timestamp: Date(), innerText: innerText, snapshotImagePath: screenshotPath)
+    private func appendSnapshot(screenshotPath: String, innerText: String, conciseText: String?) {
+        let newSnapshotModel = SnapshotTimelineModel(timestamp: Date(), innerText: innerText, snapshotImagePath: screenshotPath, conciseText: conciseText)
         snapshots.append(newSnapshotModel)
         
         // Send notification

@@ -19,7 +19,7 @@ struct WebGridSingleSnapshotView: View {
             PageTitleView(title: item.pageTitle ?? "Loading...")
                 .padding()
             
-            ConciseTextView(text: item.snapshots.first?.innerText ?? " ")
+            ConciseTextView(text: item.snapshots.last?.conciseText ?? item.snapshots.last?.innerText ?? " ")
                 .padding()
             
             RefreshView(rotationAngle: $rotationAngle, lastRefreshDate: $lastRefreshDate, reloadTrigger: reloadTrigger)

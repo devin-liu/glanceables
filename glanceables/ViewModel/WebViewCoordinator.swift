@@ -8,7 +8,7 @@ class WebViewCoordinator: NSObject, WKNavigationDelegate, WKUIDelegate, UIScroll
     var reloadSubscription: AnyCancellable?
     var pageTitle: String?
     var innerText: String?
-    var conciseText: String?
+    var llamaResult: LlamaResult?
     
     private var screenshotTrigger = PassthroughSubject<Void, Never>()
     private var cancellables = Set<AnyCancellable>()
@@ -106,8 +106,9 @@ class WebViewCoordinator: NSObject, WKNavigationDelegate, WKUIDelegate, UIScroll
         self.parent.llamaAPIManager.analyzeInnerText(innerText: innerText) { result in
             switch result {
             case .success(let result):
-                self.parent.viewModel.updateWebClip(withId: self.parent.webClip.id, newLlamaResult: LlamaResult(conciseText: result))
-                self.conciseText = result
+                let newLlamaResult = LlamaResult(conciseText: result)
+                self.parent.viewModel.updateWebClip(withId: self.parent.webClip.id, newLlamaResult: newLlamaResult)
+                self.llamaResult = newLlamaResult
                 print("Generated result: \(result)")
                 // Do something with the generated filename, e.g., update UI or model
             case .failure(let error):
@@ -154,7 +155,7 @@ class WebViewCoordinator: NSObject, WKNavigationDelegate, WKUIDelegate, UIScroll
         let snapshots = self.parent.webClip.snapshots
         if snapshots.isEmpty ||
             (snapshots.last?.innerText != innerText) {
-            self.parent.viewModel.updateWebClip(withId: self.parent.webClip.id, newInnerText: innerText)
+            self.parent.viewModel.updateWebClip(withId: self.parent.webClip.id, newLlamaResult: llamaResult, newInnerText: innerText)
         }
     }
 }

@@ -168,7 +168,12 @@ class WebClipManagerViewModel: ObservableObject {
             updatedWebClip.llamaResult = newLlamaResult
         }
         if let newInnerText = newInnerText, let newSnapshot = screenShot {
-            updatedWebClip.addSnapshotIfNeeded(newSnapshot: newSnapshot, innerText: newInnerText)
+            
+            if let newLlamaResult = newLlamaResult {
+                updatedWebClip.addSnapshotIfNeeded(newSnapshot: newSnapshot, innerText: newInnerText, newLlamaResult: newLlamaResult)
+            }else{
+                updatedWebClip.addSnapshotIfNeeded(newSnapshot: newSnapshot, innerText: newInnerText)
+            }
         }
         
         //        TODO debug why the snapshots are not persisting to UI state or backend
