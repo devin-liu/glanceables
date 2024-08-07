@@ -4,8 +4,7 @@ import Combine
 struct WebClipBrowserMenuView: View {
     @Environment(\.presentationMode) var presentationMode
     @ObservedObject var viewModel: WebClipManagerViewModel
-    @ObservedObject var captureMenuViewModel = WebClipSelectorViewModel.shared
-    @ObservedObject var dashboardViewModel = DashboardViewModel.shared
+    @ObservedObject var captureMenuViewModel = WebClipSelectorViewModel.shared    
     
     var body: some View {
         ZStack {

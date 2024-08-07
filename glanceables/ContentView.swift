@@ -2,12 +2,12 @@ import SwiftUI
 import UniformTypeIdentifiers
 
 struct ContentView: View {
-    @StateObject private var dashboard = DashboardViewModel.shared
+    @StateObject private var webClips = WebClipManagerViewModel.shared
     
     var body: some View {
         NavigationStack{
             VStack {
-                BlackMenuBarView(viewModel: dashboard)
+                BlackMenuBarView(viewModel: webClips)
                 ScrollView {
                     LazyVGrid(columns: [GridItem(.adaptive(minimum: 300))]) {
                         Text("Glanceables")
@@ -16,7 +16,7 @@ struct ContentView: View {
                             .foregroundColor(Color.black)
                     }
                     LazyVGrid(columns: [GridItem(.adaptive(minimum: 300))]) {
-                        if dashboard.webClips.isEmpty {
+                        if webClips.webClips.isEmpty {
                             emptyStateView
                         } else {
                             urlGrid
@@ -40,44 +40,17 @@ struct ContentView: View {
     }
     
     var urlGrid: some View {
-        ForEach(dashboard.webClips) { item in
+        ForEach(webClips.webClips, id: \.id) { item in
             WebGridSingleSnapshotView(item: item)
-                .onDrag {
-                    self.dashboard.draggedItem = item
-                    return NSItemProvider(object: item.url.absoluteString as NSString)
-                }
-                .onDrop(of: [UTType.text], delegate: DropViewDelegate(item: item, viewModel: $dashboard.webClips, draggedItem: $dashboard.draggedItem))
                 .contextMenu {
                     NavigationLink(destination: WebClipEditorView(webClip: item)) {
                         Text("Edit")
                     }
                     Button("Delete") {
-                        dashboard.deleteItem(item: item)
+                        webClips.deleteItem(item: item)
                     }
                 }
         }
-    }
-}
-
-struct DropViewDelegate: DropDelegate {
-    let item: WebClip
-    @Binding var viewModel: [WebClip]
-    @Binding var draggedItem: WebClip?
-    
-    func dropEntered(info: DropInfo) {
-        guard let draggedItem = draggedItem, draggedItem.id != item.id else { return }
-        
-        if let fromIndex = viewModel.firstIndex(where: { $0.id == draggedItem.id }),
-           let toIndex = viewModel.firstIndex(where: { $0.id == item.id }) {
-            withAnimation {
-                viewModel.move(fromOffsets: IndexSet(integer: fromIndex), toOffset: toIndex > fromIndex ? toIndex + 1 : toIndex)
-            }
-        }
-    }
-    
-    func performDrop(info: DropInfo) -> Bool {
-        self.draggedItem = nil
-        return true
     }
 }
 

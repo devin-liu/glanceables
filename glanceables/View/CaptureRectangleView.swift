@@ -3,8 +3,7 @@ import SwiftUI
 struct CaptureRectangleView: View {
     @Environment(\.presentationMode) var presentationMode
     @ObservedObject var captureMenuViewModel = WebClipSelectorViewModel.shared
-    @ObservedObject var webClipManager: WebClipManagerViewModel
-    @ObservedObject var dashboardViewModel = DashboardViewModel.shared
+    @ObservedObject var webClipManager: WebClipManagerViewModel    
     
     var body: some View {
         ZStack {

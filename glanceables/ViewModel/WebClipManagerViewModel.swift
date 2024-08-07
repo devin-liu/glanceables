@@ -4,7 +4,7 @@ import Combine
 
 class WebClipManagerViewModel: ObservableObject {
     static let shared = WebClipManagerViewModel()  // Singleton instance
-    @Published private var webClips: [WebClip] = []
+    @Published var webClips: [WebClip] = []
     @Published var urlString = ""
     @Published var validURLs: [URL] = []  // Now storing an array of URLs
     @Published var isEditing = false

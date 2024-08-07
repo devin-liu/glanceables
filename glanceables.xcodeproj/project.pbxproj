@@ -15,7 +15,6 @@
 		030062B42C112BD100B0242D /* WebClip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 030062B32C112BD100B0242D /* WebClip.swift */; };
 		03553FE32C41F6A800FCB4CC /* WebClipSelectorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03553FE22C41F6A800FCB4CC /* WebClipSelectorViewModel.swift */; };
 		036D58E52C3C99300042D491 /* WebClipManagerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 036D58E42C3C99300042D491 /* WebClipManagerViewModel.swift */; };
-		036F46522C59C2D3005E1377 /* DashboardViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 036F46512C59C2D3005E1377 /* DashboardViewModel.swift */; };
 		036F46562C5AE066005E1377 /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 036F46552C5AE066005E1377 /* NotificationManager.swift */; };
 		036F465C2C5AE85F005E1377 /* SnapshotTimelineModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 036F465B2C5AE85F005E1377 /* SnapshotTimelineModel.swift */; };
 		03778E402C35E740009CB9A1 /* captureElements.js in Resources */ = {isa = PBXBuildFile; fileRef = 03778E3E2C35E6FC009CB9A1 /* captureElements.js */; };
@@ -73,7 +72,6 @@
 		0355A0672C17D741005BBAF3 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Platforms/iPhoneOS.platform/Developer/Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		0355A06E2C17DA8B005BBAF3 /* glanceablesTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = glanceablesTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		036D58E42C3C99300042D491 /* WebClipManagerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebClipManagerViewModel.swift; sourceTree = "<group>"; };
-		036F46512C59C2D3005E1377 /* DashboardViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DashboardViewModel.swift; sourceTree = "<group>"; };
 		036F46552C5AE066005E1377 /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
 		036F465B2C5AE85F005E1377 /* SnapshotTimelineModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotTimelineModel.swift; sourceTree = "<group>"; };
 		03778E3E2C35E6FC009CB9A1 /* captureElements.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = captureElements.js; sourceTree = "<group>"; };
@@ -241,7 +239,6 @@
 		03A8685E2C4EE5B300CCB79D /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
-				036F46512C59C2D3005E1377 /* DashboardViewModel.swift */,
 				03A868602C4F0FB300CCB79D /* WebViewCoordinator.swift */,
 				036D58E42C3C99300042D491 /* WebClipManagerViewModel.swift */,
 				03553FE22C41F6A800FCB4CC /* WebClipSelectorViewModel.swift */,
@@ -400,7 +397,6 @@
 				038DAC2C2C61A0950000EA6A /* ChangeFeedbackFormView.swift in Sources */,
 				03C5DAD92C2A4DB20061FA25 /* AddURLFormView.swift in Sources */,
 				036F465C2C5AE85F005E1377 /* SnapshotTimelineModel.swift in Sources */,
-				036F46522C59C2D3005E1377 /* DashboardViewModel.swift in Sources */,
 				030062A72C0FE8A100B0242D /* WebClipBrowserMenuView.swift in Sources */,
 				038DAC2A2C618AE20000EA6A /* WebClipEditorView.swift in Sources */,
 				03C5DAD12C23A76B0061FA25 /* ScreenshotUtils.swift in Sources */,

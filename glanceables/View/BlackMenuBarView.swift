@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct BlackMenuBarView: View {
-    @ObservedObject var viewModel = DashboardViewModel.shared
+    @ObservedObject var viewModel = WebClipManagerViewModel.shared
     
     var body: some View {
         HStack {
@@ -36,7 +36,7 @@ struct SearchBar: View {
 }
 
 struct ParentView: View {
-    var viewModel = DashboardViewModel() // Ensure this matches the initialization requirements of your DashboardViewModel
+    var viewModel = WebClipManagerViewModel()
     
     var body: some View {
         BlackMenuBarView(viewModel: viewModel)
