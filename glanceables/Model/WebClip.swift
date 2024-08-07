@@ -105,3 +105,15 @@ extension WebClip {
         WebClipUserDefaultsRepository.shared.updateWebClip(self)
     }
 }
+
+struct PendingWebClip {
+    var id: UUID = UUID()
+    var url: URL?  // Changed to optional
+    var clipRect: CGRect?
+    var originalSize: CGSize?
+    var screenshotPath: String?
+    var scrollY: Double?
+    var pageTitle: String?
+    var capturedElements: [CapturedElement]?  // Assumed to be defined elsewhere
+    var htmlElements: [HTMLElement]?  // Assumed to be defined elsewhere
+}

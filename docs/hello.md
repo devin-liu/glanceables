@@ -41,7 +41,8 @@ The Glanceables project is designed to streamline the browsing experience on mac
 ### Views
 
 - **AddURLFormView**: Responsible for handling URL input forms.
-- **NavigationButtonsView**: Contains navigation buttons for the UI.
+- **WebClipBrowserMenuView**: Manages the browser menu for web clips, facilitating user interaction with web content.
+- **WebViewSnapshotRefresher**: Refreshes web view snapshots to ensure up-to-date content display.
 - **CaptureRectangleView**: Manages the functionality to capture specific areas of the webpage.
 
 ### Repository
@@ -54,12 +55,16 @@ The Glanceables project is designed to streamline the browsing experience on mac
 - **DashboardViewModel**: Manages data and state for the dashboard.
 - **WebClipManagerViewModel.swift**: Manages the lifecycle and operations of web clips.
 - **WebViewCoordinator.swift**: Coordinates web views and their interactions within the app.
+- **SchedulerManagerViewModel**: Manages scheduling tasks for refreshing and updating web clips.
+- **WebClipSelectorViewModel**: Manages the selection and management of different web clips.
+
 
 ### Models
 
 - **WebClip**: Represents the data model for a web clip.
 - **SnapshotTimelineModel.swift**: Manages the timeline of captured web snapshots for historical views.
 - **UserDefaults**: Manages user preferences stored across sessions.
+- **SnapshotTimelineModel.swift**: Manages the timeline of captured web snapshots for historical views.
 
 ### Utilities
 

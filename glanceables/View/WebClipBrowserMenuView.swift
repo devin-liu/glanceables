@@ -26,24 +26,27 @@ struct WebClipBrowserMenuView: View {
                 if viewModel.isURLValid && !captureMenuViewModel.showPreview {
                     GeometryReader { geometry in
                         ZStack {
-                            WebViewScreenshotCapture(viewModel: viewModel, captureMenuViewModel: captureMenuViewModel)
-                                .frame(maxHeight: .infinity)
-                                .frame(width: geometry.size.width)
-                                .gesture(
-                                    DragGesture(minimumDistance: 0)
-                                        .onChanged { value in
-                                            captureMenuViewModel.startLocation = captureMenuViewModel.startLocation ?? value.location
-                                            captureMenuViewModel.endLocation = value.location
-                                            captureMenuViewModel.dragging = true
-                                            captureMenuViewModel.dragEnded = false
-                                            captureMenuViewModel.updateClipRect(endLocation: value.location, bounds: geometry.size)
-                                            viewModel.currentClipRect = captureMenuViewModel.currentClipRect
-                                        }
-                                        .onEnded { _ in
-                                            captureMenuViewModel.dragging = false
-                                            captureMenuViewModel.dragEnded = true
-                                        }
-                                )
+                            if  let validURL = viewModel.validURL {
+                                WebViewScreenshotCapture(viewModel: viewModel, captureMenuViewModel: captureMenuViewModel, validURL: validURL)
+                                    .frame(maxHeight: .infinity)
+                                    .frame(width: geometry.size.width)
+                                    .gesture(
+                                        DragGesture(minimumDistance: 0)
+                                            .onChanged { value in
+                                                captureMenuViewModel.startLocation = captureMenuViewModel.startLocation ?? value.location
+                                                captureMenuViewModel.endLocation = value.location
+                                                captureMenuViewModel.dragging = true
+                                                captureMenuViewModel.dragEnded = false
+                                                captureMenuViewModel.updateClipRect(endLocation: value.location, bounds: geometry.size)
+                                                viewModel.currentClipRect = captureMenuViewModel.currentClipRect
+                                            }
+                                            .onEnded { _ in
+                                                captureMenuViewModel.dragging = false
+                                                captureMenuViewModel.dragEnded = true
+                                            }
+                                    )
+                            }
+                            
                             if captureMenuViewModel.captureModeOn {
                                 CaptureRectangleView(captureMenuViewModel: captureMenuViewModel, webClipManager: viewModel)
                             }
@@ -79,7 +82,7 @@ struct WebPreviewCaptureMenuView_Previews: PreviewProvider {
     static var previews: some View {
         WebClipBrowserMenuView(
             viewModel: previewViewModel,
-            captureMenuViewModel: WebClipSelectorViewModel()            
+            captureMenuViewModel: WebClipSelectorViewModel()
         )
     }
 }

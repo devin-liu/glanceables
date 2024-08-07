@@ -115,6 +115,7 @@ class WebClipManagerViewModel: ObservableObject {
     }
     
     func updateOrAddValidURL(_ newURL: URL) {
+        print("updateOrAddValidURL ", newURL)
         if let selectedIndex = selectedValidURLIndex,
            let currentURL = validURL,
            let newDomain = URLUtilities.extractDomain(from: newURL.absoluteString),
@@ -202,7 +203,6 @@ class WebClipManagerViewModel: ObservableObject {
         originalSize = nil
         pageTitle = nil
         screenShot = nil
-        screenshotPath = nil
-        
+        screenshotPath = nil        
     }
 }

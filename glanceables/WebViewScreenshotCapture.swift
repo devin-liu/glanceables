@@ -5,6 +5,8 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
     @ObservedObject var viewModel: WebClipManagerViewModel
     @ObservedObject var captureMenuViewModel = WebClipSelectorViewModel.shared
     
+    var validURL: URL
+    
     func makeUIView(context: Context) -> WKWebView {
         let webView = WKWebView()
         webView.navigationDelegate = context.coordinator
@@ -16,17 +18,15 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
         injectSelectionScript(webView: webView)
         injectCaptureElementsScript(webView: webView)
         
-        
         context.coordinator.webView = webView
+        
+        let request = URLRequest(url: validURL)
+        webView.load(request)
         
         return webView
     }
     
     func updateUIView(_ webView: WKWebView, context: Context) {
-        if let validURL = viewModel.validURL, webView.url != validURL {
-            let request = URLRequest(url: validURL)
-            webView.load(request)
-        }
     }
     
     func makeCoordinator() -> Coordinator {
@@ -49,8 +49,7 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
             }));
             window.webkit.messageHandlers.capturedElementsHandler.postMessage(JSON.stringify(selectors));
         });
-        """
-        
+        """        
         
         webView.configuration.userContentController.addUserScript(WKUserScript(source: jsCode, injectionTime: .atDocumentStart, forMainFrameOnly: false))
     }
@@ -130,10 +129,6 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
                 let centerY = frame.height / 2 - rectHeight / 2
                 self.parent.viewModel.currentClipRect = CGRect(x: centerX, y: centerY, width: rectWidth, height: rectHeight)
             }
-            
-            if let newUrl = webView.url {
-                self.parent.viewModel.updateOrAddValidURL(newUrl)
-            }
         }
         
         func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
@@ -153,11 +148,6 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
                     self.parent.viewModel.currentClipRect = CGRect(x: centerX, y: centerY, width: rectWidth, height: rectHeight)
                 }
             }
-            
-            if let newUrl = webView.url {
-                self.parent.viewModel.updateOrAddValidURL(newUrl)
-            }
-            
         }
         
         func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
@@ -183,9 +173,6 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
         }
         
         func userDidStopInteracting() {
-            if let newUrl = self.webView?.url {
-                self.parent.viewModel.updateOrAddValidURL(newUrl)
-            }
             self.captureScreenshot()
             
         }

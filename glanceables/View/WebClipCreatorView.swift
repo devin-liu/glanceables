@@ -1,8 +1,8 @@
 import SwiftUI
 
 struct WebClipCreatorView: View {
-    @StateObject private var captureMenuViewModel = WebClipSelectorViewModel.shared
-    
+    @ObservedObject private var captureMenuViewModel = WebClipSelectorViewModel.shared
+    @StateObject private var creatorViewModel = WebClipCreatorViewModel()
     var body: some View {
         VStack{
             BlackEditMenuBarView()
@@ -15,6 +15,9 @@ struct WebClipCreatorView: View {
         }
         .background(Color(.systemGray5).opacity(0.25))
         .navigationBarHidden(true)
+        .onDisappear{
+            WebClipManagerViewModel.shared.reset()
+        }
     }
 }
 
