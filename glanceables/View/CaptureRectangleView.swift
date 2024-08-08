@@ -3,7 +3,8 @@ import SwiftUI
 struct CaptureRectangleView: View {
     @Environment(\.presentationMode) var presentationMode
     @ObservedObject var captureMenuViewModel = WebClipSelectorViewModel.shared
-    @ObservedObject var webClipManager: WebClipManagerViewModel    
+    @ObservedObject var webClipManager = WebClipManagerViewModel.shared
+    @ObservedObject var pendingClip: WebClipCreatorViewModel
     
     var body: some View {
         ZStack {
@@ -16,7 +17,7 @@ struct CaptureRectangleView: View {
                             path.addRect(CGRect(origin: .zero, size: geometry.size))
                             
                             // Subtract the clip rectangle if it exists
-                            if let clipRect = webClipManager.currentClipRect {
+                            if let clipRect = pendingClip.currentClipRect {
                                 path.addRect(clipRect)
                             }
                         }
@@ -34,7 +35,7 @@ struct CaptureRectangleView: View {
     
     @ViewBuilder
     private var captureModeContent: some View {
-        if let clipRect = webClipManager.currentClipRect {
+        if let clipRect = pendingClip.currentClipRect {
             Rectangle()
                 .stroke(style: StrokeStyle(lineWidth: 2, lineCap: .round, lineJoin: .round, dash: [10, 5]))
                 .frame(width: clipRect.width, height: clipRect.height)
@@ -51,15 +52,19 @@ struct CaptureRectangleView: View {
                 if let webClip = webClipManager.selectedWebClip(), webClipManager.isEditing {
                     // Call updateWebClip function with correct parameters
                     webClipManager.updateWebClip(withId: webClip.id,
-                                                 newURL: webClipManager.validURL,
-                                                 newClipRect: webClipManager.currentClipRect,
-                                                 newScreenshotPath: webClipManager.screenShot.flatMap(ScreenshotUtils.saveScreenshotToLocalDirectory),
-                                                 newPageTitle: webClipManager.pageTitle,
+                                                 newURL: pendingClip.validURL,
+                                                 newClipRect: pendingClip.currentClipRect,
+                                                 newScreenshotPath: pendingClip.screenShot.flatMap(ScreenshotUtils.saveScreenshotToLocalDirectory),
+                                                 newPageTitle: pendingClip.pageTitle,
                                                  newCapturedElements: captureMenuViewModel.capturedElements)
                 } else {
                     // Add a new web clip if no web clip is selected or not in editing mode
-                    webClipManager.addWebClip(screenshot: webClipManager.screenShot,
-                                              capturedElements: captureMenuViewModel.capturedElements, snapshots: nil)
+                    pendingClip.currentClipRect = captureMenuViewModel.currentClipRect
+                    pendingClip.capturedElements = captureMenuViewModel.capturedElements
+//                    TODOOO MAKE SURE NEW CAPTURED ELEMSNTE AND SNAPTSHOTS ARE SAVED
+//                    MAKE SURE NEW WEB CLIPS CAN BE ADDED
+//                    MAKE SURE SCREENSHOTS PERSIST
+                    webClipManager.createWebClip(newClip: pendingClip.getNewClip())
                 }
                 self.presentationMode.wrappedValue.dismiss()
                 
@@ -71,29 +76,58 @@ struct CaptureRectangleView: View {
     }
 }
 
+
+
 struct CaptureRectangleView_Previews: PreviewProvider {
     static var previews: some View {
+        let creatorModel = WebClipCreatorViewModel()
+//        creatorModel.currentClipRect = CGRect(
+//            x: screenWidth / 2 - 150,
+//            y: 100,
+//            width: 300,
+//            height: 300
+//        )
         GeometryReader { geometry in
             let viewModel = WebClipManagerViewModel()
             let captureMenuViewModel = WebClipSelectorViewModel()
+            
             let screenWidth = geometry.size.width
             let screenHeight = geometry.size.height
             
-            viewModel.currentClipRect = CGRect(
-                x: screenWidth / 2 - 150,
-                y: 100,
-                width: 300,
-                height: 300
-            )
-            captureMenuViewModel.captureModeOn = true
+         
+//            captureMenuViewModel.captureModeOn = true
             
-            return CaptureRectangleView(
+            CaptureRectangleView(
                 captureMenuViewModel: captureMenuViewModel,
-                webClipManager: viewModel
+                pendingClip: creatorModel
             )
             .frame(width: screenWidth, height: screenHeight)
         }
     }
 }
-
-
+//
+//struct CaptureRectangleView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        GeometryReader { geometry in
+//            let viewModel = WebClipManagerViewModel()
+//            let captureMenuViewModel = WebClipSelectorViewModel()
+//            let creatorModel = WebClipCreatorViewModel()
+//            let screenWidth = geometry.size.width
+//            let screenHeight = geometry.size.height
+//            
+////            viewModel.currentClipRect = CGRect(
+////                x: screenWidth / 2 - 150,
+////                y: 100,
+////                width: 300,
+////                height: 300
+////            )
+////            captureMenuViewModel.captureModeOn = true
+//            
+//            CaptureRectangleView(
+//                captureMenuViewModel: captureMenuViewModel,
+//                pendingClip: creatorModel
+//            )
+//            .frame(width: screenWidth, height: screenHeight)
+//        }
+//    }
+//}

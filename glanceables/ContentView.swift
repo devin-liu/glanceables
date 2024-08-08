@@ -2,7 +2,7 @@ import SwiftUI
 import UniformTypeIdentifiers
 
 struct ContentView: View {
-    @StateObject private var webClips = WebClipManagerViewModel.shared
+    @ObservedObject private var webClips = WebClipManagerViewModel.shared
     
     var body: some View {
         NavigationStack{

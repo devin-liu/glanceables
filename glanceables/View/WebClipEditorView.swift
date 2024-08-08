@@ -10,6 +10,7 @@ struct WebClipEditorView: View {
                 WebClipManagerViewModel.shared.openEditForItem(webClip)
             }.onDisappear {
                 WebClipManagerViewModel.shared.reset()
+                print("editor reset")
             }
     }
 }

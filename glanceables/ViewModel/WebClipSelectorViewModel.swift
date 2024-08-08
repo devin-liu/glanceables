@@ -26,6 +26,4 @@ class WebClipSelectorViewModel: ObservableObject {
         
         currentClipRect = CGRect(x: minX, y: minY, width: width, height: height)
     }
-    
-    
 }

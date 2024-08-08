@@ -21,6 +21,8 @@ class WebClipCreatorViewModel: ObservableObject {
     @Published var pageTitle: String?
     @Published var screenShot: UIImage?
     @Published var screenshotPath: String?
+    @Published var capturedElements: [CapturedElement]?
+    @Published var snapshots: [SnapshotTimelineModel] = []
     
     private var webClip: PendingWebClip = PendingWebClip()
     private var repository = WebClipUserDefaultsRepository.shared
@@ -35,6 +37,27 @@ class WebClipCreatorViewModel: ObservableObject {
     
     func clearTextField() {
         urlString = ""
+    }
+    
+    func getNewClip() -> WebClip{
+        return WebClip(
+            id: UUID(),
+            url: validURL!,
+            clipRect: currentClipRect,
+            originalSize: originalSize,
+            screenshotPath: screenShot.flatMap(ScreenshotUtils.saveScreenshotToLocalDirectory) ?? "",
+            pageTitle: pageTitle,
+            capturedElements: capturedElements,
+            snapshots:snapshots
+        )
+    }
+    
+    func saveSnapshots(newSnapshots: [SnapshotTimelineModel]){
+        snapshots = newSnapshots
+    }
+    
+    func saveCapturedElements(newElements: [CapturedElement]){
+        capturedElements = newElements
     }
     
     
@@ -53,6 +76,7 @@ class WebClipCreatorViewModel: ObservableObject {
     }
     
     func validateURL() {
+        print("validateURL ", urlString)
         let (isValid, url) = URLUtilities.validateURL(from: urlString)
         isURLValid = isValid
         if let url = url {

@@ -29,7 +29,7 @@ class WebViewCoordinator: NSObject, WKNavigationDelegate, WKUIDelegate, UIScroll
     init(_ parent: WebViewSnapshotRefresher) {
         self.parent = parent
         super.init()
-        self.pageTitle = parent.viewModel.pageTitle
+        self.pageTitle = parent.webClip.pageTitle
         
         // Initialize schedulerViewModel after super.init()
         schedulerViewModel.startScheduler()

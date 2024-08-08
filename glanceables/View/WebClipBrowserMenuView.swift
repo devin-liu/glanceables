@@ -3,30 +3,31 @@ import Combine
 
 struct WebClipBrowserMenuView: View {
     @Environment(\.presentationMode) var presentationMode
-    @ObservedObject var viewModel: WebClipManagerViewModel
-    @ObservedObject var captureMenuViewModel = WebClipSelectorViewModel.shared    
+    @ObservedObject var clipManager = WebClipManagerViewModel.shared
+    @ObservedObject var captureMenuViewModel = WebClipSelectorViewModel.shared
+    @ObservedObject var pendingClip: WebClipCreatorViewModel
     
     var body: some View {
         ZStack {
             VStack {
                 HStack {
-                    NavigationButtonsView(viewModel: viewModel)
+                    NavigationButtonsView(viewModel: pendingClip)
                         .padding(10)
-                    AddURLFormView(viewModel: viewModel) // Create a new instance or pass as needed
+                    AddURLFormView(viewModel: pendingClip) // Create a new instance or pass as needed
                         .padding(10)
                 }
                 
-                if let screenshot = viewModel.screenShot, captureMenuViewModel.showPreview {
+                if let screenshot = pendingClip.screenShot, captureMenuViewModel.showPreview {
                     Image(uiImage: screenshot)
                         .frame(width: 300, height: 300)
                         .padding()
                 }
                 
-                if viewModel.isURLValid && !captureMenuViewModel.showPreview {
+                if pendingClip.isURLValid && !captureMenuViewModel.showPreview {
                     GeometryReader { geometry in
                         ZStack {
-                            if  let validURL = viewModel.validURL {
-                                WebViewScreenshotCapture(viewModel: viewModel, captureMenuViewModel: captureMenuViewModel, validURL: validURL)
+                            if  let validURL = pendingClip.validURL {
+                                WebViewScreenshotCapture(viewModel: pendingClip, captureMenuViewModel: captureMenuViewModel, validURL: validURL)
                                     .frame(maxHeight: .infinity)
                                     .frame(width: geometry.size.width)
                                     .gesture(
@@ -37,7 +38,7 @@ struct WebClipBrowserMenuView: View {
                                                 captureMenuViewModel.dragging = true
                                                 captureMenuViewModel.dragEnded = false
                                                 captureMenuViewModel.updateClipRect(endLocation: value.location, bounds: geometry.size)
-                                                viewModel.currentClipRect = captureMenuViewModel.currentClipRect
+                                                pendingClip.currentClipRect = captureMenuViewModel.currentClipRect
                                             }
                                             .onEnded { _ in
                                                 captureMenuViewModel.dragging = false
@@ -47,7 +48,7 @@ struct WebClipBrowserMenuView: View {
                             }
                             
                             if captureMenuViewModel.captureModeOn {
-                                CaptureRectangleView(captureMenuViewModel: captureMenuViewModel, webClipManager: viewModel)
+                                CaptureRectangleView(captureMenuViewModel: captureMenuViewModel, pendingClip: pendingClip)
                             }
                         }
                     }
@@ -72,16 +73,15 @@ struct WebClipBrowserMenuView: View {
 }
 
 struct WebPreviewCaptureMenuView_Previews: PreviewProvider {
-    static var previewViewModel: WebClipManagerViewModel = {
-        let model = WebClipManagerViewModel()
+    static var previewViewModel: WebClipCreatorViewModel = {
+        let model = WebClipCreatorViewModel()
         model.urlString = "https://news.ycombinator.com/"
         model.validateURL()
         return model
     }()
     static var previews: some View {
         WebClipBrowserMenuView(
-            viewModel: previewViewModel,
-            captureMenuViewModel: WebClipSelectorViewModel()
+            captureMenuViewModel: WebClipSelectorViewModel(), pendingClip: previewViewModel
         )
     }
 }

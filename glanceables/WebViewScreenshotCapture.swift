@@ -2,7 +2,7 @@ import SwiftUI
 import WebKit
 
 struct WebViewScreenshotCapture: UIViewRepresentable {
-    @ObservedObject var viewModel: WebClipManagerViewModel
+    @ObservedObject var viewModel: WebClipCreatorViewModel
     @ObservedObject var captureMenuViewModel = WebClipSelectorViewModel.shared
     
     var validURL: URL
