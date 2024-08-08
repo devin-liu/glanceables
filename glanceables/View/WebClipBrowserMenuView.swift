@@ -30,6 +30,9 @@ struct WebClipBrowserMenuView: View {
                                 WebViewScreenshotCapture(viewModel: pendingClip, captureMenuViewModel: captureMenuViewModel, validURL: validURL)
                                     .frame(maxHeight: .infinity)
                                     .frame(width: geometry.size.width)
+                                    .onDisappear {
+                                        print("WebViewScreenshotCapture onDisappear")
+                                    }
                                     .gesture(
                                         DragGesture(minimumDistance: 0)
                                             .onChanged { value in
@@ -76,7 +79,7 @@ struct WebPreviewCaptureMenuView_Previews: PreviewProvider {
     static var previewViewModel: WebClipCreatorViewModel = {
         let model = WebClipCreatorViewModel()
         model.urlString = "https://news.ycombinator.com/"
-        model.validateURL()
+//        model.validateURL()
         return model
     }()
     static var previews: some View {

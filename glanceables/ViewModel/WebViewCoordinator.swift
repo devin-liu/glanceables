@@ -138,7 +138,7 @@ class WebViewCoordinator: NSObject, WKNavigationDelegate, WKUIDelegate, UIScroll
         
         webView.takeSnapshot(with: configuration) { image, error in
             if let image = image {
-                let newSnapshot = self.parent.viewModel.saveScreenShot(image, toClip: self.parent.webClip)
+                let newSnapshot = self.parent.viewModel.updateScreenshot(image, toClip: self.parent.webClip)
                 if newSnapshot != nil {
                     self.parent.webClip.queueSnapshotUpdate(newSnapshot: newSnapshot)
                 }

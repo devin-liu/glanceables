@@ -8,6 +8,7 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
     var validURL: URL
     
     func makeUIView(context: Context) -> WKWebView {
+        print("makeUIView ", self.validURL)
         let webView = WKWebView()
         webView.navigationDelegate = context.coordinator
         webView.uiDelegate = context.coordinator
@@ -131,8 +132,22 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
             }
         }
         
+        deinit {
+            webView?.navigationDelegate = nil
+              webView?.uiDelegate = nil
+              webView?.scrollView.delegate = nil
+
+              // Clean up message handlers to ensure they are not retaining this Coordinator
+              webView?.configuration.userContentController.removeScriptMessageHandler(forName: "selectionHandler")
+              webView?.configuration.userContentController.removeScriptMessageHandler(forName: "capturedElementsHandler")
+              webView?.configuration.userContentController.removeScriptMessageHandler(forName: "userStoppedInteracting")
+              print("Coordinator is being deinitialized")
+          }
+          
+        
         func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+                guard let self = self else { return }
                 let simplifiedPageTitle = URLUtilities.simplifyPageTitle(webView.title ?? "No Title")
                 
                 self.parent.viewModel.pageTitle = simplifiedPageTitle
@@ -167,6 +182,7 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
             
             if message.name == "userStoppedInteracting" {
                 // Handle user stop interaction here
+                print("userStoppedInteracting", self.parent.validURL)
                 userDidStopInteracting()
             }
             

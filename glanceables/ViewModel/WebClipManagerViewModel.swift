@@ -71,7 +71,7 @@ class WebClipManagerViewModel: ObservableObject {
         loadWebClips()
     }
     
-    func saveScreenShot(_ newScreenShot: UIImage, toClip:WebClip) -> String? {
+    func updateScreenshot(_ newScreenShot: UIImage, toClip:WebClip) -> String? {
 //        screenShot = newScreenShot
 //        if isEditing, let selectedClip = selectedWebClip() {
 //            if let newScreenshotPath = ScreenshotUtils.saveScreenshotToFile(using: selectedClip, from: newScreenShot) {
@@ -79,7 +79,8 @@ class WebClipManagerViewModel: ObservableObject {
 //                return newScreenshotPath
 //            }
 //        }
-//        if let toClip = toClip {
+//        if let toClip = toClip {        
+        print("updateScreenshot ", toClip.screenshotPath)
             if let newScreenshotPath = ScreenshotUtils.saveScreenshotToFile(using: toClip, from: newScreenShot) {
                 updateWebClip(withId: toClip.id, newScreenshotPath: newScreenshotPath)
                 return newScreenshotPath

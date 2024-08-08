@@ -2,7 +2,7 @@ import SwiftUI
 
 struct WebClipCreatorView: View {
     @ObservedObject private var captureMenuViewModel = WebClipSelectorViewModel.shared
-    @ObservedObject private var creatorViewModel = WebClipCreatorViewModel()
+    @StateObject private var creatorViewModel = WebClipCreatorViewModel()
     var body: some View {
         VStack{
             BlackEditMenuBarView()
