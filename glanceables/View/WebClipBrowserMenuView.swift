@@ -4,7 +4,7 @@ import Combine
 struct WebClipBrowserMenuView: View {
     @Environment(\.presentationMode) var presentationMode
     @ObservedObject var clipManager = WebClipManagerViewModel.shared
-    @ObservedObject var captureMenuViewModel = WebClipSelectorViewModel.shared
+    @ObservedObject var webClipSelector: WebClipSelectorViewModel
     @ObservedObject var pendingClip: WebClipCreatorViewModel
     
     var body: some View {
@@ -17,17 +17,17 @@ struct WebClipBrowserMenuView: View {
                         .padding(10)
                 }
                 
-                if let screenshot = pendingClip.screenShot, captureMenuViewModel.showPreview {
+                if let screenshot = pendingClip.screenShot, webClipSelector.showPreview {
                     Image(uiImage: screenshot)
                         .frame(width: 300, height: 300)
                         .padding()
                 }
                 
-                if pendingClip.isURLValid && !captureMenuViewModel.showPreview {
+                if pendingClip.isURLValid && !webClipSelector.showPreview {
                     GeometryReader { geometry in
                         ZStack {
                             if  let validURL = pendingClip.validURL {
-                                WebViewScreenshotCapture(viewModel: pendingClip, captureMenuViewModel: captureMenuViewModel, validURL: validURL)
+                                WebViewScreenshotCapture(viewModel: pendingClip, captureMenuViewModel: webClipSelector, validURL: validURL)
                                     .frame(maxHeight: .infinity)
                                     .frame(width: geometry.size.width)
                                     .onDisappear {
@@ -36,22 +36,22 @@ struct WebClipBrowserMenuView: View {
                                     .gesture(
                                         DragGesture(minimumDistance: 0)
                                             .onChanged { value in
-                                                captureMenuViewModel.startLocation = captureMenuViewModel.startLocation ?? value.location
-                                                captureMenuViewModel.endLocation = value.location
-                                                captureMenuViewModel.dragging = true
-                                                captureMenuViewModel.dragEnded = false
-                                                captureMenuViewModel.updateClipRect(endLocation: value.location, bounds: geometry.size)
-                                                pendingClip.currentClipRect = captureMenuViewModel.currentClipRect
+                                                webClipSelector.startLocation = webClipSelector.startLocation ?? value.location
+                                                webClipSelector.endLocation = value.location
+                                                webClipSelector.dragging = true
+                                                webClipSelector.dragEnded = false
+                                                webClipSelector.updateClipRect(endLocation: value.location, bounds: geometry.size)
+                                                pendingClip.currentClipRect = webClipSelector.currentClipRect
                                             }
                                             .onEnded { _ in
-                                                captureMenuViewModel.dragging = false
-                                                captureMenuViewModel.dragEnded = true
+                                                webClipSelector.dragging = false
+                                                webClipSelector.dragEnded = true
                                             }
                                     )
                             }
                             
-                            if captureMenuViewModel.captureModeOn {
-                                CaptureRectangleView(captureMenuViewModel: captureMenuViewModel, pendingClip: pendingClip)
+                            if webClipSelector.captureModeOn {
+                                CaptureRectangleView(captureMenuViewModel: webClipSelector, pendingClip: pendingClip)
                             }
                         }
                     }
@@ -84,7 +84,7 @@ struct WebPreviewCaptureMenuView_Previews: PreviewProvider {
     }()
     static var previews: some View {
         WebClipBrowserMenuView(
-            captureMenuViewModel: WebClipSelectorViewModel(), pendingClip: previewViewModel
+            webClipSelector: WebClipSelectorViewModel(), pendingClip: previewViewModel
         )
     }
 }

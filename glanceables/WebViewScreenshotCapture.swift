@@ -3,7 +3,7 @@ import WebKit
 
 struct WebViewScreenshotCapture: UIViewRepresentable {
     @ObservedObject var viewModel: WebClipCreatorViewModel
-    @ObservedObject var captureMenuViewModel = WebClipSelectorViewModel.shared
+    @ObservedObject var captureMenuViewModel: WebClipSelectorViewModel
     
     var validURL: URL
     
@@ -26,6 +26,11 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
         
         return webView
     }
+    
+    func dismantleUIView(_ uiView: UIView, coordinator: ()) {
+           // Handle cleanup here
+        print("dismantleUIView screenshotcapture")
+       }
     
     func updateUIView(_ webView: WKWebView, context: Context) {
     }
@@ -50,7 +55,7 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
             }));
             window.webkit.messageHandlers.capturedElementsHandler.postMessage(JSON.stringify(selectors));
         });
-        """        
+        """
         
         webView.configuration.userContentController.addUserScript(WKUserScript(source: jsCode, injectionTime: .atDocumentStart, forMainFrameOnly: false))
     }
@@ -119,6 +124,18 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
         init(_ parent: WebViewScreenshotCapture) {
             self.parent = parent
         }
+
+        deinit {
+            webView?.navigationDelegate = nil
+            webView?.uiDelegate = nil
+            webView?.scrollView.delegate = nil
+            
+            // Clean up message handlers to ensure they are not retaining this Coordinator
+            webView?.configuration.userContentController.removeScriptMessageHandler(forName: "selectionHandler")
+            webView?.configuration.userContentController.removeScriptMessageHandler(forName: "capturedElementsHandler")
+            webView?.configuration.userContentController.removeScriptMessageHandler(forName: "userStoppedInteracting")
+            print("Coordinator is being deinitialized")
+        }
         
         func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!
         ) {
@@ -132,18 +149,6 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
             }
         }
         
-        deinit {
-            webView?.navigationDelegate = nil
-              webView?.uiDelegate = nil
-              webView?.scrollView.delegate = nil
-
-              // Clean up message handlers to ensure they are not retaining this Coordinator
-              webView?.configuration.userContentController.removeScriptMessageHandler(forName: "selectionHandler")
-              webView?.configuration.userContentController.removeScriptMessageHandler(forName: "capturedElementsHandler")
-              webView?.configuration.userContentController.removeScriptMessageHandler(forName: "userStoppedInteracting")
-              print("Coordinator is being deinitialized")
-          }
-          
         
         func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
