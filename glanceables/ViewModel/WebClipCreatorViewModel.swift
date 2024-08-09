@@ -27,10 +27,7 @@ class WebClipCreatorViewModel: ObservableObject {
     @Published var snapshots: [SnapshotTimelineModel] = []
     
     private var webClip: PendingWebClip = PendingWebClip()
-    private var repository = WebClipUserDefaultsRepository.shared
-//    private var debouncer: Debouncer
-
-    
+    private var repository = WebClipUserDefaultsRepository.shared    
     
     init() {
         $urlString

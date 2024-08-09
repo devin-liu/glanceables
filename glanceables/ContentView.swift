@@ -2,12 +2,12 @@ import SwiftUI
 import UniformTypeIdentifiers
 
 struct ContentView: View {
-    @ObservedObject private var webClips = WebClipManagerViewModel.shared
+    @StateObject private var webClipManager = WebClipManagerViewModel()
     
     var body: some View {
         NavigationStack{
             VStack {
-                BlackMenuBarView(viewModel: webClips)
+                BlackMenuBarView(viewModel: webClipManager)
                 ScrollView {
                     LazyVGrid(columns: [GridItem(.adaptive(minimum: 300))]) {
                         Text("Glanceables")
@@ -16,7 +16,7 @@ struct ContentView: View {
                             .foregroundColor(Color.black)
                     }
                     LazyVGrid(columns: [GridItem(.adaptive(minimum: 300))]) {
-                        if webClips.webClips.isEmpty {
+                        if webClipManager.webClips.isEmpty {
                             emptyStateView
                         } else {
                             urlGrid
@@ -40,14 +40,14 @@ struct ContentView: View {
     }
     
     var urlGrid: some View {
-        ForEach(webClips.webClips, id: \.id) { item in
-            WebGridSingleSnapshotView(item: item)
+        ForEach(webClipManager.webClips, id: \.id) { item in
+            WebGridSingleSnapshotView(item: item, webClipManager: webClipManager)
                 .contextMenu {
                     NavigationLink(destination: WebClipEditorView(webClip: item)) {
                         Text("Edit")
                     }
                     Button("Delete") {
-                        webClips.deleteItem(item: item)
+                        webClipManager.deleteItem(item: item)
                     }
                 }
         }

@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct WebClipEditorView: View {
-    @StateObject private var captureMenuViewModel = WebClipSelectorViewModel.shared
+    @StateObject var captureMenuViewModel = WebClipSelectorViewModel()
     var webClip: WebClip
     
     var body: some View {
@@ -17,6 +17,7 @@ struct WebClipEditorView: View {
 
 struct WebClipEditorView_Previews: PreviewProvider {
     static var previews: some View {
+        let captureModel = WebClipSelectorViewModel()
         // Provide a sample WebClip instance
         let sampleWebClip = WebClip(
             id: UUID(),
@@ -29,6 +30,6 @@ struct WebClipEditorView_Previews: PreviewProvider {
             htmlElements: [],
             snapshots: []
         )
-        WebClipEditorView(webClip: sampleWebClip)
+        WebClipEditorView(captureMenuViewModel: captureModel, webClip: sampleWebClip)
     }
 }
