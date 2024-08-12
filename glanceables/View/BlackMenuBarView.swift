@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct BlackMenuBarView: View {
-    @ObservedObject var viewModel = WebClipManagerViewModel.shared
+    var viewModel = WebClipManagerViewModel.shared
     
     var body: some View {
         HStack {

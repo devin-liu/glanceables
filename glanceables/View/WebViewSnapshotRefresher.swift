@@ -3,7 +3,7 @@ import WebKit
 import Combine
 
 struct WebViewSnapshotRefresher: UIViewRepresentable {
-    @ObservedObject var viewModel: WebClipManagerViewModel
+    var viewModel: WebClipManagerViewModel
     @ObservedObject var llamaAPIManager = LlamaAPIManager()
     
     var webClip: WebClip

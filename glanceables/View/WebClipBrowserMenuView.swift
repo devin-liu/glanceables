@@ -3,7 +3,7 @@ import Combine
 
 struct WebClipBrowserMenuView: View {
     @Environment(\.presentationMode) var presentationMode
-    @ObservedObject var clipManager = WebClipManagerViewModel.shared
+    var clipManager = WebClipManagerViewModel.shared
     @ObservedObject var webClipSelector: WebClipSelectorViewModel
     @ObservedObject var pendingClip: WebClipCreatorViewModel
     

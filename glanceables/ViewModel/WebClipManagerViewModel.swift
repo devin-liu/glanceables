@@ -2,12 +2,16 @@ import Foundation
 import SwiftUI
 import Combine
 
-class WebClipManagerViewModel: ObservableObject {
+@Observable class WebClipManagerViewModel {
     static let shared = WebClipManagerViewModel()  // Singleton instance
-    @Published var webClips: [WebClip] = []
+    var webClips: [WebClip] = [] {
+        didSet {
+            print("updated webClips")
+        }
+    }
 //    @Published var urlString = ""
 //    @Published var validURLs: [URL] = []  // Now storing an array of URLs
-    @Published var isEditing = false
+    var isEditing = false
 //    @Published var selectedValidURLIndex: Int? = nil {
 //        didSet {
 //            if let index = selectedValidURLIndex, validURLs.indices.contains(index) {
@@ -17,7 +21,7 @@ class WebClipManagerViewModel: ObservableObject {
 //            }
 //        }
 //    }
-    @Published var selectedWebClipIndex: Int? = nil
+    var selectedWebClipIndex: Int? = nil
 //    @Published var currentClipRect: CGRect?
 //    @Published var isURLValid = true
 //    @Published var showValidationError = false
@@ -25,16 +29,6 @@ class WebClipManagerViewModel: ObservableObject {
 //    @Published var pageTitle: String?
 //    @Published var screenShot: UIImage?
 //    @Published var screenshotPath: String?
-    
-    // Expose read-only access through a computed property
-    var readOnlyWebClips: [WebClip] {
-        return webClips
-    }
-    
-    // Add a publisher for read-only access
-    var webClipsPublisher: AnyPublisher<[WebClip], Never> {
-        $webClips.eraseToAnyPublisher()
-    }
     
     private var repository = WebClipUserDefaultsRepository.shared
     
@@ -134,6 +128,7 @@ class WebClipManagerViewModel: ObservableObject {
     func createWebClip(newClip: WebClip){
         webClips.append(newClip)
         saveWebClips()
+        loadWebClips()
     }
     
 //    func addWebClip(screenshot: UIImage?, capturedElements: [CapturedElement]?, snapshots: [SnapshotTimelineModel]?) {
