@@ -3,17 +3,25 @@ import SwiftUI
 import Combine
 
 class WebClipCreatorViewModel: ObservableObject {
-    @Published var urlString = ""
+    @Published var urlString = "" {
+        didSet {
+            debouncer.debounce {
+                self.validateURL(self.urlString)
+            }
+        }
+    }
+    
+    private var debouncer: Debouncer = Debouncer(seconds: 0.3)
     private var urlStringCancellable: AnyCancellable? // To hold the subscription
     private var cancellables: Set<AnyCancellable> = []
-
-    @Published var validURLs: [URL] = []  // Now storing an array of URLs
+    
+    @Published var validURLs: [URL] = []  // Now storing an     array of URLs
     @Published var selectedValidURLIndex: Int? = nil {
         didSet {
             print("selectedValidURLIndex", validURLs)
-            if let index = selectedValidURLIndex, validURLs.indices.contains(index) {
-                urlString = validURLs[index].absoluteString
-            }
+//            if let index = selectedValidURLIndex, validURLs.indices.contains(index) {
+//                urlString = validURLs[index].absoluteString
+//            }
         }
     }
     @Published var currentClipRect: CGRect?
@@ -30,22 +38,19 @@ class WebClipCreatorViewModel: ObservableObject {
     private var repository = WebClipUserDefaultsRepository.shared
     
     init() {
-          setupURLStringSubscription()
-      }
-
-      private func setupURLStringSubscription() {
-          $urlString
-              .removeDuplicates()
-              .debounce(for: 0.3, scheduler: DispatchQueue.main)
-              .sink(receiveValue: validateURL)
-              .store(in: &cancellables)
-      }
-
-    var validURL: URL? {
-        guard let index = selectedValidURLIndex, validURLs.indices.contains(index) else {
-            return nil
-        }
-        return validURLs[index]
+        //          setupURLStringSubscription()
+    }
+    
+    //      private func setupURLStringSubscription() {
+    //          $urlString
+    //              .removeDuplicates()
+    //              .debounce(for: 0.3, scheduler: DispatchQueue.main)
+    //              .sink(receiveValue: validateURL)
+    //              .store(in: &cancellables)
+    //      }
+    
+    var validURL: URL? {        
+        return validURLs.last
     }
     
     func clearTextField() {
@@ -89,43 +94,44 @@ class WebClipCreatorViewModel: ObservableObject {
         originalSize = newOriginalSize
     }
     
-    private func validateURL(urlString: String) {
+    private func validateURL(_ urlString: String) {
+        debouncer.cancel()
         print("validateURL ", urlString)
-//          // Implement URL validation logic here, update isURLValid accordingly
-//          isURLValid = URL(string: urlString) != nil
-//          showValidationError = !isURLValid && !urlString.isEmpty
-//        
-                let (isValid, url) = URLUtilities.validateURL(from: urlString)
-                print("run validateURL ", urlString, url)
-                isURLValid = isValid
+        //          // Implement URL validation logic here, update isURLValid accordingly
+        //          isURLValid = URL(string: urlString) != nil
+        //          showValidationError = !isURLValid && !urlString.isEmpty
+        //
+        let (isValid, url) = URLUtilities.validateURL(from: urlString)
+        print("run validateURL ", urlString, url)
+        isURLValid = isValid
         if isValid, let url = url {
             validURLs.append(url)
             selectedValidURLIndex = 0
         }
-//                if let url = url {
-//                    if validURLs.isEmpty {
-//                        validURLs.append(url)
-//                        selectedValidURLIndex = 0 // Initialize the index with the first URL
-//                    } else {
-//                        updateOrAddValidURL(url)
-//                    }
-//                }
-      }
+        //                if let url = url {
+        //                    if validURLs.isEmpty {
+        //                        validURLs.append(url)
+        //                        selectedValidURLIndex = 0 // Initialize the index with the first URL
+        //                    } else {
+        //                        updateOrAddValidURL(url)
+        //                    }
+        //                }
+    }
     
-//    func validateURL() {
-//        let (isValid, url) = URLUtilities.validateURL(from: urlString)
-//        print("run validateURL ", urlString, url)
-//        isURLValid = isValid
-//        if let url = url {
-//            if validURLs.isEmpty {
-//                validURLs.append(url)
-//                selectedValidURLIndex = 0 // Initialize the index with the first URL
-//            } else {
-//                updateOrAddValidURL(url)
-//            }
-//        }
-//    }
-//    
+    //    func validateURL() {
+    //        let (isValid, url) = URLUtilities.validateURL(from: urlString)
+    //        print("run validateURL ", urlString, url)
+    //        isURLValid = isValid
+    //        if let url = url {
+    //            if validURLs.isEmpty {
+    //                validURLs.append(url)
+    //                selectedValidURLIndex = 0 // Initialize the index with the first URL
+    //            } else {
+    //                updateOrAddValidURL(url)
+    //            }
+    //        }
+    //    }
+    //
     func updateOrAddValidURL(_ newURL: URL) {
         if let selectedIndex = selectedValidURLIndex,
            let currentURL = validURL,
@@ -145,8 +151,8 @@ class WebClipCreatorViewModel: ObservableObject {
 
 
 class Debouncer {
-    var workItem: DispatchWorkItem?
-    private var interval: TimeInterval
+    private var workItem: DispatchWorkItem?
+    private let interval: TimeInterval
 
     init(seconds: TimeInterval) {
         self.interval = seconds
@@ -156,5 +162,11 @@ class Debouncer {
         workItem?.cancel()
         workItem = DispatchWorkItem(block: action)
         DispatchQueue.main.asyncAfter(deadline: .now() + interval, execute: workItem!)
+    }
+
+    // Ensure this method is properly defined
+    func cancel() {
+        workItem?.cancel()
+        workItem = nil
     }
 }

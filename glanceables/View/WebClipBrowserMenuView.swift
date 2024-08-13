@@ -25,7 +25,7 @@ struct WebClipBrowserMenuView: View {
                 if pendingClip.isURLValid && !webClipSelector.showPreview {
                     GeometryReader { geometry in
                         ZStack {
-                            if  let validURL = pendingClip.validURL {
+                            if  let validURL = pendingClip.validURLs.last {
                                 WebViewScreenshotCapture(viewModel: pendingClip, captureMenuViewModel: webClipSelector, validURL: validURL)
                                     .frame(maxHeight: .infinity)
                                     .frame(width: geometry.size.width)
