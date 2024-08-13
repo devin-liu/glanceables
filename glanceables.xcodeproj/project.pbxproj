@@ -45,6 +45,7 @@
 		03B798592C62EA5600E431E4 /* SchedulerModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03B798582C62EA5600E431E4 /* SchedulerModel.swift */; };
 		03B7985B2C62F0BA00E431E4 /* WebClipCreatorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03B7985A2C62F0BA00E431E4 /* WebClipCreatorViewModel.swift */; };
 		03BEC9AF2C6AD34E00372E6E /* WebClipGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03BEC9AE2C6AD34E00372E6E /* WebClipGridView.swift */; };
+		03BEC9B12C6B1CC200372E6E /* GridScreenshotView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03BEC9B02C6B1CC200372E6E /* GridScreenshotView.swift */; };
 		03C5DAD12C23A76B0061FA25 /* ScreenshotUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03C5DAD02C23A76B0061FA25 /* ScreenshotUtils.swift */; };
 		03C5DAD32C24F0CF0061FA25 /* URLUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03C5DAD22C24F0CF0061FA25 /* URLUtilities.swift */; };
 		03C5DAD52C2647E20061FA25 /* CaptureModeToggleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03C5DAD42C2647E20061FA25 /* CaptureModeToggleView.swift */; };
@@ -104,6 +105,7 @@
 		03B798582C62EA5600E431E4 /* SchedulerModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SchedulerModel.swift; sourceTree = "<group>"; };
 		03B7985A2C62F0BA00E431E4 /* WebClipCreatorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebClipCreatorViewModel.swift; sourceTree = "<group>"; };
 		03BEC9AE2C6AD34E00372E6E /* WebClipGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebClipGridView.swift; sourceTree = "<group>"; };
+		03BEC9B02C6B1CC200372E6E /* GridScreenshotView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridScreenshotView.swift; sourceTree = "<group>"; };
 		03C5DAD02C23A76B0061FA25 /* ScreenshotUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ScreenshotUtils.swift; path = glanceables/Utilities/ScreenshotUtils.swift; sourceTree = SOURCE_ROOT; };
 		03C5DAD22C24F0CF0061FA25 /* URLUtilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLUtilities.swift; sourceTree = "<group>"; };
 		03C5DAD42C2647E20061FA25 /* CaptureModeToggleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureModeToggleView.swift; sourceTree = "<group>"; };
@@ -235,6 +237,7 @@
 				038DAC292C618AE20000EA6A /* WebClipEditorView.swift */,
 				038DAC2B2C61A0950000EA6A /* ChangeFeedbackFormView.swift */,
 				03BEC9AE2C6AD34E00372E6E /* WebClipGridView.swift */,
+				03BEC9B02C6B1CC200372E6E /* GridScreenshotView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -382,6 +385,7 @@
 				0378B8692C096D850005BAE5 /* ContentView.swift in Sources */,
 				038208E02C1BB3F400606536 /* WebViewScreenshotCapture.swift in Sources */,
 				03C5DAD32C24F0CF0061FA25 /* URLUtilities.swift in Sources */,
+				03BEC9B12C6B1CC200372E6E /* GridScreenshotView.swift in Sources */,
 				038DAC2F2C61C9710000EA6A /* WebClipRepositoryProtocol.swift in Sources */,
 				03A868552C48871000CCB79D /* LlamaAPIManager.swift in Sources */,
 				03C5DAD52C2647E20061FA25 /* CaptureModeToggleView.swift in Sources */,

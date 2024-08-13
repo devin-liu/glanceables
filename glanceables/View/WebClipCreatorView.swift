@@ -6,7 +6,7 @@ struct WebClipCreatorView: View {
     var webClipManager: WebClipManagerViewModel
     var body: some View {
         VStack{
-            BlackEditMenuBarView()
+            BlackEditMenuBarView(webClipSelector: webClipSelector)
             VStack{
                 WebClipBrowserMenuView(webClipManager: webClipManager, webClipSelector: webClipSelector, pendingClip: creatorViewModel)
             }.padding(20)

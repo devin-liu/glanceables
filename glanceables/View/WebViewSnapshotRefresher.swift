@@ -1,10 +1,10 @@
 import SwiftUI
 import WebKit
-import Combine
 
 struct WebViewSnapshotRefresher: UIViewRepresentable {
     var viewModel: WebClipManagerViewModel
-    @ObservedObject var webClip: WebClip
+    var webClip: WebClip
+    @StateObject var llamaAPIManager = LlamaAPIManager()
     
     func makeUIView(context: Context) -> WKWebView {
         let webView = WKWebView()
@@ -28,7 +28,7 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
     }
     
     func makeCoordinator() -> WebViewCoordinator {
-        WebViewCoordinator(self, webClip: webClip, webClipManager: viewModel)
+        WebViewCoordinator(self, webClip: webClip, webClipManager: viewModel, llamaAPIManager: llamaAPIManager)
     }
     
     func dismantleUIView(_ uiView: WKWebView, coordinator: WebViewCoordinator) {

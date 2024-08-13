@@ -27,17 +27,19 @@ class WebClipCreatorViewModel: ObservableObject {
     @Published var snapshots: [SnapshotTimelineModel] = []
     
     private var webClip: PendingWebClip = PendingWebClip()
-    private var repository = WebClipUserDefaultsRepository.shared    
+    private var repository = WebClipUserDefaultsRepository.shared
     
     init() {
-        $urlString
-            .removeDuplicates()
-            .debounce(for: 0.3, scheduler: DispatchQueue.main)
-            .sink { [weak self] urlString in
-                self?.validateURL(urlString: urlString)
-            }
-            .store(in: &cancellables)
-    }
+          setupURLStringSubscription()
+      }
+
+      private func setupURLStringSubscription() {
+          $urlString
+              .removeDuplicates()
+              .debounce(for: 0.3, scheduler: DispatchQueue.main)
+              .sink(receiveValue: validateURL)
+              .store(in: &cancellables)
+      }
 
     var validURL: URL? {
         guard let index = selectedValidURLIndex, validURLs.indices.contains(index) else {

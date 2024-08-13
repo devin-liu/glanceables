@@ -9,16 +9,17 @@ class WebViewCoordinator: NSObject, WKNavigationDelegate, WKUIDelegate, UIScroll
     var pageTitle: String?
     var llamaResult: LlamaResult?
     var webClipManager: WebClipManagerViewModel
-    @ObservedObject var webClip: WebClip
-    @ObservedObject var llamaAPIManager = LlamaAPIManager()
+    var webClip: WebClip
+    var llamaAPIManager: LlamaAPIManager
     
     private var cancellables = Set<AnyCancellable>()
     
-    init(_ parent: WebViewSnapshotRefresher, webClip: WebClip, webClipManager: WebClipManagerViewModel) {
+    init(_ parent: WebViewSnapshotRefresher, webClip: WebClip, webClipManager: WebClipManagerViewModel, llamaAPIManager: LlamaAPIManager) {
         self.parent = parent
         self.webClip = webClip
         self.webClipManager = webClipManager
         self.pageTitle = webClip.pageTitle
+        self.llamaAPIManager = llamaAPIManager
         super.init()
     }
     
@@ -88,13 +89,13 @@ class WebViewCoordinator: NSObject, WKNavigationDelegate, WKUIDelegate, UIScroll
     
     
     func processElementsInnerText(_ innerText: String) {
-        llamaAPIManager.analyzeInnerText(innerText: innerText) { result in
+        llamaAPIManager.analyzeInnerText(innerText: innerText) { [weak self] result in
+            guard let self = self else { return }
             switch result {
             case .success(let result):
                 self.webClipManager.updateWebClip(withId: self.parent.webClip.id, newLlamaResult: result)
                 print("Generated result: \(result)")
                 self.parent.webClip.queueSnapshotUpdate(innerText: innerText, conciseText: result.conciseText)
-                // Do something with the generated filename, e.g., update UI or model
             case .failure(let error):
                 print("Error interpreting changes: \(error.localizedDescription)")
                 self.parent.webClip.queueSnapshotUpdate(innerText: innerText, conciseText: innerText)

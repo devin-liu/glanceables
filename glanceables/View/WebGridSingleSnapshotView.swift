@@ -8,16 +8,9 @@ struct WebGridSingleSnapshotView: View {
     @State private var rotationAngle: Double = 0  // State variable for rotation angle
     @State private var reloadTrigger = PassthroughSubject<Void, Never>() // Local reload trigger
     @ObservedObject var item: WebClip
-    var webClipManager: WebClipManagerViewModel
     
     var body: some View {
-        VStack {
-            ScreenshotView(item: item, webClipManager: webClipManager)
-                .padding(10)
-                .onDisappear {
-                    print("ScreenshotView onDisappear")
-                }
-            
+        VStack {            
             PageTitleView(title: item.pageTitle ?? "Loading...")
                 .padding()
             

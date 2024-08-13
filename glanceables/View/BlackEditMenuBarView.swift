@@ -1,10 +1,12 @@
 import SwiftUI
 
 struct BlackEditMenuBarView: View {
+    @ObservedObject var webClipSelector: WebClipSelectorViewModel
+    
     var body: some View {
         HStack {
             Spacer()            
-                CaptureModeToggleView()
+                CaptureModeToggleView(viewModel: webClipSelector)
                     .padding(.trailing, 24)
             
         }
@@ -15,7 +17,8 @@ struct BlackEditMenuBarView: View {
 
 struct BlackEditMenubarView_Previews: PreviewProvider {
     static var previews: some View {
-        BlackEditMenuBarView()
+        let webClipSelector = WebClipSelectorViewModel()
+        BlackEditMenuBarView(webClipSelector: webClipSelector)
             .frame(maxHeight: .infinity, alignment: .top)
     }
 }

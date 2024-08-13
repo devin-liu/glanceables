@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct CaptureModeToggleView: View {
-    @ObservedObject private var viewModel = WebClipSelectorViewModel.shared
+    @ObservedObject var viewModel: WebClipSelectorViewModel
     
     
     var body: some View {
@@ -28,7 +28,8 @@ struct CaptureModeToggleView: View {
 // SwiftUI Preview
 struct CaptureModeToggleView_Previews: PreviewProvider {
     static var previews: some View {
-        CaptureModeToggleView()
+        let webClipSelector = WebClipSelectorViewModel()
+        CaptureModeToggleView(viewModel: webClipSelector)
             .previewLayout(.sizeThatFits)  // Uses minimal size that fits the content
     }
 }

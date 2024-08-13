@@ -1,8 +1,6 @@
 import SwiftUI
-import Combine
 
-class WebClipSelectorViewModel: ObservableObject {
-    static let shared = WebClipSelectorViewModel()  // Singleton instance
+class WebClipSelectorViewModel: ObservableObject {    
     @Published var currentClipRect: CGRect?
     @Published var userInteracting: Bool = false
     @Published var scrollY: Double = 0

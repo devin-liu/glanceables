@@ -19,23 +19,25 @@ struct WebClipGridItems: View {
     
     var body: some View {
         LazyVGrid(columns: columns) {
-            ForEach(webClips, id: \.self.id) { item in
-                WebGridSingleSnapshotView(item: item, webClipManager: webClipManager)
-                    .contextMenu {
-                        NavigationLink(destination: WebClipEditorView(webClipManager: webClipManager, webClip: item)) {
-                            Text("Edit")
+            ForEach(webClips, id: \.self) { item in
+                VStack {
+                    GridScreenshotView(item: item, webClipManager: webClipManager)
+                        .padding(10)
+                        .onDisappear {
+                            print("ScreenshotView onDisappear")
                         }
-                        Button("Delete") {
-                            webClipManager.deleteItemById(item.id)
-                        }
+                    
+                    WebGridSingleSnapshotView(item: item)
+                       
+                } .contextMenu {
+                    NavigationLink(destination: WebClipEditorView(webClipManager: webClipManager, webClipId: item.id)) {
+                        Text("Edit")
                     }
-            }
-            .onDelete(perform: { indexSet in
-                indexSet.forEach { index in
-                    let id = webClips[index].id
-                    webClipManager.deleteItemById(id)
+                    Button("Delete") {
+                        webClipManager.deleteItemById(item.id)
+                    }
                 }
-            })
+            }
         }
     }
 }

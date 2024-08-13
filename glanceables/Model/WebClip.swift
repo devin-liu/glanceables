@@ -117,3 +117,11 @@ struct PendingWebClip {
     var capturedElements: [CapturedElement]?  // Assumed to be defined elsewhere
     var htmlElements: [HTMLElement]?  // Assumed to be defined elsewhere
 }
+
+
+extension WebClip: Hashable {
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+        hasher.combine(url)
+    }
+}

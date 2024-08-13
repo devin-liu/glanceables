@@ -1,6 +1,5 @@
 import Foundation
 import SwiftUI
-import Combine
 
 @Observable class WebClipManagerViewModel {
 //    static let shared = WebClipManagerViewModel()  // Singleton instance
@@ -133,8 +132,8 @@ import Combine
         loadWebClips()
     }
     
-    func openEditForItem(_ item: WebClip) {
-        guard let index = webClips.firstIndex(where: { $0.id == item.id }) else { return }
+    func openEditForItem(_ id: UUID) {
+        guard let index = webClips.firstIndex(where: { $0.id == id }) else { return }
         selectedWebClipIndex = index
 //        urlString = webClips[index].url.absoluteString
 //        isEditing = true
