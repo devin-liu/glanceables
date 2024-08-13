@@ -21,10 +21,21 @@ class WebClipUserDefaultsRepository: WebClipRepositoryProtocol {
     // Delete a specific WebClip from UserDefaults.
     func deleteWebClip(_ webClip: WebClip) {
         var webClips = loadWebClips()
+        print("before delete ", webClips.count)
         if let index = webClips.firstIndex(where: { $0.id == webClip.id }) {
             webClips.remove(at: index)
+            print("after delete ", webClips.count)
             saveWebClips(webClips)
         }
+    }
+    
+    // Delete a specific WebClip from UserDefaults.
+    func deleteWebClipById(_ id: UUID) {
+        print("Deleting item with ID: \(id)")
+        var webClips = loadWebClips()
+        webClips.removeAll { $0.id == id }
+        print("Remaining clips: \(webClips.count)")
+        saveWebClips(webClips)
     }
     
     // Update a specific WebClip in UserDefaults.

@@ -4,9 +4,7 @@ import Combine
 
 struct WebViewSnapshotRefresher: UIViewRepresentable {
     var viewModel: WebClipManagerViewModel
-    @ObservedObject var llamaAPIManager = LlamaAPIManager()
-    
-    var webClip: WebClip
+    @ObservedObject var webClip: WebClip
     
     func makeUIView(context: Context) -> WKWebView {
         let webView = WKWebView()
@@ -20,17 +18,24 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
         injectGetElementsFromSelectorsScript(webView: webView)
         
         let request = URLRequest(url: webClip.url)
-        webView.load(request)        
+        webView.load(request)
         
         return webView
     }
     
     func updateUIView(_ webView: WKWebView, context: Context) {
-        
+        print("updateUIView")
     }
     
     func makeCoordinator() -> WebViewCoordinator {
-        WebViewCoordinator(self)
+        WebViewCoordinator(self, webClip: webClip, webClipManager: viewModel)
+    }
+    
+    func dismantleUIView(_ uiView: WKWebView, coordinator: WebViewCoordinator) {
+        print("dismantleUIView WebViewSnapshotRefresher")
+    }
+    func viewWillDisappear(){
+        print("viewWillDisappear WebViewSnapshotRefresher")
     }
     
     private func configureMessageHandler(webView: WKWebView, contentController: WKUserContentController, context: Context) {

@@ -8,52 +8,40 @@ class WebViewCoordinator: NSObject, WKNavigationDelegate, WKUIDelegate, UIScroll
     var reloadSubscription: AnyCancellable?
     var pageTitle: String?
     var llamaResult: LlamaResult?
+    var webClipManager: WebClipManagerViewModel
+    @ObservedObject var webClip: WebClip
+    @ObservedObject var llamaAPIManager = LlamaAPIManager()
     
     private var cancellables = Set<AnyCancellable>()
-    private lazy var schedulerViewModel: SchedulerViewModel = {
-        SchedulerViewModel(interval: 60.0, actions: [
-            { [weak self] in
-                DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
-                    self?.captureScreenshot()
-                }
-            },
-            { [weak self] in
-                self?.webView?.reload()
-                DispatchQueue.main.asyncAfter(deadline: .now() + 60) {
-                    self?.captureScreenshot()
-                }
-            }
-        ])
-    }()
     
-    init(_ parent: WebViewSnapshotRefresher) {
+    init(_ parent: WebViewSnapshotRefresher, webClip: WebClip, webClipManager: WebClipManagerViewModel) {
         self.parent = parent
+        self.webClip = webClip
+        self.webClipManager = webClipManager
+        self.pageTitle = webClip.pageTitle
         super.init()
-        self.pageTitle = parent.webClip.pageTitle
-        
-        // Initialize schedulerViewModel after super.init()
-        schedulerViewModel.startScheduler()
     }
     
     deinit {
-        schedulerViewModel.stopScheduler()
+        print("WebViewcoordinator deinit")
+//        schedulerViewModel.stopScheduler()
     }
     
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         let simplifiedPageTitle = URLUtilities.simplifyPageTitle(webView.title ?? "No Title")
         self.pageTitle = simplifiedPageTitle
         
-        if let capturedElements = self.parent.webClip.capturedElements  {
+        if let capturedElements = webClip.capturedElements  {
             self.restoreScrollPosition(capturedElements, in: webView)
         }
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.1) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.1) { [self] in
             // Restore scroll positions based on captured elements
-            if let capturedElements = self.parent.webClip.capturedElements  {
+            if let capturedElements = webClip.capturedElements  {
                 self.restoreScrollPosition(capturedElements, in: webView)
             }
             // Capture a screenshot
-            self.schedulerViewModel.triggerScreenshot()
+//            self.schedulerViewModel.triggerScreenshot()
         }                
     }
     
@@ -100,10 +88,10 @@ class WebViewCoordinator: NSObject, WKNavigationDelegate, WKUIDelegate, UIScroll
     
     
     func processElementsInnerText(_ innerText: String) {
-        self.parent.llamaAPIManager.analyzeInnerText(innerText: innerText) { result in
+        llamaAPIManager.analyzeInnerText(innerText: innerText) { result in
             switch result {
             case .success(let result):
-                self.parent.viewModel.updateWebClip(withId: self.parent.webClip.id, newLlamaResult: result)
+                self.webClipManager.updateWebClip(withId: self.parent.webClip.id, newLlamaResult: result)
                 print("Generated result: \(result)")
                 self.parent.webClip.queueSnapshotUpdate(innerText: innerText, conciseText: result.conciseText)
                 // Do something with the generated filename, e.g., update UI or model
@@ -116,7 +104,6 @@ class WebViewCoordinator: NSObject, WKNavigationDelegate, WKUIDelegate, UIScroll
     
     func captureScreenshot() {
         guard let webView = webView else { return }
-        let webClip = self.parent.webClip
         
         let configuration = WKSnapshotConfiguration()
         
@@ -138,7 +125,7 @@ class WebViewCoordinator: NSObject, WKNavigationDelegate, WKUIDelegate, UIScroll
         
         webView.takeSnapshot(with: configuration) { image, error in
             if let image = image {
-                let newSnapshot = self.parent.viewModel.updateScreenshot(image, toClip: self.parent.webClip)
+                let newSnapshot = self.webClipManager.updateScreenshot(image, toClip: self.webClip)
                 if newSnapshot != nil {
                     self.parent.webClip.queueSnapshotUpdate(newSnapshot: newSnapshot)
                 }

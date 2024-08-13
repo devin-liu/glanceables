@@ -3,7 +3,7 @@ import SwiftUI
 struct CaptureRectangleView: View {
     @Environment(\.presentationMode) var presentationMode
     @ObservedObject var captureMenuViewModel = WebClipSelectorViewModel.shared
-    var webClipManager = WebClipManagerViewModel.shared
+    var webClipManager: WebClipManagerViewModel
     @ObservedObject var pendingClip: WebClipCreatorViewModel
     
     var body: some View {
@@ -90,7 +90,7 @@ struct CaptureRectangleView_Previews: PreviewProvider {
         GeometryReader { geometry in
             let viewModel = WebClipManagerViewModel()
             let captureMenuViewModel = WebClipSelectorViewModel()
-            
+            let webClipManager = WebClipManagerViewModel()
             let screenWidth = geometry.size.width
             let screenHeight = geometry.size.height
             
@@ -99,7 +99,7 @@ struct CaptureRectangleView_Previews: PreviewProvider {
             
             CaptureRectangleView(
                 captureMenuViewModel: captureMenuViewModel,
-                pendingClip: creatorModel
+                webClipManager: webClipManager, pendingClip: creatorModel
             )
             .frame(width: screenWidth, height: screenHeight)
         }

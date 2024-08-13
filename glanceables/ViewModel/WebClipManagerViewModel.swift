@@ -3,12 +3,27 @@ import SwiftUI
 import Combine
 
 @Observable class WebClipManagerViewModel {
-    static let shared = WebClipManagerViewModel()  // Singleton instance
+//    static let shared = WebClipManagerViewModel()  // Singleton instance
     var webClips: [WebClip] = [] {
         didSet {
-            print("updated webClips")
+            print("updated webClips", webClips.count)
         }
     }
+    
+    init() {
+        loadWebClips()
+    }
+    
+    public func isEmpty() -> Bool {
+        return webClips.count == 0
+    }
+    
+    public func getClips() -> [WebClip] {
+        print("getClips")
+        return webClips
+    }
+    
+    
 //    @Published var urlString = ""
 //    @Published var validURLs: [URL] = []  // Now storing an array of URLs
     var isEditing = false
@@ -59,12 +74,7 @@ import Combine
         guard let webClip = webClip(withId: id) else { return nil }
         return ScreenshotUtils.loadImage(from: webClip.screenshotPath)
     }
-    
-    
-    init() {
-        loadWebClips()
-    }
-    
+
     func updateScreenshot(_ newScreenShot: UIImage, toClip:WebClip) -> String? {
 //        screenShot = newScreenShot
 //        if isEditing, let selectedClip = selectedWebClip() {
@@ -82,12 +92,7 @@ import Combine
 //        }
         return nil
     }
-//    
-//    
-//    func saveOriginalSize(newOriginalSize: CGSize) {
-//        originalSize = newOriginalSize
-//    }
-    
+
     func loadWebClips() {
         webClips = repository.loadWebClips()
     }
@@ -96,57 +101,12 @@ import Combine
         repository.saveWebClips(webClips)
     }
     
-//    func validateURL() {
-//        let (isValid, url) = URLUtilities.validateURL(from: urlString)
-//        isURLValid = isValid
-//        if let url = url {
-//            if validURLs.isEmpty {
-//                validURLs.append(url)
-//                selectedValidURLIndex = 0 // Initialize the index with the first URL
-//            } else {
-//                updateOrAddValidURL(url)
-//            }
-//        }
-//    }
-    
-//    func updateOrAddValidURL(_ newURL: URL) {
-//        print("updateOrAddValidURL ", newURL)
-//        if let selectedIndex = selectedValidURLIndex,
-//           let currentURL = validURL,
-//           let newDomain = URLUtilities.extractDomain(from: newURL.absoluteString),
-//           let currentDomain = URLUtilities.extractDomain(from: currentURL.absoluteString),
-//           newDomain == currentDomain {
-//            validURLs[selectedIndex] = newURL // Replace the URL at the current index if domains match
-//        } else {
-//            // There is no selected index or domains are not provided; skip domain checking
-//            print("No selected index or domain provided; adding URL")
-//            validURLs.append(newURL)
-//            selectedValidURLIndex = validURLs.count - 1 // Update the index to the new URL if not set
-//        }
-//    }
-//    
     func createWebClip(newClip: WebClip){
         webClips.append(newClip)
         saveWebClips()
         loadWebClips()
     }
-    
-//    func addWebClip(screenshot: UIImage?, capturedElements: [CapturedElement]?, snapshots: [SnapshotTimelineModel]?) {
-//        guard isURLValid, validURL != nil else { return }
-//        let newWebClip = WebClip(
-//            id: UUID(),
-//            url: validURL!,
-//            clipRect: currentClipRect,
-//            originalSize: originalSize,
-//            screenshotPath: screenshot.flatMap(ScreenshotUtils.saveScreenshotToLocalDirectory) ?? "",
-//            pageTitle: pageTitle,
-//            capturedElements: capturedElements,
-//            snapshots:snapshots
-//        )
-//        webClips.append(newWebClip)
-//        saveWebClips()
-//    }
-    
+ 
     func updateWebClip(withId id: UUID, newURL: URL? = nil, newClipRect: CGRect? = nil, newScreenshotPath: String? = nil, newPageTitle: String? = nil, newCapturedElements: [CapturedElement]? = nil, newLlamaResult: LlamaResult? = nil, newInnerText: String? = nil) {
         guard let index = webClips.firstIndex(where: { $0.id == id }) else {
             return
@@ -186,22 +146,18 @@ import Combine
         loadWebClips()
     }
     
+    func deleteItemById(_ id: UUID) {
+        repository.deleteWebClipById(id)
+        loadWebClips()
+    }
+    
     func moveItem(fromOffsets: IndexSet, toOffset: Int) {
         webClips.move(fromOffsets: fromOffsets, toOffset: toOffset)
         saveWebClips() // Persist the new order in the repository
     }
     
     func reset() {
-//        urlString = ""
-//        validURLs.removeAll()
-//        selectedValidURLIndex = nil
+        isEditing = false
         selectedWebClipIndex = nil
-//        currentClipRect = nil
-//        isURLValid = true
-//        showValidationError = false
-//        originalSize = nil
-//        pageTitle = nil
-//        screenShot = nil
-//        screenshotPath = nil
     }
 }

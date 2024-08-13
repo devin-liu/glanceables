@@ -2,18 +2,18 @@ import SwiftUI
 import UniformTypeIdentifiers
 
 struct ContentView: View {
-    private var webClipManager = WebClipManagerViewModel()
+    @State private var webClipManager = WebClipManagerViewModel()
     
     var body: some View {
         NavigationStack{
             VStack {
-                BlackMenuBarView(viewModel: webClipManager)
+                BlackMenuBarView(webClipManager: webClipManager)
                 ScrollView {
                     Text("Glanceables")
                         .font(.system(.largeTitle, design: .rounded))
                         .fontWeight(.medium)
                         .foregroundColor(Color.black)
-                    if webClipManager.webClips.isEmpty {
+                    if webClipManager.isEmpty() {
                         emptyStateView
                     } else {
                         WebClipGridView(webClipManager: webClipManager)
@@ -28,7 +28,7 @@ struct ContentView: View {
     var emptyStateView: some View {
         VStack {
             Spacer()
-            CreateButtonView()
+            CreateButtonView(webClipManager: webClipManager)
                 .padding()
             Spacer()
         }

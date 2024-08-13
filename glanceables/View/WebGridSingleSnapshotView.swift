@@ -8,12 +8,15 @@ struct WebGridSingleSnapshotView: View {
     @State private var rotationAngle: Double = 0  // State variable for rotation angle
     @State private var reloadTrigger = PassthroughSubject<Void, Never>() // Local reload trigger
     @ObservedObject var item: WebClip
-    @State var webClipManager: WebClipManagerViewModel
+    var webClipManager: WebClipManagerViewModel
     
     var body: some View {
         VStack {
             ScreenshotView(item: item, webClipManager: webClipManager)
                 .padding(10)
+                .onDisappear {
+                    print("ScreenshotView onDisappear")
+                }
             
             PageTitleView(title: item.pageTitle ?? "Loading...")
                 .padding()
@@ -38,6 +41,7 @@ struct WebGridSingleSnapshotView: View {
         }
         .onDisappear {
             stopTimer()
+            print("WebGridSingleSnapshotView onDisappear")
         }
     }
     
@@ -66,14 +70,21 @@ struct ScreenshotView: View {
         ZStack(alignment: .top) {
             if let screenshotPath = item.screenshotPath {
                 AsyncImageView(imagePath: screenshotPath)
+                    .onDisappear {
+                        print("AsyncImageView onDisappear")
+                    }
             }
-            ScrollView {
-                WebViewSnapshotRefresher(viewModel: webClipManager, webClip: item)
-                    .frame(width: item.originalSize?.width, height: 600)
-                    .edgesIgnoringSafeArea(.all)
-            }
-            .opacity(0)  // Make the ScrollView invisible
-            .frame(width: 0, height: 0)  // Make the ScrollView occupy no space
+            
+            WebViewSnapshotRefresher(viewModel: webClipManager, webClip: item)
+                .frame(width: item.originalSize?.width, height: 600)
+                .edgesIgnoringSafeArea(.all)
+                .opacity(0)  // Make the ScrollView invisible
+                .frame(width: 0, height: 0)  // Make the ScrollView occupy no space
+                .onDisappear {
+                    print("WebViewSnapshotRefresher onDisappear")
+                }
+            
+            
         }
     }
 }

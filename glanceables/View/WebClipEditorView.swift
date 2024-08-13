@@ -1,15 +1,16 @@
 import SwiftUI
 
 struct WebClipEditorView: View {
+    var webClipManager: WebClipManagerViewModel
     @StateObject var captureMenuViewModel = WebClipSelectorViewModel()
     var webClip: WebClip
     
     var body: some View {
-        WebClipCreatorView()
+        WebClipCreatorView(webClipManager: webClipManager)
             .onAppear {
-                WebClipManagerViewModel.shared.openEditForItem(webClip)
+                webClipManager.openEditForItem(webClip)
             }.onDisappear {
-                WebClipManagerViewModel.shared.reset()
+                webClipManager.reset()
                 print("editor reset")
             }
     }
@@ -18,6 +19,7 @@ struct WebClipEditorView: View {
 struct WebClipEditorView_Previews: PreviewProvider {
     static var previews: some View {
         let captureModel = WebClipSelectorViewModel()
+        let webClipManager = WebClipManagerViewModel()
         // Provide a sample WebClip instance
         let sampleWebClip = WebClip(
             id: UUID(),
@@ -30,6 +32,6 @@ struct WebClipEditorView_Previews: PreviewProvider {
             htmlElements: [],
             snapshots: []
         )
-        WebClipEditorView(captureMenuViewModel: captureModel, webClip: sampleWebClip)
+        WebClipEditorView(webClipManager: webClipManager, captureMenuViewModel: captureModel, webClip: sampleWebClip)
     }
 }

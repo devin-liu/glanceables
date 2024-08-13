@@ -1,12 +1,12 @@
 import SwiftUI
 
 struct BlackMenuBarView: View {
-    var viewModel = WebClipManagerViewModel.shared
+    var webClipManager: WebClipManagerViewModel
     
     var body: some View {
         HStack {
             Spacer()            
-            NavigationLink(destination: WebClipCreatorView()) {
+            NavigationLink(destination: WebClipCreatorView(webClipManager: webClipManager)) {
                 Image(systemName: "plus")
                     .font(.system(size: 40))
                     .foregroundColor(.white)
@@ -36,10 +36,10 @@ struct SearchBar: View {
 }
 
 struct ParentView: View {
-    var viewModel = WebClipManagerViewModel()
+    var webClipManager = WebClipManagerViewModel()
     
     var body: some View {
-        BlackMenuBarView(viewModel: viewModel)
+        BlackMenuBarView(webClipManager: webClipManager)
             .frame(maxHeight: .infinity, alignment: .top)
     }
 }

@@ -3,7 +3,7 @@ import Combine
 
 struct WebClipBrowserMenuView: View {
     @Environment(\.presentationMode) var presentationMode
-    var clipManager = WebClipManagerViewModel.shared
+    var webClipManager: WebClipManagerViewModel
     @ObservedObject var webClipSelector: WebClipSelectorViewModel
     @ObservedObject var pendingClip: WebClipCreatorViewModel
     
@@ -51,7 +51,7 @@ struct WebClipBrowserMenuView: View {
                             }
                             
                             if webClipSelector.captureModeOn {
-                                CaptureRectangleView(captureMenuViewModel: webClipSelector, pendingClip: pendingClip)
+                                CaptureRectangleView(captureMenuViewModel: webClipSelector, webClipManager: webClipManager, pendingClip: pendingClip)
                             }
                         }
                     }
@@ -84,7 +84,7 @@ struct WebPreviewCaptureMenuView_Previews: PreviewProvider {
     }()
     static var previews: some View {
         WebClipBrowserMenuView(
-            webClipSelector: WebClipSelectorViewModel(), pendingClip: previewViewModel
+            webClipManager: WebClipManagerViewModel(), webClipSelector: WebClipSelectorViewModel(), pendingClip: previewViewModel
         )
     }
 }
