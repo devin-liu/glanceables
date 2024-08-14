@@ -1,17 +1,21 @@
 import SwiftUI
+import WebKit
 
 struct WebClipBrowserMenuView: View {
-    @Environment(\.presentationMode) var presentationMode
+    @Environment(\.dismiss) private var dismiss
     var webClipManager: WebClipManagerViewModel
     @ObservedObject var webClipSelector: WebClipSelectorViewModel
     @ObservedObject var pendingClip: WebClipCreatorViewModel
+    @State private var webView: WKWebView?    
     
     var body: some View {
         ZStack {
             VStack {
                 HStack {
-                    NavigationButtonsView(viewModel: pendingClip)
-                        .padding(10)
+                    if let webView = webView {
+                        NavigationButtonsView(webView: webView)
+                            .padding(10)
+                    }
                     AddURLFormView(viewModel: pendingClip) // Create a new instance or pass as needed
                         .padding(10)
                 }
@@ -26,9 +30,12 @@ struct WebClipBrowserMenuView: View {
                     GeometryReader { geometry in
                         ZStack {
                             if  let validURL = pendingClip.validURLs.last {
-                                WebViewScreenshotCapture(viewModel: pendingClip, captureMenuViewModel: webClipSelector, validURL: validURL)
+                                WebViewScreenshotCapture(viewModel: pendingClip, captureMenuViewModel: webClipSelector, webView: $webView, validURL: validURL)
                                     .frame(maxHeight: .infinity)
                                     .frame(width: geometry.size.width)
+                                    .onAppear {
+                                        print("WebViewScreenshotCapture onAppear")
+                                    }
                                     .onDisappear {
                                         print("WebViewScreenshotCapture onDisappear")
                                     }
@@ -49,9 +56,7 @@ struct WebClipBrowserMenuView: View {
                                     )
                             }
                             
-                            if webClipSelector.captureModeOn {
-                                CaptureRectangleView(captureMenuViewModel: webClipSelector, webClipManager: webClipManager, pendingClip: pendingClip)
-                            }
+                            CaptureRectangleView(dismiss: dismiss, captureMenuViewModel: webClipSelector, webClipManager: webClipManager, pendingClip: pendingClip)
                         }
                     }
                 }
@@ -63,7 +68,7 @@ struct WebClipBrowserMenuView: View {
                 HStack {
                     Spacer()
                     RedXButton(action: {
-                        self.presentationMode.wrappedValue.dismiss()
+                        dismiss()
                     })
                     .padding(.top, -20)
                     .padding(.trailing, -20)
@@ -78,7 +83,7 @@ struct WebPreviewCaptureMenuView_Previews: PreviewProvider {
     static var previewViewModel: WebClipCreatorViewModel = {
         let model = WebClipCreatorViewModel()
         model.urlString = "https://news.ycombinator.com/"
-//        model.validateURL()
+        //        model.validateURL()
         return model
     }()
     static var previews: some View {

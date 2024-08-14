@@ -4,40 +4,56 @@ import WebKit
 struct WebViewScreenshotCapture: UIViewRepresentable {
     @ObservedObject var viewModel: WebClipCreatorViewModel
     @ObservedObject var captureMenuViewModel: WebClipSelectorViewModel
+    @Binding var webView: WKWebView?
     
     var validURL: URL
-    
+        
     func makeUIView(context: Context) -> WKWebView {
-        print("makeUIView ", self.validURL)
-        let webView = WKWebView()
-        webView.navigationDelegate = context.coordinator
-        webView.uiDelegate = context.coordinator
-        webView.scrollView.delegate = context.coordinator
+        print("makeUIView", validURL)
+        let web = WKWebView()
+        webView = web  // Set the binding
+        configureWebView(webView: web, context: context)
+        return web
+    }
+    
+    func updateUIView(_ uiView: WKWebView, context: Context) {
+        // Perform any dynamic updates to your view's content.
+    }
+    
+    func dismantleUIView(_ uiView: WKWebView, coordinator: Coordinator) {
+        // Remove observers when the view is dismantled.
+        uiView.removeObserver(coordinator, forKeyPath: #keyPath(WKWebView.title))
+        uiView.removeObserver(coordinator, forKeyPath: #keyPath(WKWebView.canGoBack))
+        uiView.removeObserver(coordinator, forKeyPath: #keyPath(WKWebView.canGoForward))
+    }
+    
+    func makeCoordinator() -> Coordinator {
+        return Coordinator(self)
+    }
+    
+    private func configureWebView(webView: WKWebView, context: Context) {
+        let coordinator = context.coordinator
+        webView.navigationDelegate = coordinator
+        webView.uiDelegate = coordinator
+        webView.scrollView.delegate = coordinator
+        
+        context.coordinator.webView = webView
+
+        
+        // Observers Setup
+        webView.addObserver(coordinator, forKeyPath: #keyPath(WKWebView.title), options: .new, context: nil)
+        webView.addObserver(coordinator, forKeyPath: #keyPath(WKWebView.canGoBack), options: .new, context: nil)
+        webView.addObserver(coordinator, forKeyPath: #keyPath(WKWebView.canGoForward), options: .new, context: nil)
         
         configureMessageHandler(webView: webView, contentController: webView.configuration.userContentController, context: context)
         JavaScriptLoader.loadJavaScript(webView: webView, resourceName: "captureElements", extensionType: "js")
         injectSelectionScript(webView: webView)
         injectCaptureElementsScript(webView: webView)
         
-        context.coordinator.webView = webView
-        
         let request = URLRequest(url: validURL)
         webView.load(request)
-        
-        return webView
     }
-    
-    func dismantleUIView(_ uiView: UIView, coordinator: ()) {
-           // Handle cleanup here
-        print("dismantleUIView screenshotcapture")
-       }
-    
-    func updateUIView(_ webView: WKWebView, context: Context) {
-    }
-    
-    func makeCoordinator() -> Coordinator {
-        Coordinator(self)
-    }
+
     
     private func configureMessageHandler(webView: WKWebView, contentController: WKUserContentController, context: Context) {
         contentController.add(context.coordinator, name: "selectionHandler")
@@ -124,7 +140,18 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
         init(_ parent: WebViewScreenshotCapture) {
             self.parent = parent
         }
-
+        
+        override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+                  guard let webView = object as? WKWebView else { return }
+                  if keyPath == #keyPath(WKWebView.title) {
+                      
+                          // Update any relevant state in your SwiftUI view model.
+                          print("observeValue ", webView.title)
+                          self.initializeClipRect()
+                      
+                  }
+              }
+        
         deinit {
             webView?.navigationDelegate = nil
             webView?.uiDelegate = nil
@@ -137,10 +164,23 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
             print("Coordinator is being deinitialized")
         }
         
+        func initializeClipRect(){
+            if self.parent.viewModel.currentClipRect == nil, let frame = self.webView?.frame {
+                print("webView ClipRect 2")
+                let rectWidth: CGFloat = 300 // Example width
+                let rectHeight: CGFloat = 300 // Example height
+                let centerX = frame.width / 2 - rectWidth / 2
+                let centerY = frame.height / 2 - rectHeight / 2
+                self.parent.viewModel.currentClipRect = CGRect(x: centerX, y: centerY, width: rectWidth, height: rectHeight)
+            }
+        }
+        
         func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!
         ) {
+            print("webView ClipRect 1", self.parent.viewModel.currentClipRect, self.webView?.frame)
             // Initialize clipRect in the center of the WebView frame
             if self.parent.viewModel.currentClipRect == nil, let frame = self.webView?.frame {
+                print("webView ClipRect 2")
                 let rectWidth: CGFloat = 300 // Example width
                 let rectHeight: CGFloat = 300 // Example height
                 let centerX = frame.width / 2 - rectWidth / 2
@@ -161,6 +201,7 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
                 
                 // Initialize clipRect in the center of the WebView frame
                 if self.parent.viewModel.currentClipRect == nil, let frame = self.webView?.frame {
+                    print("webView ClipRect 2")
                     let rectWidth: CGFloat = 300 // Example width
                     let rectHeight: CGFloat = 300 // Example height
                     let centerX = frame.width / 2 - rectWidth / 2

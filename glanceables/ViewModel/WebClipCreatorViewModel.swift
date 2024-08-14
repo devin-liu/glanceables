@@ -40,6 +40,8 @@ class WebClipCreatorViewModel: ObservableObject {
         urlString = ""
     }
     
+    
+    
     func getNewClip() -> WebClip{
         return WebClip(
             id: UUID(),
@@ -79,6 +81,10 @@ class WebClipCreatorViewModel: ObservableObject {
         let (isValid, url) = URLUtilities.validateURL(from: urlString)
         print("run validateURL ", urlString, url)
         isURLValid = isValid
+        if isValid, let url = url {
+            validURLs.append(url)
+        }
+        
     }
 }
 

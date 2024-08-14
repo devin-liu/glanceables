@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		030062972C0A7F2600B0242D /* HeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 030062962C0A7F2600B0242D /* HeaderView.swift */; };
 		030062992C0A833200B0242D /* CreateButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 030062982C0A833200B0242D /* CreateButtonView.swift */; };
 		0300629B2C0D209400B0242D /* UserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0300629A2C0D209400B0242D /* UserDefaults.swift */; };
 		0300629D2C0D229800B0242D /* BlackMenuBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0300629C2C0D229800B0242D /* BlackMenuBarView.swift */; };
@@ -64,7 +63,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		030062962C0A7F2600B0242D /* HeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderView.swift; sourceTree = "<group>"; };
 		030062982C0A833200B0242D /* CreateButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateButtonView.swift; sourceTree = "<group>"; };
 		0300629A2C0D209400B0242D /* UserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaults.swift; sourceTree = "<group>"; };
 		0300629C2C0D229800B0242D /* BlackMenuBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlackMenuBarView.swift; sourceTree = "<group>"; };
@@ -222,7 +220,6 @@
 			children = (
 				03C5DAD82C2A4DB20061FA25 /* AddURLFormView.swift */,
 				03A868622C51FF0800CCB79D /* NavigationButtonsView.swift */,
-				030062962C0A7F2600B0242D /* HeaderView.swift */,
 				0300629C2C0D229800B0242D /* BlackMenuBarView.swift */,
 				038DAC272C6182140000EA6A /* BlackEditMenuBarView.swift */,
 				03C5DAD42C2647E20061FA25 /* CaptureModeToggleView.swift */,
@@ -376,7 +373,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				03553FE32C41F6A800FCB4CC /* WebClipSelectorViewModel.swift in Sources */,
-				030062972C0A7F2600B0242D /* HeaderView.swift in Sources */,
 				03A8685B2C4B312E00CCB79D /* LlamaResult.swift in Sources */,
 				03A868512C4865C900CCB79D /* CaptureRectangleView.swift in Sources */,
 				03778E422C36028F009CB9A1 /* CapturedElement.swift in Sources */,
