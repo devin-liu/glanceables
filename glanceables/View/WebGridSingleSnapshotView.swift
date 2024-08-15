@@ -56,8 +56,7 @@ struct WebGridSingleSnapshotView: View {
 }
 
 struct ScreenshotView: View {
-    @ObservedObject var item: WebClip
-    var webClipManager: WebClipManagerViewModel
+    @ObservedObject var item: WebClip    
     
     var body: some View {
         ZStack(alignment: .top) {

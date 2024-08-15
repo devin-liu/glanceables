@@ -1,7 +1,6 @@
 import SwiftUI
 
 struct CreateButtonView: View {
-    var webClipManager: WebClipManagerViewModel
     
     var body: some View {
         NavigationLink(destination: WebClipCreatorView()) {
@@ -35,7 +34,7 @@ struct CreateButtonView: View {
 struct CreateButtonView_Previews: PreviewProvider {
     static var previews: some View {
         let webClipManager = WebClipManagerViewModel()
-        CreateButtonView(webClipManager: webClipManager)
+        CreateButtonView()
             .previewLayout(.sizeThatFits) // Adjust this to match the context you want to preview in
             .padding()
     }
