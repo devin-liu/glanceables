@@ -6,7 +6,6 @@ class WebViewCoordinator: NSObject, WKNavigationDelegate, WKUIDelegate, UIScroll
     var parent: WebViewSnapshotRefresher
     var webView: WKWebView?
     var reloadSubscription: AnyCancellable?
-    var pageTitle: String?
     var llamaResult: LlamaResult?
     var webClipManager: WebClipManagerViewModel
     var webClip: WebClip
@@ -18,32 +17,30 @@ class WebViewCoordinator: NSObject, WKNavigationDelegate, WKUIDelegate, UIScroll
         self.parent = parent
         self.webClip = webClip
         self.webClipManager = webClipManager
-        self.pageTitle = webClip.pageTitle
         self.llamaAPIManager = llamaAPIManager
         super.init()
     }
     
     deinit {
         print("WebViewcoordinator deinit")
-//        schedulerViewModel.stopScheduler()
+        //        schedulerViewModel.stopScheduler()
     }
     
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         let simplifiedPageTitle = URLUtilities.simplifyPageTitle(webView.title ?? "No Title")
-        self.pageTitle = simplifiedPageTitle
         
         if let capturedElements = webClip.capturedElements  {
-            self.restoreScrollPosition(capturedElements, in: webView)
+            restoreScrollPosition(capturedElements, in: webView)
         }
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.1) { [self] in
             // Restore scroll positions based on captured elements
             if let capturedElements = webClip.capturedElements  {
-                self.restoreScrollPosition(capturedElements, in: webView)
+                restoreScrollPosition(capturedElements, in: webView)
             }
             // Capture a screenshot
-//            self.schedulerViewModel.triggerScreenshot()
-        }                
+            //            self.schedulerViewModel.triggerScreenshot()
+        }
     }
     
     // Method to restore the scroll position for captured elements
@@ -63,6 +60,7 @@ class WebViewCoordinator: NSObject, WKNavigationDelegate, WKUIDelegate, UIScroll
     }
     
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
+        guard let webView = webView else { return }
         if message.name == "elementsFromSelectorsHandler", let messageBody = message.body as? String {
             parseElementsFromSelectors(messageBody)
             captureScreenshot()
@@ -89,22 +87,25 @@ class WebViewCoordinator: NSObject, WKNavigationDelegate, WKUIDelegate, UIScroll
     
     
     func processElementsInnerText(_ innerText: String) {
+        guard let webClip = parent.webClip else { return }
         llamaAPIManager.analyzeInnerText(innerText: innerText) { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .success(let result):
-                self.webClipManager.updateWebClip(withId: self.parent.webClip.id, newLlamaResult: result)
+                webClipManager.updateWebClip(withId: webClip.id, newLlamaResult: result)
                 print("Generated result: \(result)")
-                self.parent.webClip.queueSnapshotUpdate(innerText: innerText, conciseText: result.conciseText)
+                webClip.queueSnapshotUpdate(innerText: innerText, conciseText: result.conciseText)
             case .failure(let error):
                 print("Error interpreting changes: \(error.localizedDescription)")
-                self.parent.webClip.queueSnapshotUpdate(innerText: innerText, conciseText: innerText)
+                webClip.queueSnapshotUpdate(innerText: innerText, conciseText: innerText)
             }
         }
     }
     
     func captureScreenshot() {
         guard let webView = webView else { return }
+        guard let webClip = parent.webClip else { return }
+        let webClipManager = webClipManager
         
         let configuration = WKSnapshotConfiguration()
         
@@ -126,9 +127,9 @@ class WebViewCoordinator: NSObject, WKNavigationDelegate, WKUIDelegate, UIScroll
         
         webView.takeSnapshot(with: configuration) { image, error in
             if let image = image {
-                let newSnapshot = self.webClipManager.updateScreenshot(image, toClip: self.webClip)
+                let newSnapshot = webClipManager.updateScreenshot(image, toClip: webClip)
                 if newSnapshot != nil {
-                    self.parent.webClip.queueSnapshotUpdate(newSnapshot: newSnapshot)
+                    webClip.queueSnapshotUpdate(newSnapshot: newSnapshot)
                 }
             }
         }

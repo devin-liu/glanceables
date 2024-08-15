@@ -147,7 +147,7 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
                       
                           // Update any relevant state in your SwiftUI view model.
                           print("observeValue ", webView.title)
-                          self.initializeClipRect()
+                          initializeClipRect()
                       
                   }
               }
@@ -165,27 +165,27 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
         }
         
         func initializeClipRect(){
-            if self.parent.viewModel.currentClipRect == nil, let frame = self.webView?.frame {
+            if parent.viewModel.currentClipRect == nil, let frame = webView?.frame {
                 print("webView ClipRect 2")
                 let rectWidth: CGFloat = 300 // Example width
                 let rectHeight: CGFloat = 300 // Example height
                 let centerX = frame.width / 2 - rectWidth / 2
                 let centerY = frame.height / 2 - rectHeight / 2
-                self.parent.viewModel.currentClipRect = CGRect(x: centerX, y: centerY, width: rectWidth, height: rectHeight)
+                parent.viewModel.currentClipRect = CGRect(x: centerX, y: centerY, width: rectWidth, height: rectHeight)
             }
         }
         
         func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!
         ) {
-            print("webView ClipRect 1", self.parent.viewModel.currentClipRect, self.webView?.frame)
+            print("webView ClipRect 1", parent.viewModel.currentClipRect, webView.frame)
             // Initialize clipRect in the center of the WebView frame
-            if self.parent.viewModel.currentClipRect == nil, let frame = self.webView?.frame {
+            if parent.viewModel.currentClipRect == nil {
                 print("webView ClipRect 2")
                 let rectWidth: CGFloat = 300 // Example width
                 let rectHeight: CGFloat = 300 // Example height
-                let centerX = frame.width / 2 - rectWidth / 2
-                let centerY = frame.height / 2 - rectHeight / 2
-                self.parent.viewModel.currentClipRect = CGRect(x: centerX, y: centerY, width: rectWidth, height: rectHeight)
+                let centerX = webView.frame.width / 2 - rectWidth / 2
+                let centerY = webView.frame.height / 2 - rectHeight / 2
+                parent.viewModel.currentClipRect = CGRect(x: centerX, y: centerY, width: rectWidth, height: rectHeight)
             }
         }
         
@@ -195,18 +195,18 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
                 guard let self = self else { return }
                 let simplifiedPageTitle = URLUtilities.simplifyPageTitle(webView.title ?? "No Title")
                 
-                self.parent.viewModel.pageTitle = simplifiedPageTitle
+                parent.viewModel.pageTitle = simplifiedPageTitle
                 
-                self.parent.viewModel.saveOriginalSize(newOriginalSize: webView.scrollView.contentSize)
+                parent.viewModel.saveOriginalSize(newOriginalSize: webView.scrollView.contentSize)
                 
                 // Initialize clipRect in the center of the WebView frame
-                if self.parent.viewModel.currentClipRect == nil, let frame = self.webView?.frame {
+                if parent.viewModel.currentClipRect == nil {
                     print("webView ClipRect 2")
                     let rectWidth: CGFloat = 300 // Example width
                     let rectHeight: CGFloat = 300 // Example height
-                    let centerX = frame.width / 2 - rectWidth / 2
-                    let centerY = frame.height / 2 - rectHeight / 2
-                    self.parent.viewModel.currentClipRect = CGRect(x: centerX, y: centerY, width: rectWidth, height: rectHeight)
+                    let centerX = webView.frame.width / 2 - rectWidth / 2
+                    let centerY = webView.frame.height / 2 - rectHeight / 2
+                    parent.viewModel.currentClipRect = CGRect(x: centerX, y: centerY, width: rectWidth, height: rectHeight)
                 }
             }
         }
@@ -215,9 +215,7 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
             if message.name == "selectionHandler", let messageBody = message.body as? String {
                 let scrollY = parseScrollY(messageBody)
                 if scrollY != 0 {
-                    DispatchQueue.main.async {
-                        self.parent.captureMenuViewModel.scrollY = scrollY
-                    }
+                    parent.captureMenuViewModel.scrollY = scrollY
                 }
                 
             }
@@ -228,14 +226,14 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
             
             if message.name == "userStoppedInteracting" {
                 // Handle user stop interaction here
-                print("userStoppedInteracting", self.parent.validURL)
+                print("userStoppedInteracting", parent.validURL)
                 userDidStopInteracting()
             }
             
         }
         
         func userDidStopInteracting() {
-            self.captureScreenshot()
+            captureScreenshot()
             
         }
         
@@ -254,7 +252,7 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
         }
         
         func processCapturedElements(_ elements: [CapturedElement]) {
-            self.parent.captureMenuViewModel.capturedElements = elements
+            parent.captureMenuViewModel.capturedElements = elements
         }
         
         private func parseScrollY(_ message: String) -> Double {
@@ -280,27 +278,26 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
         
         
         func scrollViewDidScroll(_ scrollView: UIScrollView) {
-            DispatchQueue.main.async {
-                self.parent.captureMenuViewModel.scrollY = Double(scrollView.contentOffset.y)
-            }
+                parent.captureMenuViewModel.scrollY = Double(scrollView.contentOffset.y)
         }
         
         func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
-            self.parent.captureMenuViewModel.userInteracting = true
+            parent.captureMenuViewModel.userInteracting = true
         }
         
         func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
             if !decelerate {
-                self.parent.captureMenuViewModel.userInteracting = false
+                parent.captureMenuViewModel.userInteracting = false
             }
         }
         
         func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-            self.parent.captureMenuViewModel.userInteracting = false
+            parent.captureMenuViewModel.userInteracting = false
         }
         
         private func captureScreenshot() {
             guard let webView = webView else { return }
+            let viewModel = parent.viewModel
             let configuration = WKSnapshotConfiguration()
             if let clipRect = parent.viewModel.currentClipRect {
                 // Capture the current screenshot that the user sees
@@ -315,9 +312,7 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
             
             webView.takeSnapshot(with: configuration) { image, error in
                 if let image = image {
-                    DispatchQueue.main.async {
-                        self.parent.viewModel.saveScreenShot(image)
-                    }
+                    viewModel.saveScreenShot(image)
                 } else if let error = error {
                     print("Screenshot error: \(error.localizedDescription)")
                 }

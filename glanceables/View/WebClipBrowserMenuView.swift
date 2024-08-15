@@ -5,8 +5,8 @@ struct WebClipBrowserMenuView: View {
     @Environment(\.dismiss) private var dismiss
     var webClipManager: WebClipManagerViewModel
     @ObservedObject var webClipSelector: WebClipSelectorViewModel
-    @ObservedObject var pendingClip: WebClipCreatorViewModel
-    @State private var webView: WKWebView?    
+    @StateObject private var pendingClip = WebClipCreatorViewModel()
+    @State private var webView: WKWebView?
     
     var body: some View {
         ZStack {
@@ -88,7 +88,7 @@ struct WebPreviewCaptureMenuView_Previews: PreviewProvider {
     }()
     static var previews: some View {
         WebClipBrowserMenuView(
-            webClipManager: WebClipManagerViewModel(), webClipSelector: WebClipSelectorViewModel(), pendingClip: previewViewModel
+            webClipManager: WebClipManagerViewModel(), webClipSelector: WebClipSelectorViewModel()
         )
     }
 }

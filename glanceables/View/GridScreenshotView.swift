@@ -20,6 +20,7 @@ struct GridScreenshotView: View {
                 .frame(width: 0, height: 0)  // Make the ScrollView occupy no space
                 .onDisappear {
                     print("WebViewSnapshotRefresher onDisappear")
+                    
                 }
             
             

@@ -1,14 +1,13 @@
 import SwiftUI
 
 struct WebClipCreatorView: View {
-    @StateObject private var creatorViewModel = WebClipCreatorViewModel()
     @StateObject private var webClipSelector = WebClipSelectorViewModel()
     var webClipManager: WebClipManagerViewModel
     var body: some View {
         VStack{
             BlackEditMenuBarView(webClipSelector: webClipSelector)
             VStack{
-                WebClipBrowserMenuView(webClipManager: webClipManager, webClipSelector: webClipSelector, pendingClip: creatorViewModel)
+                WebClipBrowserMenuView(webClipManager: webClipManager, webClipSelector: webClipSelector)
             }.padding(20)
         }
         .background(Color(.systemGray5).opacity(0.25))
