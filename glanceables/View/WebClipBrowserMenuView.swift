@@ -50,7 +50,7 @@ struct WebClipBrowserMenuView: View {
                                     )
                             }
                             
-                            CaptureRectangleView(dismiss: dismiss, captureMenuViewModel: webClipSelector, webClipManager: webClipManager, pendingClip: pendingClip)
+                            CaptureRectangleView(dismiss: dismiss, captureMenuViewModel: webClipSelector, pendingClip: pendingClip)
                         }
                     }
                 }

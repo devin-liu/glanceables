@@ -1,9 +1,9 @@
 import SwiftUI
 
 struct CaptureRectangleView: View {
+    @Environment(WebClipManagerViewModel.self) private var webClipManager
     var dismiss: DismissAction?
     @ObservedObject var captureMenuViewModel: WebClipSelectorViewModel
-    var webClipManager: WebClipManagerViewModel
     @ObservedObject var pendingClip: WebClipCreatorViewModel
     
     var body: some View {
@@ -65,7 +65,7 @@ struct CaptureRectangleView: View {
                     pendingClip.currentClipRect = captureMenuViewModel.currentClipRect
                     pendingClip.capturedElements = captureMenuViewModel.capturedElements
                     webClipManager.createWebClip(newClip: pendingClip.getNewClip())
-                }                
+                }
                 if let dismiss {
                     dismiss()
                 }
@@ -93,7 +93,7 @@ struct CaptureRectangleView_Previews: PreviewProvider {
             
             CaptureRectangleView(
                 dismiss:nil, captureMenuViewModel: captureMenuViewModel,
-                webClipManager: webClipManager, pendingClip: creatorModel
+                pendingClip: creatorModel
             )
             .frame(width: screenWidth, height: screenHeight)
         }
