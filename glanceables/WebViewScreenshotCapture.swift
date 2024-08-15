@@ -23,9 +23,9 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
     
     func dismantleUIView(_ uiView: WKWebView, coordinator: Coordinator) {
         // Remove observers when the view is dismantled.
-        uiView.removeObserver(coordinator, forKeyPath: #keyPath(WKWebView.title))
-        uiView.removeObserver(coordinator, forKeyPath: #keyPath(WKWebView.canGoBack))
-        uiView.removeObserver(coordinator, forKeyPath: #keyPath(WKWebView.canGoForward))
+//        uiView.removeObserver(coordinator, forKeyPath: #keyPath(WKWebView.title))
+//        uiView.removeObserver(coordinator, forKeyPath: #keyPath(WKWebView.canGoBack))
+//        uiView.removeObserver(coordinator, forKeyPath: #keyPath(WKWebView.canGoForward))
     }
     
     func makeCoordinator() -> Coordinator {
@@ -42,10 +42,10 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
 
         
         // Observers Setup
-        webView.addObserver(coordinator, forKeyPath: #keyPath(WKWebView.title), options: .new, context: nil)
-        webView.addObserver(coordinator, forKeyPath: #keyPath(WKWebView.canGoBack), options: .new, context: nil)
-        webView.addObserver(coordinator, forKeyPath: #keyPath(WKWebView.canGoForward), options: .new, context: nil)
-        
+//        webView.addObserver(coordinator, forKeyPath: #keyPath(WKWebView.title), options: .new, context: nil)
+//        webView.addObserver(coordinator, forKeyPath: #keyPath(WKWebView.canGoBack), options: .new, context: nil)
+//        webView.addObserver(coordinator, forKeyPath: #keyPath(WKWebView.canGoForward), options: .new, context: nil)
+//        
         configureMessageHandler(webView: webView, contentController: webView.configuration.userContentController, context: context)
         JavaScriptLoader.loadJavaScript(webView: webView, resourceName: "captureElements", extensionType: "js")
         injectSelectionScript(webView: webView)

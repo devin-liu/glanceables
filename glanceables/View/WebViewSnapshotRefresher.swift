@@ -2,8 +2,8 @@ import SwiftUI
 import WebKit
 
 struct WebViewSnapshotRefresher: UIViewRepresentable {
-    var viewModel: WebClipManagerViewModel
-    var webClip: WebClip?
+    var webClipManager: WebClipManagerViewModel
+    var webClipId: UUID
     @StateObject var llamaAPIManager = LlamaAPIManager()
     
     func makeUIView(context: Context) -> WKWebView {
@@ -17,7 +17,7 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
         context.coordinator.webView = webView
         injectGetElementsFromSelectorsScript(webView: webView)
         
-        let request = URLRequest(url: webClip!.url)
+        let request = URLRequest(url: webClipManager.webClip(webClipId)!.url)
         webView.load(request)
         
         return webView
@@ -28,7 +28,7 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
     }
     
     func makeCoordinator() -> WebViewCoordinator {
-        WebViewCoordinator(self, webClip: webClip!, webClipManager: viewModel, llamaAPIManager: llamaAPIManager)
+        WebViewCoordinator(self, webClipId: webClipId, webClipManager: webClipManager, llamaAPIManager: llamaAPIManager)
     }
     
     func dismantleUIView(_ uiView: WKWebView, coordinator: WebViewCoordinator) {
@@ -43,13 +43,13 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
     }
     
     func injectGetElementsFromSelectorsScript(webView: WKWebView) {
-        guard let capturedElement = self.webClip!.capturedElements?.last else { return }
+        guard let capturedElement = webClipManager.webClip(webClipId)?.capturedElements?.last else { return }
         let elementSelector = capturedElement.selector
         JavaScriptLoader.injectGetElementsFromSelectorsScript(webView: webView, elementSelector: elementSelector)
     }
     
     func injectIsolateElementFromSelectorScript(webView: WKWebView) {
-        guard let capturedElement = self.webClip!.capturedElements?.last else { return }
+        guard let capturedElement = webClipManager.webClip(webClipId)?.capturedElements?.last else { return }
         let elementSelector = capturedElement.selector
         JavaScriptLoader.injectIsolateElementFromSelectorScript(webView: webView, elementSelector: elementSelector)
     }

@@ -11,19 +11,7 @@ struct GridScreenshotView: View {
                     .onDisappear {
                         print("AsyncImageView onDisappear")
                     }
-            }
-            
-            WebViewSnapshotRefresher(viewModel: webClipManager, webClip: item)
-                .frame(width: item.originalSize?.width, height: 600)
-                .edgesIgnoringSafeArea(.all)
-                .opacity(0)  // Make the ScrollView invisible
-                .frame(width: 0, height: 0)  // Make the ScrollView occupy no space
-                .onDisappear {
-                    print("WebViewSnapshotRefresher onDisappear")
-                    
-                }
-            
-            
+            }            
         }
     }
 }

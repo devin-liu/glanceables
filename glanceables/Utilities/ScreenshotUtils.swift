@@ -15,9 +15,9 @@ struct ScreenshotUtils {
         }
     }
     
-    static func saveScreenshotToFile(using webClip: WebClip, from screenshot: UIImage) -> String? {
+    static func saveScreenshotToFile(screenshotPath: String, from screenshot: UIImage) -> String? {
         guard let data = screenshot.jpegData(compressionQuality: 1.0) else { return nil }
-        let url = URL(fileURLWithPath: webClip.screenshotPath.unsafelyUnwrapped)
+        let url = URL(fileURLWithPath: screenshotPath)
         
         do {
             try data.write(to: url)

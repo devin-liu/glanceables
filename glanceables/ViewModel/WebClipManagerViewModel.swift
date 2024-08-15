@@ -2,8 +2,8 @@ import Foundation
 import SwiftUI
 
 @Observable class WebClipManagerViewModel {
-//    static let shared = WebClipManagerViewModel()  // Singleton instance
-    var webClips: [WebClip] = [] {
+    //    static let shared = WebClipManagerViewModel()  // Singleton instance
+    private var webClips: [WebClip] = [] {
         didSet {
             print("updated webClips", webClips.count)
         }
@@ -23,42 +23,42 @@ import SwiftUI
     }
     
     
-//    @Published var urlString = ""
-//    @Published var validURLs: [URL] = []  // Now storing an array of URLs
+    //    @Published var urlString = ""
+    //    @Published var validURLs: [URL] = []  // Now storing an array of URLs
     var isEditing = false
-//    @Published var selectedValidURLIndex: Int? = nil {
-//        didSet {
-//            if let index = selectedValidURLIndex, validURLs.indices.contains(index) {
-//                urlString = validURLs[index].absoluteString
-//            } else {
-//                urlString = ""  // Clear urlString if there's no valid URL selected
-//            }
-//        }
-//    }
+    //    @Published var selectedValidURLIndex: Int? = nil {
+    //        didSet {
+    //            if let index = selectedValidURLIndex, validURLs.indices.contains(index) {
+    //                urlString = validURLs[index].absoluteString
+    //            } else {
+    //                urlString = ""  // Clear urlString if there's no valid URL selected
+    //            }
+    //        }
+    //    }
     var selectedWebClipIndex: Int? = nil
-//    @Published var currentClipRect: CGRect?
-//    @Published var isURLValid = true
-//    @Published var showValidationError = false
-//    @Published var originalSize: CGSize?
-//    @Published var pageTitle: String?
-//    @Published var screenShot: UIImage?
-//    @Published var screenshotPath: String?
+    //    @Published var currentClipRect: CGRect?
+    //    @Published var isURLValid = true
+    //    @Published var showValidationError = false
+    //    @Published var originalSize: CGSize?
+    //    @Published var pageTitle: String?
+    //    @Published var screenShot: UIImage?
+    //    @Published var screenshotPath: String?
     
     private var repository = WebClipUserDefaultsRepository.shared
     
-//    var validURL: URL? {
-//        guard let index = selectedValidURLIndex, validURLs.indices.contains(index) else {
-//            return nil
-//        }
-//        return validURLs[index]
-//    }
-//    
-//    func clearTextField() {
-//        urlString = ""
-//    }
+    //    var validURL: URL? {
+    //        guard let index = selectedValidURLIndex, validURLs.indices.contains(index) else {
+    //            return nil
+    //        }
+    //        return validURLs[index]
+    //    }
+    //
+    //    func clearTextField() {
+    //        urlString = ""
+    //    }
     
     // Add a computed property to access a specific WebClip by ID
-    func webClip(withId id: UUID) -> WebClip? {
+    func webClip(_ id: UUID) -> WebClip? {
         return webClips.first(where: { $0.id == id })
     }
     
@@ -70,28 +70,33 @@ import SwiftUI
     }
     
     func imageForWebClip(withId id: UUID) -> UIImage? {
-        guard let webClip = webClip(withId: id) else { return nil }
+        guard let webClip = webClip(id) else { return nil }
         return ScreenshotUtils.loadImage(from: webClip.screenshotPath)
     }
-
-    func updateScreenshot(_ newScreenShot: UIImage, toClip:WebClip) -> String? {
-//        screenShot = newScreenShot
-//        if isEditing, let selectedClip = selectedWebClip() {
-//            if let newScreenshotPath = ScreenshotUtils.saveScreenshotToFile(using: selectedClip, from: newScreenShot) {
-//                updateWebClip(withId: selectedClip.id, newScreenshotPath: newScreenshotPath)
-//                return newScreenshotPath
-//            }
-//        }
-//        if let toClip = toClip {        
-        print("updateScreenshot ", toClip.screenshotPath)
-            if let newScreenshotPath = ScreenshotUtils.saveScreenshotToFile(using: toClip, from: newScreenShot) {
-                updateWebClip(withId: toClip.id, newScreenshotPath: newScreenshotPath)
-                return newScreenshotPath
+    
+    func updateScreenshot(_ newScreenShot: UIImage, toClipId:UUID) -> String? {
+        //        screenShot = newScreenShot
+        //        if isEditing, let selectedClip = selectedWebClip() {
+        //            if let newScreenshotPath = ScreenshotUtils.saveScreenshotToFile(using: selectedClip, from: newScreenShot) {
+        //                updateWebClip(withId: selectedClip.id, newScreenshotPath: newScreenshotPath)
+        //                return newScreenshotPath
+        //            }
+        //        }
+        //        if let toClip = toClip {
+        if let toClip = webClip(toClipId){
+            if let screenshotPath = toClip.screenshotPath{
+                print("updateScreenshot ", screenshotPath)
+                if let newScreenshotPath = ScreenshotUtils.saveScreenshotToFile(screenshotPath: screenshotPath, from: newScreenShot) {
+                    updateWebClip(withId: toClip.id, newScreenshotPath: newScreenshotPath)
+                    return newScreenshotPath
+                }
             }
-//        }
+        }
+        
+        
         return nil
     }
-
+    
     func loadWebClips() {
         webClips = repository.loadWebClips()
     }
@@ -103,9 +108,9 @@ import SwiftUI
     func createWebClip(newClip: WebClip){
         webClips.append(newClip)
         saveWebClips()
-        loadWebClips()
+        //        loadWebClips()
     }
- 
+    
     func updateWebClip(withId id: UUID, newURL: URL? = nil, newClipRect: CGRect? = nil, newScreenshotPath: String? = nil, newPageTitle: String? = nil, newCapturedElements: [CapturedElement]? = nil, newLlamaResult: LlamaResult? = nil, newInnerText: String? = nil) {
         guard let index = webClips.firstIndex(where: { $0.id == id }) else {
             return
@@ -135,14 +140,8 @@ import SwiftUI
     func openEditForItem(_ id: UUID) {
         guard let index = webClips.firstIndex(where: { $0.id == id }) else { return }
         selectedWebClipIndex = index
-//        urlString = webClips[index].url.absoluteString
-//        isEditing = true
-    }
-    
-    
-    func deleteItem(item: WebClip) {
-        repository.deleteWebClip(item)
-        loadWebClips()
+        //        urlString = webClips[index].url.absoluteString
+        //        isEditing = true
     }
     
     func deleteItemById(_ id: UUID) {

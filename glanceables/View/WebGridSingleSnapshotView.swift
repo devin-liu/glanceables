@@ -67,17 +67,6 @@ struct ScreenshotView: View {
                         print("AsyncImageView onDisappear")
                     }
             }
-            
-            WebViewSnapshotRefresher(viewModel: webClipManager, webClip: item)
-                .frame(width: item.originalSize?.width, height: 600)
-                .edgesIgnoringSafeArea(.all)
-                .opacity(0)  // Make the ScrollView invisible
-                .frame(width: 0, height: 0)  // Make the ScrollView occupy no space
-                .onDisappear {
-                    print("WebViewSnapshotRefresher onDisappear")
-                }
-            
-            
         }
     }
 }
@@ -175,15 +164,16 @@ class ImageLoader: ObservableObject {
     }
     
     func load() {
+        let imagePath = imagePath
         DispatchQueue.global(qos: .background).async { [weak self] in
-            guard let strongSelf = self else { return }
-            if let data = FileManager.default.contents(atPath: strongSelf.imagePath),
+            guard let self = self else { return }
+            if let data = FileManager.default.contents(atPath: imagePath),
                let image = UIImage(data: data) {
                 DispatchQueue.main.async {
-                    self?.image = image
+                    self.image = image
                 }
             } else {
-                print("Failed to load image from path: \(strongSelf.imagePath)")
+                print("Failed to load image from path: \(imagePath)")
             }
         }
     }

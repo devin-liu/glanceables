@@ -5,9 +5,9 @@ struct WebClipGridView: View {
     var webClipManager: WebClipManagerViewModel
     
     var body: some View {
-        Text("WebClips available: \(webClipManager.webClips.count)")
-        WebClipGridItems(webClips: webClipManager.webClips, webClipManager: webClipManager)
-        .animation(.easeInOut, value: webClipManager.webClips)
+        Text("WebClips available: \(webClipManager.getClips().count)")
+        WebClipGridItems(webClips: webClipManager.getClips(), webClipManager: webClipManager)
+        .animation(.easeInOut, value: webClipManager.getClips())
     }
 }
 
@@ -28,6 +28,15 @@ struct WebClipGridItems: View {
                         }
                     
                     WebGridSingleSnapshotView(item: item)
+                    
+                    WebViewSnapshotRefresher(webClipManager: webClipManager, webClipId: item.id)
+                                 .frame(width: item.originalSize?.width, height: 600)
+                                 .edgesIgnoringSafeArea(.all)
+                                 .opacity(0)  // Make the ScrollView invisible
+                                 .frame(width: 0, height: 0)  // Make the ScrollView occupy no space
+                                 .onDisappear {
+                                     print("WebViewSnapshotRefresher onDisappear")
+                                 }
                        
                 } .contextMenu {
                     NavigationLink(destination: WebClipEditorView(webClipManager: webClipManager, webClipId: item.id)) {
