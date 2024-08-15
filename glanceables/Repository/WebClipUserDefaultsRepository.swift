@@ -33,7 +33,11 @@ class WebClipUserDefaultsRepository: WebClipRepositoryProtocol {
     func deleteWebClipById(_ id: UUID) {
         print("Deleting item with ID: \(id)")
         var webClips = loadWebClips()
-        webClips.removeAll { $0.id == id }
+        if let index = webClips.firstIndex(where: { $0.id == id }) {
+            let webClip = webClips[index]
+            webClip.reset()
+            webClips.remove(at: index)
+        }                
         print("Remaining clips: \(webClips.count)")
         saveWebClips(webClips)
     }

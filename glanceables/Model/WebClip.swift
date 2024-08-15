@@ -97,6 +97,25 @@ class WebClip: ObservableObject, Identifiable, Equatable {
             NotificationManager.shared.sendNotification(title: title, body: innerText)
         }
     }
+    
+    func reset() {
+            // Reset URL and path-related properties
+            url = URL(string: "about:blank")!  // Assigning a default blank URL
+            clipRect = nil
+            originalSize = nil
+            screenshotPath = nil
+            screenshot = nil
+            scrollY = nil
+            pageTitle = nil
+            
+            // Clear collections
+            capturedElements = []
+            htmlElements = []
+            snapshots = []
+            
+            // Clear any pending updates
+            pendingUpdates.removeAll()                                                
+        }
 }
 
 

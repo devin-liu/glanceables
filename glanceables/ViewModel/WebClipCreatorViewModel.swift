@@ -40,6 +40,13 @@ class WebClipCreatorViewModel: ObservableObject {
         urlString = ""
     }
     
+    func updateClipRect(newRect: CGRect){
+        currentClipRect = newRect
+    }
+    
+    func updatePageTitle(newTitle: String){
+        pageTitle = newTitle
+    }
     
     
     func getNewClip() -> WebClip{

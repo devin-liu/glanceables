@@ -2,16 +2,17 @@ import SwiftUI
 import WebKit
 
 struct WebViewScreenshotCapture: UIViewRepresentable {
-    @ObservedObject var viewModel: WebClipCreatorViewModel
-    @ObservedObject var captureMenuViewModel: WebClipSelectorViewModel
-    @Binding var webView: WKWebView?
+//    @Binding var webView: WKWebView?
     
+    var viewModel: WebClipCreatorViewModel
+    var captureMenuViewModel: WebClipSelectorViewModel
+
     var validURL: URL
         
     func makeUIView(context: Context) -> WKWebView {
         print("makeUIView", validURL)
         let web = WKWebView()
-        webView = web  // Set the binding
+//        webView = web  // Set the binding
         configureWebView(webView: web, context: context)
         return web
     }
@@ -171,7 +172,7 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
                 let rectHeight: CGFloat = 300 // Example height
                 let centerX = frame.width / 2 - rectWidth / 2
                 let centerY = frame.height / 2 - rectHeight / 2
-                parent.viewModel.currentClipRect = CGRect(x: centerX, y: centerY, width: rectWidth, height: rectHeight)
+                parent.viewModel.updateClipRect(newRect: CGRect(x: centerX, y: centerY, width: rectWidth, height: rectHeight))
             }
         }
         
@@ -185,7 +186,7 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
                 let rectHeight: CGFloat = 300 // Example height
                 let centerX = webView.frame.width / 2 - rectWidth / 2
                 let centerY = webView.frame.height / 2 - rectHeight / 2
-                parent.viewModel.currentClipRect = CGRect(x: centerX, y: centerY, width: rectWidth, height: rectHeight)
+                parent.viewModel.updateClipRect(newRect: (CGRect(x: centerX, y: centerY, width: rectWidth, height: rectHeight)))
             }
         }
         
@@ -195,7 +196,7 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
                 guard let self = self else { return }
                 let simplifiedPageTitle = URLUtilities.simplifyPageTitle(webView.title ?? "No Title")
                 
-                parent.viewModel.pageTitle = simplifiedPageTitle
+//                parent.viewModel.pageTitle = simplifiedPageTitle
                 
                 parent.viewModel.saveOriginalSize(newOriginalSize: webView.scrollView.contentSize)
                 
@@ -206,7 +207,7 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
                     let rectHeight: CGFloat = 300 // Example height
                     let centerX = webView.frame.width / 2 - rectWidth / 2
                     let centerY = webView.frame.height / 2 - rectHeight / 2
-                    parent.viewModel.currentClipRect = CGRect(x: centerX, y: centerY, width: rectWidth, height: rectHeight)
+                    parent.viewModel.updateClipRect(newRect: (CGRect(x: centerX, y: centerY, width: rectWidth, height: rectHeight)))
                 }
             }
         }

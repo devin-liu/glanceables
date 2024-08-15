@@ -5,17 +5,17 @@ struct WebClipBrowserMenuView: View {
     @Environment(\.dismiss) private var dismiss
     var webClipManager: WebClipManagerViewModel
     @ObservedObject var webClipSelector: WebClipSelectorViewModel
-    @StateObject private var pendingClip = WebClipCreatorViewModel()
-    @State private var webView: WKWebView?
+    @StateObject var pendingClip = WebClipCreatorViewModel()
+//    @State private var webView: WKWebView?
     
     var body: some View {
         ZStack {
             VStack {
                 HStack {
-                    if let webView = webView {
-                        NavigationButtonsView(webView: webView)
-                            .padding(10)
-                    }
+//                    if let webView = webView {
+//                        NavigationButtonsView(webView: webView)
+//                            .padding(10)
+//                    }
                     AddURLFormView(viewModel: pendingClip) // Create a new instance or pass as needed
                         .padding(10)
                 }
@@ -30,15 +30,9 @@ struct WebClipBrowserMenuView: View {
                     GeometryReader { geometry in
                         ZStack {
                             if  let validURL = pendingClip.validURLs.last {
-                                WebViewScreenshotCapture(viewModel: pendingClip, captureMenuViewModel: webClipSelector, webView: $webView, validURL: validURL)
+                                WebViewScreenshotCapture(viewModel: pendingClip, captureMenuViewModel: webClipSelector, validURL: validURL)
                                     .frame(maxHeight: .infinity)
                                     .frame(width: geometry.size.width)
-                                    .onAppear {
-                                        print("WebViewScreenshotCapture onAppear")
-                                    }
-                                    .onDisappear {
-                                        print("WebViewScreenshotCapture onDisappear")
-                                    }
                                     .gesture(
                                         DragGesture(minimumDistance: 0)
                                             .onChanged { value in
