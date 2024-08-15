@@ -114,14 +114,14 @@ class WebClip: ObservableObject, Identifiable, Equatable {
             snapshots = []
             
             // Clear any pending updates
-            pendingUpdates.removeAll()                                                
+            pendingUpdates.removeAll()
         }
 }
 
 
 extension WebClip {
     func persistSnapshots() {
-        WebClipUserDefaultsRepository.shared.updateWebClip(self)
+        WebClipUserDefaultsRepository.updateWebClip(self)
     }
 }
 

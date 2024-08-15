@@ -2,7 +2,6 @@ import Foundation
 import SwiftUI
 
 @Observable class WebClipManagerViewModel {
-    //    static let shared = WebClipManagerViewModel()  // Singleton instance
     private var webClips: [WebClip] = [] {
         didSet {
             print("updated webClips", webClips.count)
@@ -36,26 +35,6 @@ import SwiftUI
     //        }
     //    }
     var selectedWebClipIndex: Int? = nil
-    //    @Published var currentClipRect: CGRect?
-    //    @Published var isURLValid = true
-    //    @Published var showValidationError = false
-    //    @Published var originalSize: CGSize?
-    //    @Published var pageTitle: String?
-    //    @Published var screenShot: UIImage?
-    //    @Published var screenshotPath: String?
-    
-    private var repository = WebClipUserDefaultsRepository.shared
-    
-    //    var validURL: URL? {
-    //        guard let index = selectedValidURLIndex, validURLs.indices.contains(index) else {
-    //            return nil
-    //        }
-    //        return validURLs[index]
-    //    }
-    //
-    //    func clearTextField() {
-    //        urlString = ""
-    //    }
     
     // Add a computed property to access a specific WebClip by ID
     func webClip(_ id: UUID) -> WebClip? {
@@ -75,14 +54,6 @@ import SwiftUI
     }
     
     func updateScreenshot(_ newScreenShot: UIImage, toClipId:UUID) -> String? {
-        //        screenShot = newScreenShot
-        //        if isEditing, let selectedClip = selectedWebClip() {
-        //            if let newScreenshotPath = ScreenshotUtils.saveScreenshotToFile(using: selectedClip, from: newScreenShot) {
-        //                updateWebClip(withId: selectedClip.id, newScreenshotPath: newScreenshotPath)
-        //                return newScreenshotPath
-        //            }
-        //        }
-        //        if let toClip = toClip {
         if let toClip = webClip(toClipId){
             if let screenshotPath = toClip.screenshotPath{
                 print("updateScreenshot ", screenshotPath)
@@ -92,17 +63,15 @@ import SwiftUI
                 }
             }
         }
-        
-        
         return nil
     }
     
     func loadWebClips() {
-        webClips = repository.loadWebClips()
+        webClips = WebClipUserDefaultsRepository.loadWebClips()
     }
     
     func saveWebClips() {
-        repository.saveWebClips(webClips)
+        WebClipUserDefaultsRepository.saveWebClips(webClips)
     }
     
     func createWebClip(newClip: WebClip){
@@ -133,19 +102,17 @@ import SwiftUI
             updatedWebClip.capturedElements = newCapturedElements
         }
         
-        repository.updateWebClip(updatedWebClip)
+        WebClipUserDefaultsRepository.updateWebClip(updatedWebClip)
         loadWebClips()
     }
     
     func openEditForItem(_ id: UUID) {
         guard let index = webClips.firstIndex(where: { $0.id == id }) else { return }
         selectedWebClipIndex = index
-        //        urlString = webClips[index].url.absoluteString
-        //        isEditing = true
     }
     
     func deleteItemById(_ id: UUID) {
-        repository.deleteWebClipById(id)
+        WebClipUserDefaultsRepository.deleteWebClipById(id)
         loadWebClips()
     }
     

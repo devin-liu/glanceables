@@ -1,12 +1,12 @@
 import SwiftUI
 
 struct GridScreenshotView: View {
-    @ObservedObject var item: WebClip
+    var webClipId: UUID
     var webClipManager: WebClipManagerViewModel
     
     var body: some View {
         ZStack(alignment: .top) {
-            if let screenshotPath = item.screenshotPath {
+            if let screenshotPath = webClipManager.webClip(webClipId)?.screenshotPath {
                 AsyncImageView(imagePath: screenshotPath)
                     .onDisappear {
                         print("AsyncImageView onDisappear")

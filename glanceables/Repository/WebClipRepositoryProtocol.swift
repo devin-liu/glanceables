@@ -1,8 +1,8 @@
 import Foundation
 
 protocol WebClipRepositoryProtocol {
-    func loadWebClips() -> [WebClip]
-    mutating func saveWebClips(_ webClips: [WebClip])
-    func deleteWebClip(_ webClip: WebClip)
-    func deleteWebClipById(_ id: UUID)
+    static func loadWebClips() -> [WebClip]
+    static func saveWebClips(_ webClips: [WebClip])
+    static func deleteWebClip(_ webClip: WebClip)
+    static func deleteWebClipById(_ id: UUID)
 }

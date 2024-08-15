@@ -13,10 +13,10 @@ class WebViewCoordinator: NSObject, WKNavigationDelegate, WKUIDelegate, UIScroll
     
     private var cancellables = Set<AnyCancellable>()
     
-    init(_ parent: WebViewSnapshotRefresher, webClipId: UUID, webClipManager: WebClipManagerViewModel, llamaAPIManager: LlamaAPIManager) {
+    init(_ parent: WebViewSnapshotRefresher, webClipId: UUID, llamaAPIManager: LlamaAPIManager) {
         self.parent = parent
         self.webClipId = webClipId
-        self.webClipManager = webClipManager
+        self.webClipManager = parent.webClipManager
         self.llamaAPIManager = llamaAPIManager
         super.init()
     }
@@ -33,11 +33,12 @@ class WebViewCoordinator: NSObject, WKNavigationDelegate, WKUIDelegate, UIScroll
             restoreScrollPosition(capturedElements, in: webView)
         }
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.1) { [self] in
-            // Restore scroll positions based on captured elements
-            if let capturedElements = webClipManager.webClip(webClipId)?.capturedElements  {
-                restoreScrollPosition(capturedElements, in: webView)
-            }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.1) { [weak self] in
+               guard let self = self else { return }
+               // Restore scroll positions based on captured elements
+               if let capturedElements = self.webClipManager.webClip(self.webClipId)?.capturedElements  {
+                   self.restoreScrollPosition(capturedElements, in: webView)
+               }
             // Capture a screenshot
             //            self.schedulerViewModel.triggerScreenshot()
         }

@@ -2,24 +2,23 @@ import Foundation
 import UIKit  // Needed for CGSize and CGRect
 
 class WebClipUserDefaultsRepository: WebClipRepositoryProtocol {
-    static let shared = WebClipUserDefaultsRepository()
-    private let userDefaults = UserDefaults.standard
-    private let webClipKey = "savedURLs"
+    private static let userDefaults = UserDefaults.standard
+       private static let webClipKey = "savedURLs"
     
     // Load all WebClips from UserDefaults.
-    func loadWebClips() -> [WebClip] {
+    static func loadWebClips() -> [WebClip] {
         let itemsData = UserDefaults.standard.array(forKey: webClipKey) as? [[String: Any]] ?? []
         return itemsData.compactMap { decodeWebViewItem(dict: $0) }
     }
     
     // Save an array of WebClips to UserDefaults.
-    func saveWebClips(_ webClips: [WebClip]) {
+    static func saveWebClips(_ webClips: [WebClip]) {
         let itemsData = webClips.map { encodeWebViewItem($0) }
         UserDefaults.standard.set(itemsData, forKey: webClipKey)
     }
     
     // Delete a specific WebClip from UserDefaults.
-    func deleteWebClip(_ webClip: WebClip) {
+    static func deleteWebClip(_ webClip: WebClip) {
         var webClips = loadWebClips()
         print("before delete ", webClips.count)
         if let index = webClips.firstIndex(where: { $0.id == webClip.id }) {
@@ -30,20 +29,20 @@ class WebClipUserDefaultsRepository: WebClipRepositoryProtocol {
     }
     
     // Delete a specific WebClip from UserDefaults.
-    func deleteWebClipById(_ id: UUID) {
+    static func deleteWebClipById(_ id: UUID) {
         print("Deleting item with ID: \(id)")
         var webClips = loadWebClips()
         if let index = webClips.firstIndex(where: { $0.id == id }) {
             let webClip = webClips[index]
             webClip.reset()
             webClips.remove(at: index)
-        }                
+        }
         print("Remaining clips: \(webClips.count)")
         saveWebClips(webClips)
     }
     
     // Update a specific WebClip in UserDefaults.
-    func updateWebClip(_ webClip: WebClip) {
+    static func updateWebClip(_ webClip: WebClip) {
         var webClips = loadWebClips()
         if let index = webClips.firstIndex(where: { $0.id == webClip.id }) {
             webClips[index] = webClip
@@ -51,7 +50,7 @@ class WebClipUserDefaultsRepository: WebClipRepositoryProtocol {
         }
     }
     
-    private func encodeWebViewItem(_ item: WebClip) -> [String: Any] {
+    static private  func encodeWebViewItem(_ item: WebClip) -> [String: Any] {
         var dict = [String: Any]()
         dict["id"] = item.id.uuidString
         dict["url"] = item.url.absoluteString
@@ -96,7 +95,7 @@ class WebClipUserDefaultsRepository: WebClipRepositoryProtocol {
         return dict
     }
     
-    private func decodeWebViewItem(dict: [String: Any]) -> WebClip? {
+    static private func decodeWebViewItem(dict: [String: Any]) -> WebClip? {
         guard let idString = dict["id"] as? String,
               let id = UUID(uuidString: idString),
               let urlString = dict["url"] as? String,
@@ -132,7 +131,7 @@ class WebClipUserDefaultsRepository: WebClipRepositoryProtocol {
         return WebClip(id: id, url: url, clipRect: clipRect, originalSize: originalSize, screenshotPath: screenshotPath, screenshot: screenshot, scrollY: scrollY, pageTitle: pageTitle, capturedElements: capturedElements, htmlElements: htmlElements, snapshots: snapshots)
     }
     
-    private func decodeRect(dict: [String: Any]?) -> CGRect? {
+    static private func decodeRect(dict: [String: Any]?) -> CGRect? {
         guard let dict = dict,
               let x = dict["x"] as? CGFloat,
               let y = dict["y"] as? CGFloat,
@@ -143,7 +142,7 @@ class WebClipUserDefaultsRepository: WebClipRepositoryProtocol {
         return CGRect(x: x, y: y, width: width, height: height)
     }
     
-    private func decodeSize(dict: [String: Any]?) -> CGSize? {
+    static private func decodeSize(dict: [String: Any]?) -> CGSize? {
         guard let dict = dict,
               let width = dict["width"] as? CGFloat,
               let height = dict["height"] as? CGFloat else {

@@ -21,7 +21,7 @@ struct WebClipGridItems: View {
         LazyVGrid(columns: columns) {
             ForEach(webClips, id: \.self) { item in
                 VStack {
-                    GridScreenshotView(item: item, webClipManager: webClipManager)
+                    GridScreenshotView(webClipId: item.id, webClipManager: webClipManager)
                         .padding(10)
                         .onDisappear {
                             print("ScreenshotView onDisappear")

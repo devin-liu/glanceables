@@ -28,7 +28,7 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
     }
     
     func makeCoordinator() -> WebViewCoordinator {
-        WebViewCoordinator(self, webClipId: webClipId, webClipManager: webClipManager, llamaAPIManager: llamaAPIManager)
+        WebViewCoordinator(self, webClipId: webClipId, llamaAPIManager: llamaAPIManager)
     }
     
     func dismantleUIView(_ uiView: WKWebView, coordinator: WebViewCoordinator) {
