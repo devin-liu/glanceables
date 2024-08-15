@@ -1,9 +1,7 @@
 import UserNotifications
 
 class NotificationManager {
-    static let shared = NotificationManager()
-    
-    func requestAuthorization() {
+    static func requestAuthorization() {
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound]) { granted, error in
             if granted {
                 print("Notification permission granted.")
@@ -13,7 +11,7 @@ class NotificationManager {
         }
     }
     
-    func sendNotification(title: String, body: String) {        
+    static func sendNotification(title: String, body: String) {
         let content = UNMutableNotificationContent()
         content.title = title
         content.body = body

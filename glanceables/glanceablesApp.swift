@@ -3,7 +3,7 @@ import SwiftUI
 @main
 struct glanceablesApp: App {
     init() {
-        NotificationManager.shared.requestAuthorization()
+        NotificationManager.requestAuthorization()
     }
 
     var body: some Scene {

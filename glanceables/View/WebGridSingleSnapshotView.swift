@@ -10,7 +10,7 @@ struct WebGridSingleSnapshotView: View {
     @ObservedObject var item: WebClip
     
     var body: some View {
-        VStack {            
+        VStack {
             PageTitleView(title: item.pageTitle ?? "Loading...")
                 .padding()
             
@@ -150,31 +150,6 @@ struct AsyncImageView: View {
         }
         .onAppear {
             imageLoader.load()
-        }
-    }
-}
-
-
-class ImageLoader: ObservableObject {
-    @Published var image: UIImage?
-    private let imagePath: String
-    
-    init(imagePath: String) {
-        self.imagePath = imagePath
-    }
-    
-    func load() {
-        let imagePath = imagePath
-        DispatchQueue.global(qos: .background).async { [weak self] in
-            guard let self = self else { return }
-            if let data = FileManager.default.contents(atPath: imagePath),
-               let image = UIImage(data: data) {
-                DispatchQueue.main.async {
-                    self.image = image
-                }
-            } else {
-                print("Failed to load image from path: \(imagePath)")
-            }
         }
     }
 }
