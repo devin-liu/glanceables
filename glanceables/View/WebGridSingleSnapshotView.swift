@@ -175,15 +175,15 @@ class ImageLoader: ObservableObject {
     }
     
     func load() {
-        DispatchQueue.global(qos: .background).async {
-            if let data = FileManager.default.contents(atPath: self.imagePath),
+        DispatchQueue.global(qos: .background).async { [weak self] in
+            guard let strongSelf = self else { return }
+            if let data = FileManager.default.contents(atPath: strongSelf.imagePath),
                let image = UIImage(data: data) {
                 DispatchQueue.main.async {
-                    self.image = image
+                    self?.image = image
                 }
             } else {
-                // Log error or handle the scenario where the image could not be loaded
-                print("Failed to load image from path: \(self.imagePath)")
+                print("Failed to load image from path: \(strongSelf.imagePath)")
             }
         }
     }
