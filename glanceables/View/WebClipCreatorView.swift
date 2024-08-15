@@ -8,7 +8,7 @@ struct WebClipCreatorView: View {
         VStack{
             BlackEditMenuBarView(webClipSelector: webClipSelector)
             VStack{
-                WebClipBrowserMenuView(webClipManager: webClipManager, webClipSelector: webClipSelector)
+                WebClipBrowserMenuView(webClipSelector: webClipSelector)
             }.padding(20)
         }
         .background(Color(.systemGray5).opacity(0.25))
