@@ -2,26 +2,25 @@ import SwiftUI
 import UniformTypeIdentifiers
 
 struct WebClipGridView: View {
-    var webClipManager: WebClipManagerViewModel
+    @Environment(WebClipManagerViewModel.self) private var webClipManager
     
     var body: some View {
-        Text("WebClips available: \(webClipManager.getClips().count)")
-        WebClipGridItems(webClips: webClipManager.getClips(), webClipManager: webClipManager)
+        WebClipGridItems(webClips: webClipManager.getClips())
         .animation(.easeInOut, value: webClipManager.getClips())
     }
 }
 
 struct WebClipGridItems: View {
+    @Environment(WebClipManagerViewModel.self) private var webClipManager
     var webClips: [WebClip]
-    var webClipManager: WebClipManagerViewModel
-    
+        
     let columns = [GridItem(.adaptive(minimum: 300))]
     
     var body: some View {
         LazyVGrid(columns: columns) {
             ForEach(webClips, id: \.self) { item in
                 VStack {
-                    GridScreenshotView(webClipId: item.id, webClipManager: webClipManager)
+                    GridScreenshotView(webClipId: item.id)
                         .padding(10)
                         .onDisappear {
                             print("ScreenshotView onDisappear")
@@ -29,7 +28,7 @@ struct WebClipGridItems: View {
                     
                     WebGridSingleSnapshotView(item: item)
                     
-                    WebViewSnapshotRefresher(webClipManager: webClipManager, webClipId: item.id)
+                    WebViewSnapshotRefresher(webClipId: item.id)
                                  .frame(width: item.originalSize?.width, height: 600)
                                  .edgesIgnoringSafeArea(.all)
                                  .opacity(0)  // Make the ScrollView invisible

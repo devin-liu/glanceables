@@ -1,8 +1,8 @@
 import SwiftUI
 
 struct GridScreenshotView: View {
+    @Environment(WebClipManagerViewModel.self) private var webClipManager
     var webClipId: UUID
-    var webClipManager: WebClipManagerViewModel
     
     var body: some View {
         ZStack(alignment: .top) {

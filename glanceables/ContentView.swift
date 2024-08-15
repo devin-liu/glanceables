@@ -15,7 +15,7 @@ struct ContentView: View {
                     if webClipManager.isEmpty() {
                         emptyStateView
                     } else {
-                        WebClipGridView(webClipManager: webClipManager)
+                        WebClipGridView()
                     }
                 }
                 .padding()
@@ -27,7 +27,7 @@ struct ContentView: View {
     var emptyStateView: some View {
         VStack {
             Spacer()
-            CreateButtonView(webClipManager: webClipManager)
+            CreateButtonView()
                 .padding()
             Spacer()
         }
