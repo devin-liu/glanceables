@@ -39,7 +39,7 @@ struct WebClipGridItems: View {
                                  }
                        
                 } .contextMenu {
-                    NavigationLink(destination: WebClipEditorView(webClipManager: webClipManager, webClipId: item.id)) {
+                    NavigationLink(destination: WebClipEditorView(webClipId: item.id)) {
                         Text("Edit")
                     }
                     Button("Delete") {

@@ -174,7 +174,6 @@
 				038DAC2D2C61C9600000EA6A /* Repository */,
 				03A8685D2C4EE54200CCB79D /* View */,
 				03A8685F2C4EE63500CCB79D /* Utilities */,
-				03A868542C48871000CCB79D /* LlamaAPIManager.swift */,
 				03A868562C48880600CCB79D /* Response.swift */,
 				038208DF2C1BB3F400606536 /* WebViewScreenshotCapture.swift */,
 				03A8685E2C4EE5B300CCB79D /* ViewModel */,
@@ -256,6 +255,7 @@
 		03A8685F2C4EE63500CCB79D /* Utilities */ = {
 			isa = PBXGroup;
 			children = (
+				03A868542C48871000CCB79D /* LlamaAPIManager.swift */,
 				0300629A2C0D209400B0242D /* UserDefaults.swift */,
 				036F46552C5AE066005E1377 /* NotificationManager.swift */,
 				03C5DAD02C23A76B0061FA25 /* ScreenshotUtils.swift */,

@@ -1,8 +1,9 @@
 import SwiftUI
 
 struct WebClipCreatorView: View {
+    @Environment(WebClipManagerViewModel.self) private var webClipManager
     @StateObject private var webClipSelector = WebClipSelectorViewModel()
-    var webClipManager: WebClipManagerViewModel
+
     var body: some View {
         VStack{
             BlackEditMenuBarView(webClipSelector: webClipSelector)
@@ -21,6 +22,6 @@ struct WebClipCreatorView: View {
 struct WebClipCreatorView_Previews: PreviewProvider {
     static var previews: some View {
         let webClipManager = WebClipManagerViewModel()
-        WebClipCreatorView(webClipManager: webClipManager)
+        WebClipCreatorView()
     }
 }

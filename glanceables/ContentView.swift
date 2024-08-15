@@ -2,12 +2,11 @@ import SwiftUI
 import UniformTypeIdentifiers
 
 struct ContentView: View {
-    @State private var webClipManager = WebClipManagerViewModel()
-    
+    @Environment(WebClipManagerViewModel.self) private var webClipManager
     var body: some View {
         NavigationStack{
             VStack {
-                BlackMenuBarView(webClipManager: webClipManager)
+                BlackMenuBarView()
                 ScrollView {
                     Text("Glanceables")
                         .font(.system(.largeTitle, design: .rounded))

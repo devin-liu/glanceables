@@ -4,7 +4,7 @@ struct CreateButtonView: View {
     var webClipManager: WebClipManagerViewModel
     
     var body: some View {
-        NavigationLink(destination: WebClipCreatorView(webClipManager: webClipManager)) {
+        NavigationLink(destination: WebClipCreatorView()) {
             VStack {
                 ZStack {
                     Rectangle()
