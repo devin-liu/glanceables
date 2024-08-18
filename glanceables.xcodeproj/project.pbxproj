@@ -46,6 +46,7 @@
 		03BEC9AF2C6AD34E00372E6E /* WebClipGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03BEC9AE2C6AD34E00372E6E /* WebClipGridView.swift */; };
 		03BEC9B12C6B1CC200372E6E /* GridScreenshotView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03BEC9B02C6B1CC200372E6E /* GridScreenshotView.swift */; };
 		03BEC9B32C6EAA2500372E6E /* ImageLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03BEC9B22C6EAA2500372E6E /* ImageLoader.swift */; };
+		03BEC9B92C72720A00372E6E /* WebClipRefresherGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03BEC9B82C72720A00372E6E /* WebClipRefresherGrid.swift */; };
 		03C5DAD12C23A76B0061FA25 /* ScreenshotUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03C5DAD02C23A76B0061FA25 /* ScreenshotUtils.swift */; };
 		03C5DAD32C24F0CF0061FA25 /* URLUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03C5DAD22C24F0CF0061FA25 /* URLUtilities.swift */; };
 		03C5DAD52C2647E20061FA25 /* CaptureModeToggleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03C5DAD42C2647E20061FA25 /* CaptureModeToggleView.swift */; };
@@ -106,6 +107,7 @@
 		03BEC9AE2C6AD34E00372E6E /* WebClipGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebClipGridView.swift; sourceTree = "<group>"; };
 		03BEC9B02C6B1CC200372E6E /* GridScreenshotView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GridScreenshotView.swift; sourceTree = "<group>"; };
 		03BEC9B22C6EAA2500372E6E /* ImageLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageLoader.swift; sourceTree = "<group>"; };
+		03BEC9B82C72720A00372E6E /* WebClipRefresherGrid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebClipRefresherGrid.swift; sourceTree = "<group>"; };
 		03C5DAD02C23A76B0061FA25 /* ScreenshotUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ScreenshotUtils.swift; path = glanceables/Utilities/ScreenshotUtils.swift; sourceTree = SOURCE_ROOT; };
 		03C5DAD22C24F0CF0061FA25 /* URLUtilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLUtilities.swift; sourceTree = "<group>"; };
 		03C5DAD42C2647E20061FA25 /* CaptureModeToggleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureModeToggleView.swift; sourceTree = "<group>"; };
@@ -236,6 +238,7 @@
 				038DAC2B2C61A0950000EA6A /* ChangeFeedbackFormView.swift */,
 				03BEC9AE2C6AD34E00372E6E /* WebClipGridView.swift */,
 				03BEC9B02C6B1CC200372E6E /* GridScreenshotView.swift */,
+				03BEC9B82C72720A00372E6E /* WebClipRefresherGrid.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -401,6 +404,7 @@
 				038208E22C1BB40400606536 /* WebViewSnapshotRefresher.swift in Sources */,
 				03A868632C51FF0800CCB79D /* NavigationButtonsView.swift in Sources */,
 				036F46562C5AE066005E1377 /* NotificationManager.swift in Sources */,
+				03BEC9B92C72720A00372E6E /* WebClipRefresherGrid.swift in Sources */,
 				038DAC2C2C61A0950000EA6A /* ChangeFeedbackFormView.swift in Sources */,
 				03C5DAD92C2A4DB20061FA25 /* AddURLFormView.swift in Sources */,
 				036F465C2C5AE85F005E1377 /* SnapshotTimelineModel.swift in Sources */,
