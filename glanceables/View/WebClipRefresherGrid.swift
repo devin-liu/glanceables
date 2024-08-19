@@ -21,9 +21,6 @@ struct WebClipRefresherGrid: View {
                     .edgesIgnoringSafeArea(.all)
                     .opacity(0)  // Make the ScrollView invisible
                     .frame(width: 0, height: 0)  // Make the ScrollView occupy no space
-                    .onDisappear {
-                        print("WebViewSnapshotRefresher onDisappear")
-                    }
             }
         }
     }

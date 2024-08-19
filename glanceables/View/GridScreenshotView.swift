@@ -7,10 +7,7 @@ struct GridScreenshotView: View {
     var body: some View {
         ZStack(alignment: .top) {
             if let screenshotPath = webClipManager.webClip(webClipId)?.screenshotPath {
-                AsyncImageView(imagePath: screenshotPath)
-                    .onDisappear {
-                        print("AsyncImageView onDisappear")
-                    }
+                AsyncImageView(imagePath: screenshotPath)                    
             }            
         }
     }

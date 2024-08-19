@@ -3,7 +3,7 @@ import SwiftUI
 struct WebClipCreatorView: View {
     @Environment(WebClipManagerViewModel.self) private var webClipManager
     @StateObject private var webClipSelector = WebClipSelectorViewModel()
-
+    
     var body: some View {
         VStack{
             BlackEditMenuBarView(webClipSelector: webClipSelector)
@@ -12,10 +12,7 @@ struct WebClipCreatorView: View {
             }.padding(20)
         }
         .background(Color(.systemGray5).opacity(0.25))
-        .navigationBarHidden(true)        
-        .onDisappear{
-            print("creator reset")
-        }
+        .navigationBarHidden(true)                
     }
 }
 

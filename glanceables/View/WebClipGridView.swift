@@ -22,9 +22,6 @@ struct WebClipGridItems: View {
                 VStack {
                     GridScreenshotView(webClipId: item.id)
                         .padding(10)
-                        .onDisappear {
-                            print("ScreenshotView onDisappear")
-                        }
                     
                     WebGridSingleSnapshotView(item: item)
                     
@@ -43,9 +40,3 @@ struct WebClipGridItems: View {
         WebClipRefresherGrid()
     }
 }
-
-//struct WebClipGrid_Previews: PreviewProvider {
-//    static var previews: some View {
-//        ContentView()
-//    }
-//}

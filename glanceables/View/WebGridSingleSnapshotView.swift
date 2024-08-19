@@ -34,7 +34,6 @@ struct WebGridSingleSnapshotView: View {
         }
         .onDisappear {
             stopTimer()
-            print("WebGridSingleSnapshotView onDisappear")
         }
     }
     
@@ -56,15 +55,12 @@ struct WebGridSingleSnapshotView: View {
 }
 
 struct ScreenshotView: View {
-    @ObservedObject var item: WebClip    
+    @ObservedObject var item: WebClip
     
     var body: some View {
         ZStack(alignment: .top) {
             if let screenshotPath = item.screenshotPath {
                 AsyncImageView(imagePath: screenshotPath)
-                    .onDisappear {
-                        print("AsyncImageView onDisappear")
-                    }
             }
         }
     }
