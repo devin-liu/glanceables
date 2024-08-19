@@ -33,6 +33,7 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
     }
     
     private func configureWebView(webView: WKWebView, context: Context) {
+        
         let coordinator = context.coordinator
         webView.navigationDelegate = coordinator
         webView.uiDelegate = coordinator
@@ -57,6 +58,7 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
 
     
     private func configureMessageHandler(webView: WKWebView, contentController: WKUserContentController, context: Context) {
+        contentController.removeAllScriptMessageHandlers()
         contentController.add(context.coordinator, name: "selectionHandler")
         contentController.add(context.coordinator, name: "capturedElementsHandler")
         contentController.add(context.coordinator, name: "userStoppedInteracting")
@@ -196,7 +198,7 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
                 guard let self = self else { return }
                 let simplifiedPageTitle = URLUtilities.simplifyPageTitle(webView.title ?? "No Title")
                 
-//                parent.viewModel.pageTitle = simplifiedPageTitle
+                parent.viewModel.updatePageTitle(simplifiedPageTitle)
                 
                 parent.viewModel.saveOriginalSize(newOriginalSize: webView.scrollView.contentSize)
                 
