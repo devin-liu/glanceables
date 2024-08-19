@@ -5,10 +5,7 @@ struct AddURLFormView: View {
     
     var body: some View {
         HStack {
-            TextField("Search or enter website name", text: $viewModel.urlString)
-                .autocapitalization(.none)
-                .disableAutocorrection(true)
-                .textInputAutocapitalization(.never)
+            urlTextField
             
             if viewModel.urlString != "" {
                 Button(action: viewModel.clearTextField) {
@@ -35,7 +32,15 @@ struct AddURLFormView: View {
             RoundedRectangle(cornerRadius: 10)
                 .stroke(Color(.systemGray3), lineWidth: 1)
         )
-    }    
+    }  
+    
+    private var urlTextField: some View {
+        TextField("Search or enter website name", text: $viewModel.urlString)
+            .autocapitalization(.none)
+            .disableAutocorrection(true)
+            .textInputAutocapitalization(.never)
+            .multilineTextAlignment(.center)
+    }
 }
 
 struct AddURLFormView_Previews: PreviewProvider {

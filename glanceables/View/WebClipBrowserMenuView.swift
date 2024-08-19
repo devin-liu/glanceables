@@ -4,16 +4,18 @@ import WebKit
 struct WebClipBrowserMenuView: View {
     @Environment(\.dismiss) private var dismiss
     @ObservedObject var webClipSelector: WebClipSelectorViewModel
-    @StateObject var pendingClip = WebClipCreatorViewModel()
+    //    @StateObject var pendingClip = WebClipCreatorViewModel()
+    @ObservedObject var pendingClip:WebClipCreatorViewModel
+    
     
     var body: some View {
         ZStack {
             VStack {
                 HStack {
-//                    if let webView = webView {
-//                        NavigationButtonsView(webView: webView)
-//                            .padding(10)
-//                    }
+                    //                    if let webView = webView {
+                    //                        NavigationButtonsView(webView: webView)
+                    //                            .padding(10)
+                    //                    }
                     AddURLFormView(viewModel: pendingClip) // Create a new instance or pass as needed
                         .padding(10)
                 }
@@ -74,12 +76,13 @@ struct WebClipBrowserMenuView: View {
 struct WebPreviewCaptureMenuView_Previews: PreviewProvider {
     static var previewViewModel: WebClipCreatorViewModel = {
         let model = WebClipCreatorViewModel()
-        model.urlString = "https://news.ycombinator.com/"
-        //        model.validateURL()
+        model.urlString = "https://news.ycombinator.com/"        
         return model
     }()
+    
     static var previews: some View {
-        WebClipBrowserMenuView(webClipSelector: WebClipSelectorViewModel()
+        let pendingClip = WebClipCreatorViewModel()
+        WebClipBrowserMenuView(webClipSelector: WebClipSelectorViewModel(), pendingClip: pendingClip
         )
     }
 }

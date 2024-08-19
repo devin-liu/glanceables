@@ -143,4 +143,19 @@ extension WebClip: Hashable {
         hasher.combine(id)
         hasher.combine(url)
     }
+    
+    func toPendingWebClip() -> PendingWebClip {
+           var pendingClip = PendingWebClip()
+           pendingClip.id = self.id  // Retain the same UUID for continuity
+           pendingClip.url = self.url
+           pendingClip.clipRect = self.clipRect
+           pendingClip.originalSize = self.originalSize
+           pendingClip.screenshotPath = self.screenshotPath
+           pendingClip.scrollY = self.scrollY
+           pendingClip.pageTitle = self.pageTitle
+           pendingClip.capturedElements = self.capturedElements
+           pendingClip.htmlElements = self.htmlElements
+           
+           return pendingClip
+       }
 }

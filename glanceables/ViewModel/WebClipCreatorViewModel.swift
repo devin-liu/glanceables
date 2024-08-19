@@ -34,8 +34,16 @@ class WebClipCreatorViewModel: ObservableObject {
         return validURLs.last
     }
     
+    func updateUrlString(_ newText: String){
+        urlString = newText
+    }
+    
+    func updatePendingWebClip(newPendingClip: PendingWebClip){
+        webClip = newPendingClip
+        updateUrlString(newPendingClip.url!.absoluteString)
+    }
+    
     func clearTextField() {
-        print("clearTextField")
         urlString = ""
     }
     

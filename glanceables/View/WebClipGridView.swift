@@ -29,6 +29,8 @@ struct WebClipGridItems: View {
                 } .contextMenu {
                     NavigationLink(destination: WebClipEditorView(webClipId: item.id)) {
                         Text("Edit")
+                    }.onSubmit {
+                        webClipManager.openEditForItem(item.id)
                     }
                     Button("Delete") {
                         webClipManager.deleteItemById(item.id)
