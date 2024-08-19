@@ -2,8 +2,8 @@ import Foundation
 import SwiftUI
 import Combine
 
-class WebClipCreatorViewModel: ObservableObject {
-    @Published var urlString = "" {
+@Observable class WebClipCreatorViewModel {
+    var urlString = "" {
         didSet {
             debouncer.debounce {
                 self.validateURL(self.urlString)
@@ -15,16 +15,16 @@ class WebClipCreatorViewModel: ObservableObject {
     private var urlStringCancellable: AnyCancellable? // To hold the subscription
     private var cancellables: Set<AnyCancellable> = []
     
-    @Published var validURLs: [URL] = []
-    @Published var currentClipRect: CGRect?
-    @Published var isURLValid = true
-    @Published var showValidationError = false
-    @Published var originalSize: CGSize?
-    @Published var pageTitle: String?
-    @Published var screenShot: UIImage?
-    @Published var screenshotPath: String?
-    @Published var capturedElements: [CapturedElement]?
-    @Published var snapshots: [SnapshotTimelineModel] = []
+    var validURLs: [URL] = []
+    var currentClipRect: CGRect?
+    var isURLValid = true
+    var showValidationError = false
+    var originalSize: CGSize?
+    var pageTitle: String?
+    var screenShot: UIImage?
+    var screenshotPath: String?
+    var capturedElements: [CapturedElement]?
+    var snapshots: [SnapshotTimelineModel] = []
     
     private var webClip: PendingWebClip = PendingWebClip()
     

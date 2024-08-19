@@ -3,15 +3,12 @@ import SwiftUI
 struct WebClipCreatorView: View {
     @Environment(WebClipManagerViewModel.self) private var webClipManager
     @StateObject private var webClipSelector = WebClipSelectorViewModel()
-    @StateObject var pendingClip = WebClipCreatorViewModel()
-    
+    @State var pendingClip = WebClipCreatorViewModel()    
     private var webClip: WebClip?
     
     init(webClip: WebClip? = nil) {
-        
         self.webClip = webClip
         if let webClip {
-            print("WebClipCreatorView  existing webclip ", webClip, webClip.url, webClip.pageTitle)
             pendingClip.updatePendingWebClip(newPendingClip: webClip.toPendingWebClip())
         }
         
@@ -28,10 +25,3 @@ struct WebClipCreatorView: View {
         .navigationBarHidden(true)
     }
 }
-//
-//struct WebClipCreatorView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        let webClipManager = WebClipManagerViewModel()
-//        WebClipCreatorView()
-//    }
-//}

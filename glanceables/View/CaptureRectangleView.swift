@@ -4,7 +4,7 @@ struct CaptureRectangleView: View {
     @Environment(WebClipManagerViewModel.self) private var webClipManager
     var dismiss: DismissAction?
     @ObservedObject var captureMenuViewModel: WebClipSelectorViewModel
-    @ObservedObject var pendingClip: WebClipCreatorViewModel
+    var pendingClip: WebClipCreatorViewModel
     
     var body: some View {
         ZStack {
@@ -58,7 +58,7 @@ struct CaptureRectangleView: View {
                                                  newPageTitle: pendingClip.pageTitle,
                                                  newCapturedElements: captureMenuViewModel.capturedElements)
                 } else {
-                    // Add a new web clip if no web clip is selected or not in editing mode                    
+                    // Add a new web clip if no web clip is selected or not in editing mode
                     webClipManager.createWebClip(newClip: pendingClip.getNewClip())
                 }
                 if let dismiss {
@@ -84,8 +84,7 @@ struct CaptureRectangleView_Previews: PreviewProvider {
         let creatorModel = WebClipCreatorViewModel()
         
         GeometryReader { geometry in
-            let captureMenuViewModel = WebClipSelectorViewModel()
-            let webClipManager = WebClipManagerViewModel()
+            let captureMenuViewModel = WebClipSelectorViewModel()            
             let screenWidth = geometry.size.width
             let screenHeight = geometry.size.height
             

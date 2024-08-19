@@ -5,7 +5,7 @@ struct WebClipBrowserMenuView: View {
     @Environment(\.dismiss) private var dismiss
     @ObservedObject var webClipSelector: WebClipSelectorViewModel
     //    @StateObject var pendingClip = WebClipCreatorViewModel()
-    @ObservedObject var pendingClip:WebClipCreatorViewModel
+    var pendingClip:WebClipCreatorViewModel
     
     
     var body: some View {
@@ -76,7 +76,7 @@ struct WebClipBrowserMenuView: View {
 struct WebPreviewCaptureMenuView_Previews: PreviewProvider {
     static var previewViewModel: WebClipCreatorViewModel = {
         let model = WebClipCreatorViewModel()
-        model.urlString = "https://news.ycombinator.com/"        
+        model.urlString = "https://news.ycombinator.com/"
         return model
     }()
     

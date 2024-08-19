@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct AddURLFormView: View {
-    @ObservedObject var viewModel: WebClipCreatorViewModel
+    @Bindable var viewModel: WebClipCreatorViewModel
     
     var body: some View {
         HStack {
@@ -32,7 +32,7 @@ struct AddURLFormView: View {
             RoundedRectangle(cornerRadius: 10)
                 .stroke(Color(.systemGray3), lineWidth: 1)
         )
-    }  
+    }
     
     private var urlTextField: some View {
         TextField("Search or enter website name", text: $viewModel.urlString)

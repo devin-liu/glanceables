@@ -32,8 +32,7 @@ struct CreateButtonView: View {
 }
 
 struct CreateButtonView_Previews: PreviewProvider {
-    static var previews: some View {
-        let webClipManager = WebClipManagerViewModel()
+    static var previews: some View {        
         CreateButtonView()
             .previewLayout(.sizeThatFits) // Adjust this to match the context you want to preview in
             .padding()

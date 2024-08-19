@@ -146,10 +146,7 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
         
         override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
             guard let webView = object as? WKWebView else { return }
-            if keyPath == #keyPath(WKWebView.title) {
-                
-                // Update any relevant state in your SwiftUI view model.
-                print("observeValue ", webView.title)
+            if keyPath == #keyPath(WKWebView.title) {                                
                 initializeClipRect()
                 
             }
@@ -180,11 +177,8 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
         
         func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!
         ) {
-            print("webView ClipRect 1", parent.viewModel.currentClipRect, webView.frame)
-            print("WebView didstartNavigation ", webView.title)
             // Initialize clipRect in the center of the WebView frame
             if parent.viewModel.currentClipRect == nil {
-                print("webView ClipRect 2")
                 let rectWidth: CGFloat = 300 // Example width
                 let rectHeight: CGFloat = 300 // Example height
                 let centerX = webView.frame.width / 2 - rectWidth / 2
@@ -202,7 +196,6 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
                 
                 // Initialize clipRect in the center of the WebView frame
                 if parent.viewModel.currentClipRect == nil {
-                    print("webView ClipRect 2")
                     let rectWidth: CGFloat = 300 // Example width
                     let rectHeight: CGFloat = 300 // Example height
                     let centerX = webView.frame.width / 2 - rectWidth / 2
