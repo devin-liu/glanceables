@@ -2,17 +2,17 @@ import SwiftUI
 import WebKit
 
 struct WebViewScreenshotCapture: UIViewRepresentable {
-//    @Binding var webView: WKWebView?
+    //    @Binding var webView: WKWebView?
     
     var viewModel: WebClipCreatorViewModel
     var captureMenuViewModel: WebClipSelectorViewModel
-
+    
     var validURL: URL
-        
+    
     func makeUIView(context: Context) -> WKWebView {
         print("makeUIView", validURL)
         let web = WKWebView()
-//        webView = web  // Set the binding
+        //        webView = web  // Set the binding
         configureWebView(webView: web, context: context)
         return web
     }
@@ -23,9 +23,9 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
     
     func dismantleUIView(_ uiView: WKWebView, coordinator: Coordinator) {
         // Remove observers when the view is dismantled.
-//        uiView.removeObserver(coordinator, forKeyPath: #keyPath(WKWebView.title))
-//        uiView.removeObserver(coordinator, forKeyPath: #keyPath(WKWebView.canGoBack))
-//        uiView.removeObserver(coordinator, forKeyPath: #keyPath(WKWebView.canGoForward))
+        //        uiView.removeObserver(coordinator, forKeyPath: #keyPath(WKWebView.title))
+        //        uiView.removeObserver(coordinator, forKeyPath: #keyPath(WKWebView.canGoBack))
+        //        uiView.removeObserver(coordinator, forKeyPath: #keyPath(WKWebView.canGoForward))
     }
     
     func makeCoordinator() -> Coordinator {
@@ -40,13 +40,13 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
         webView.scrollView.delegate = coordinator
         
         context.coordinator.webView = webView
-
+        
         
         // Observers Setup
-//        webView.addObserver(coordinator, forKeyPath: #keyPath(WKWebView.title), options: .new, context: nil)
-//        webView.addObserver(coordinator, forKeyPath: #keyPath(WKWebView.canGoBack), options: .new, context: nil)
-//        webView.addObserver(coordinator, forKeyPath: #keyPath(WKWebView.canGoForward), options: .new, context: nil)
-//        
+        //        webView.addObserver(coordinator, forKeyPath: #keyPath(WKWebView.title), options: .new, context: nil)
+        //        webView.addObserver(coordinator, forKeyPath: #keyPath(WKWebView.canGoBack), options: .new, context: nil)
+        //        webView.addObserver(coordinator, forKeyPath: #keyPath(WKWebView.canGoForward), options: .new, context: nil)
+        //        
         configureMessageHandler(webView: webView, contentController: webView.configuration.userContentController, context: context)
         JavaScriptLoader.loadJavaScript(webView: webView, resourceName: "captureElements", extensionType: "js")
         injectSelectionScript(webView: webView)
@@ -55,7 +55,7 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
         let request = URLRequest(url: validURL)
         webView.load(request)
     }
-
+    
     
     private func configureMessageHandler(webView: WKWebView, contentController: WKUserContentController, context: Context) {
         contentController.removeAllScriptMessageHandlers()
@@ -145,15 +145,15 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
         }
         
         override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
-                  guard let webView = object as? WKWebView else { return }
-                  if keyPath == #keyPath(WKWebView.title) {
-                      
-                          // Update any relevant state in your SwiftUI view model.
-                          print("observeValue ", webView.title)
-                          initializeClipRect()
-                      
-                  }
-              }
+            guard let webView = object as? WKWebView else { return }
+            if keyPath == #keyPath(WKWebView.title) {
+                
+                // Update any relevant state in your SwiftUI view model.
+                print("observeValue ", webView.title)
+                initializeClipRect()
+                
+            }
+        }
         
         deinit {
             webView?.navigationDelegate = nil
@@ -181,6 +181,7 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
         func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!
         ) {
             print("webView ClipRect 1", parent.viewModel.currentClipRect, webView.frame)
+            print("WebView didstartNavigation ", webView.title)
             // Initialize clipRect in the center of the WebView frame
             if parent.viewModel.currentClipRect == nil {
                 print("webView ClipRect 2")
@@ -196,10 +197,7 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
         func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
                 guard let self = self else { return }
-                let simplifiedPageTitle = URLUtilities.simplifyPageTitle(webView.title ?? "No Title")
-                
-                parent.viewModel.updatePageTitle(simplifiedPageTitle)
-                
+                parent.viewModel.updatePageTitle(webView.title)                
                 parent.viewModel.saveOriginalSize(newOriginalSize: webView.scrollView.contentSize)
                 
                 // Initialize clipRect in the center of the WebView frame
@@ -237,7 +235,7 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
         
         func userDidStopInteracting() {
             captureScreenshot()
-            
+            parent.viewModel.updatePageTitle(webView?.title)
         }
         
         func parseCapturedElements(_ jsonString: String) {
@@ -281,7 +279,7 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
         
         
         func scrollViewDidScroll(_ scrollView: UIScrollView) {
-                parent.captureMenuViewModel.scrollY = Double(scrollView.contentOffset.y)
+            parent.captureMenuViewModel.scrollY = Double(scrollView.contentOffset.y)
         }
         
         func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {

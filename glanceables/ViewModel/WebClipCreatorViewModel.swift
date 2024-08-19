@@ -9,7 +9,7 @@ class WebClipCreatorViewModel: ObservableObject {
                 self.validateURL(self.urlString)
             }
         }
-    }
+    }    
     
     private var debouncer: Debouncer = Debouncer(seconds: 0.3)
     private var urlStringCancellable: AnyCancellable? // To hold the subscription
@@ -43,8 +43,9 @@ class WebClipCreatorViewModel: ObservableObject {
         currentClipRect = newRect
     }
     
-    func updatePageTitle(_ newTitle: String){
-        pageTitle = newTitle
+    func updatePageTitle(_ newTitle: String?){
+        let simpleTitle = URLUtilities.simplifyPageTitle(newTitle ?? "No Title")
+        pageTitle = simpleTitle
     }
     
     
@@ -83,9 +84,7 @@ class WebClipCreatorViewModel: ObservableObject {
     
     private func validateURL(_ urlString: String) {
         debouncer.cancel()
-        print("validateURL ", urlString)
         let (isValid, url) = URLUtilities.validateURL(from: urlString)
-        print("run validateURL ", urlString, url)
         isURLValid = isValid
         if isValid, let url = url {
             validURLs.append(url)

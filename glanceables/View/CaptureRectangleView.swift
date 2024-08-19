@@ -27,7 +27,7 @@ struct CaptureRectangleView: View {
                 }
             }
             if captureMenuViewModel.captureModeOn {
-                captureModeContent                    
+                captureModeContent
             }
         }
     }
@@ -58,9 +58,7 @@ struct CaptureRectangleView: View {
                                                  newPageTitle: pendingClip.pageTitle,
                                                  newCapturedElements: captureMenuViewModel.capturedElements)
                 } else {
-                    // Add a new web clip if no web clip is selected or not in editing mode
-                    pendingClip.currentClipRect = captureMenuViewModel.currentClipRect
-                    pendingClip.capturedElements = captureMenuViewModel.capturedElements
+                    // Add a new web clip if no web clip is selected or not in editing mode                    
                     webClipManager.createWebClip(newClip: pendingClip.getNewClip())
                 }
                 if let dismiss {
@@ -69,6 +67,9 @@ struct CaptureRectangleView: View {
                 
             }
             .offset(x: -10, y: -65)
+            .onAppear {
+                print("save button overlay appear")
+            }
         } else {
             EmptyView()
         }
