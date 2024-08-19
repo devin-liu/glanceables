@@ -2,11 +2,7 @@ import Foundation
 import SwiftUI
 
 @Observable class WebClipManagerViewModel {
-    private var webClips: [WebClip] = [] {
-        didSet {
-            print("updated webClips", webClips.count)
-        }
-    }
+    private var webClips: [WebClip] = []
     
     init() {
         loadWebClips()
@@ -17,23 +13,10 @@ import SwiftUI
     }
     
     public func getClips() -> [WebClip] {
-        print("getClips")
         return webClips
     }
     
-    
-    //    @Published var urlString = ""
-    //    @Published var validURLs: [URL] = []  // Now storing an array of URLs
     var isEditing = false
-    //    @Published var selectedValidURLIndex: Int? = nil {
-    //        didSet {
-    //            if let index = selectedValidURLIndex, validURLs.indices.contains(index) {
-    //                urlString = validURLs[index].absoluteString
-    //            } else {
-    //                urlString = ""  // Clear urlString if there's no valid URL selected
-    //            }
-    //        }
-    //    }
     var selectedWebClipIndex: Int? = nil
     
     // Add a computed property to access a specific WebClip by ID

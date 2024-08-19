@@ -27,10 +27,7 @@ struct CaptureRectangleView: View {
                 }
             }
             if captureMenuViewModel.captureModeOn {
-                captureModeContent
-                    .onAppear {
-                        print("captureModeContent onAppear")
-                    }
+                captureModeContent                    
             }
         }
     }
