@@ -201,7 +201,7 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
             if message.name == "selectionHandler", let messageBody = message.body as? String {
                 let scrollY = parseScrollY(messageBody)
                 if scrollY != 0 {
-                    parent.captureMenuViewModel.scrollY = scrollY
+                    parent.captureMenuViewModel.setScrollY(scrollY)
                 }
                 
             }
@@ -238,7 +238,7 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
         }
         
         func processCapturedElements(_ elements: [CapturedElement]) {
-            parent.captureMenuViewModel.capturedElements = elements
+            parent.captureMenuViewModel.setCapturedElements(elements)
         }
         
         private func parseScrollY(_ message: String) -> Double {
@@ -264,21 +264,21 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
         
         
         func scrollViewDidScroll(_ scrollView: UIScrollView) {
-            parent.captureMenuViewModel.scrollY = Double(scrollView.contentOffset.y)
+            parent.captureMenuViewModel.setScrollY(Double(scrollView.contentOffset.y))
         }
         
         func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
-            parent.captureMenuViewModel.userInteracting = true
+            parent.captureMenuViewModel.setUserInteracting(true)
         }
         
         func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {
             if !decelerate {
-                parent.captureMenuViewModel.userInteracting = false
+                parent.captureMenuViewModel.setUserInteracting(false)
             }
         }
         
         func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-            parent.captureMenuViewModel.userInteracting = false
+            parent.captureMenuViewModel.setUserInteracting(false)
         }
         
         private func captureScreenshot() {

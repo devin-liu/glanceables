@@ -35,16 +35,16 @@ struct WebClipBrowserMenuView: View {
                                     .gesture(
                                         DragGesture(minimumDistance: 0)
                                             .onChanged { value in
-                                                webClipSelector.startLocation = webClipSelector.startLocation ?? value.location
-                                                webClipSelector.endLocation = value.location
-                                                webClipSelector.dragging = true
-                                                webClipSelector.dragEnded = false
-                                                webClipSelector.updateClipRect(endLocation: value.location, bounds: geometry.size)
-                                                pendingClip.currentClipRect = webClipSelector.currentClipRect
-                                            }
+                                                       webClipSelector.setStartLocation(webClipSelector.startLocation ?? value.location)
+                                                       webClipSelector.setEndLocation(value.location)
+                                                       // Note: We don't need to set dragging and dragEnded explicitly here,
+                                                       // as they're handled in the setStartLocation and setEndLocation methods
+                                                       webClipSelector.updateClipRect(endLocation: value.location, bounds: geometry.size)
+                                                       pendingClip.currentClipRect = webClipSelector.currentClipRect
+                                                   }
                                             .onEnded { _ in
-                                                webClipSelector.dragging = false
-                                                webClipSelector.dragEnded = true
+                                                webClipSelector.setDragging(false)
+                                                webClipSelector.setDragEnded(true)                                                
                                             }
                                     )
                             }
