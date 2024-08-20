@@ -40,6 +40,7 @@
 		03A8685B2C4B312E00CCB79D /* LlamaResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03A8685A2C4B312E00CCB79D /* LlamaResult.swift */; };
 		03A868612C4F0FB300CCB79D /* WebViewCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03A868602C4F0FB300CCB79D /* WebViewCoordinator.swift */; };
 		03A868632C51FF0800CCB79D /* NavigationButtonsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03A868622C51FF0800CCB79D /* NavigationButtonsView.swift */; };
+		03B557922C753488001466BB /* LeakAvoider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03B557912C753488001466BB /* LeakAvoider.swift */; };
 		03B798572C62E9A400E431E4 /* SchedulerManagerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03B798562C62E9A400E431E4 /* SchedulerManagerViewModel.swift */; };
 		03B798592C62EA5600E431E4 /* SchedulerModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03B798582C62EA5600E431E4 /* SchedulerModel.swift */; };
 		03B7985B2C62F0BA00E431E4 /* WebClipCreatorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03B7985A2C62F0BA00E431E4 /* WebClipCreatorViewModel.swift */; };
@@ -101,6 +102,7 @@
 		03A8685A2C4B312E00CCB79D /* LlamaResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LlamaResult.swift; sourceTree = "<group>"; };
 		03A868602C4F0FB300CCB79D /* WebViewCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewCoordinator.swift; sourceTree = "<group>"; };
 		03A868622C51FF0800CCB79D /* NavigationButtonsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationButtonsView.swift; sourceTree = "<group>"; };
+		03B557912C753488001466BB /* LeakAvoider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeakAvoider.swift; sourceTree = "<group>"; };
 		03B798562C62E9A400E431E4 /* SchedulerManagerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SchedulerManagerViewModel.swift; sourceTree = "<group>"; };
 		03B798582C62EA5600E431E4 /* SchedulerModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SchedulerModel.swift; sourceTree = "<group>"; };
 		03B7985A2C62F0BA00E431E4 /* WebClipCreatorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebClipCreatorViewModel.swift; sourceTree = "<group>"; };
@@ -265,6 +267,7 @@
 				03A868582C489B3100CCB79D /* JavascriptLoader.swift */,
 				03C5DAD22C24F0CF0061FA25 /* URLUtilities.swift */,
 				03BEC9B22C6EAA2500372E6E /* ImageLoader.swift */,
+				03B557912C753488001466BB /* LeakAvoider.swift */,
 			);
 			path = Utilities;
 			sourceTree = "<group>";
@@ -415,6 +418,7 @@
 				03A868612C4F0FB300CCB79D /* WebViewCoordinator.swift in Sources */,
 				03BEC9AF2C6AD34E00372E6E /* WebClipGridView.swift in Sources */,
 				0378B8672C096D850005BAE5 /* glanceablesApp.swift in Sources */,
+				03B557922C753488001466BB /* LeakAvoider.swift in Sources */,
 				030062B42C112BD100B0242D /* WebClip.swift in Sources */,
 				03A868532C48692A00CCB79D /* SaveButtonView.swift in Sources */,
 				03B798572C62E9A400E431E4 /* SchedulerManagerViewModel.swift in Sources */,

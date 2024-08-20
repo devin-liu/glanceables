@@ -6,6 +6,12 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
     var webClipId: UUID
     var id = UUID()
     @State var llamaAPIManager = LlamaAPIManager()
+    @State private var webView: WKWebView?
+    @StateObject private var schedulerViewModel = SchedulerViewModel()
+    
+    init(webClipId: UUID) {
+        self.webClipId = webClipId
+    }
     
     func makeUIView(context: Context) -> WKWebView {
         let webView = WKWebView()
@@ -18,11 +24,24 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
         context.coordinator.webView = webView
         webView.configuration.userContentController.add(leakAvoider, name: "elementsFromSelectorsHandler")
         
-        JavaScriptLoader.loadJavaScript(webView: webView, resourceName: "captureElements", extensionType: "js")        
+        JavaScriptLoader.loadJavaScript(webView: webView, resourceName: "captureElements", extensionType: "js")
         injectGetElementsFromSelectorsScript(webView: webView)
         
         let request = URLRequest(url: webClipManager.webClip(webClipId)!.url)
         webView.load(request)
+        
+        schedulerViewModel.configure(
+            interval: 60.0, // Reload every minute
+            actions: { [] schedulerViewModel in
+                return (
+                    { captureScreenshot(webView: webView) },
+                    { webView.reload() }
+                )
+            }
+        )
+        
+        schedulerViewModel.startScheduler()
+        
         
         return webView
     }
@@ -37,12 +56,16 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
     
     func dismantleUIView(_ uiView: WKWebView, coordinator: WebViewCoordinator) {
         print("dismantleUIView WebViewSnapshotRefresher")
+        schedulerViewModel.stopScheduler()
+        
     }
     func viewWillDisappear(){
         print("viewWillDisappear WebViewSnapshotRefresher")
+        schedulerViewModel.stopScheduler()
     }
     
-    func handleDidFinishNavigation(webView: WKWebView){
+    func handleDidFinishNavigation(webView: WKWebView?){
+        guard let webView else { return }
         if let capturedElements = webClipManager.webClip(webClipId)?.capturedElements  {
             restoreScrollPosition(capturedElements, in: webView)
         }
@@ -90,7 +113,8 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
         JavaScriptLoader.injectIsolateElementFromSelectorScript(webView: webView, elementSelector: elementSelector)
     }
     
-    func captureScreenshot(webView: WKWebView) {
+    func captureScreenshot(webView: WKWebView?) {
+        guard let webView else { return }
         let webClipId = webClipId
         
         let configuration = WKSnapshotConfiguration()
@@ -121,6 +145,3 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
         }
     }
 }
-
-
-
