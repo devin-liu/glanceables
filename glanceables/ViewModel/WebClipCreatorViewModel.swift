@@ -1,6 +1,7 @@
 import Foundation
 import SwiftUI
 import Combine
+import WebKit
 
 @Observable class WebClipCreatorViewModel {
     var urlString = "" {
@@ -9,7 +10,7 @@ import Combine
                 self.validateURL(self.urlString)
             }
         }
-    }    
+    }
     
     private var debouncer: Debouncer = Debouncer(seconds: 0.3)
     private var urlStringCancellable: AnyCancellable? // To hold the subscription
@@ -25,6 +26,7 @@ import Combine
     var screenshotPath: String?
     var capturedElements: [CapturedElement]?
     var snapshots: [SnapshotTimelineModel] = []
+    var webView: WKWebView?
     
     private var webClip: PendingWebClip = PendingWebClip()
     
@@ -32,6 +34,10 @@ import Combine
     
     var validURL: URL? {
         return validURLs.last
+    }
+    
+    func updateWebView(newWebView: WKWebView){
+        webView = newWebView
     }
     
     func updateUrlString(_ newText: String){
@@ -88,6 +94,14 @@ import Combine
     
     func saveOriginalSize(newOriginalSize: CGSize) {
         originalSize = newOriginalSize
+    }
+    
+    func finalizeClip(){
+        if let webView = webView {
+            updatePageTitle(webView.title)
+            updateUrlString(webView.url!.absoluteString)
+            validateURL(webView.url!.absoluteString)            
+        }
     }
     
     private func validateURL(_ urlString: String) {

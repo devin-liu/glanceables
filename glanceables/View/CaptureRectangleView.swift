@@ -48,6 +48,7 @@ struct CaptureRectangleView: View {
     private var saveButtonOverlay: some View {
         if captureMenuViewModel.dragEnded {
             SaveButtonView {
+                pendingClip.finalizeClip()
                 // Check if a web clip is selected and if it's in editing mode
                 if let webClip = webClipManager.selectedWebClip(), webClipManager.isEditing {
                     // Call updateWebClip function with correct parameters

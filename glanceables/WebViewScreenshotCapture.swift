@@ -2,8 +2,6 @@ import SwiftUI
 import WebKit
 
 struct WebViewScreenshotCapture: UIViewRepresentable {
-    //    @Binding var webView: WKWebView?
-    
     var viewModel: WebClipCreatorViewModel
     var captureMenuViewModel: WebClipSelectorViewModel
     
@@ -14,6 +12,7 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
         let web = WKWebView()
         //        webView = web  // Set the binding
         configureWebView(webView: web, context: context)
+        viewModel.updateWebView(newWebView: web)
         return web
     }
     
