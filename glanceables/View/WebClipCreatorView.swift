@@ -4,7 +4,7 @@ struct WebClipCreatorView: View {
     @Environment(WebClipManagerViewModel.self) private var webClipManager
     @Environment(\.dismiss) private var dismiss
     @State private var webClipSelector = WebClipSelectorViewModel()
-    @State var pendingClip = WebClipCreatorViewModel()    
+    @State var pendingClip = WebClipCreatorViewModel()       
     private var webClip: WebClip?
     
     init(webClip: WebClip? = nil) {
@@ -12,8 +12,6 @@ struct WebClipCreatorView: View {
         if let webClip {
             pendingClip.updatePendingWebClip(newPendingClip: webClip.toPendingWebClip())
         }
-        print("WebClipCreatorView init", webClip)
-        //        this does not reset in between hitting dismiss on blank creator views
         
     }
     

@@ -19,6 +19,7 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
     }
     
     func makeCoordinator() -> Coordinator {
+        print("makeCoordinator")
         return Coordinator(self)
     }
     

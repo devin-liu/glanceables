@@ -8,19 +8,17 @@
 import Foundation
 import SwiftUI
 
+import Foundation
+import SwiftUI
+
 struct WebClipRefresherGrid: View {
     @Environment(WebClipManagerViewModel.self) private var webClipManager
     
-    let columns = [GridItem(.adaptive(minimum: 300))]
-    
     var body: some View {
-        LazyVGrid(columns: columns) {
-            ForEach(webClipManager.webClips, id: \.self) { item in
-                WebViewSnapshotRefresher(webClipId: item.id)
-                    .frame(width: item.originalSize?.width, height: 600)
-                    .edgesIgnoringSafeArea(.all)
-                    .opacity(0)  // Make the ScrollView invisible
-            }
+        List(webClipManager.webClips) { item in
+            WebViewSnapshotRefresher(webClipId: item.id)
+                .edgesIgnoringSafeArea(.all)
+                .opacity(0)  // Make the View invisible
         }
     }
 }

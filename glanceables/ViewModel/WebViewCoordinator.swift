@@ -5,24 +5,30 @@ import Combine
 class WebViewCoordinator: NSObject, WKNavigationDelegate, WKUIDelegate, UIScrollViewDelegate, WKScriptMessageHandler {
     var parent: WebViewSnapshotRefresher?
     var webView: WKWebView?
-    //    var reloadSubscription: AnyCancellable?
-    //    var webClipId: UUID
-    //    var llamaAPIManager: LlamaAPIManager
     
     private var cancellables = Set<AnyCancellable>()
     
     init(_ parent: WebViewSnapshotRefresher) {
         self.parent = parent
-        //        self.webClipId = webClipId
-        //        self.llamaAPIManager = llamaAPIManager
         super.init()
     }
     
     deinit {
-        //        TODO make this get hit as well
-        print("Snapshot WebViewcoordinator deinitialized")
-        //        schedulerViewModel.stopScheduler()
+        // Print to console that the coordinator is being deinitialized
+        print("Snapshot WebViewCoordinator deinitialized")
+        
+        // Remove any script message handlers
+        webView?.configuration.userContentController.removeScriptMessageHandler(forName: "elementsFromSelectorsHandler")
+        
+        // Cancel all active Combine subscriptions
+        cancellables.forEach { $0.cancel() }
+        cancellables.removeAll()
+        
+        // Clear the webView's delegate to avoid retain cycles
+        webView?.navigationDelegate = nil
+        webView?.uiDelegate = nil
     }
+    
     
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         parent!.handleDidFinishNavigation(webView: webView)
