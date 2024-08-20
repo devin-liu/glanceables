@@ -3,14 +3,12 @@ import WebKit
 
 struct WebViewScreenshotCapture: UIViewRepresentable {
     var viewModel: WebClipCreatorViewModel
-    var captureMenuViewModel: WebClipSelectorViewModel
-    
+    var captureMenuViewModel: WebClipSelectorViewModel    
     var validURL: URL
     
     func makeUIView(context: Context) -> WKWebView {
         print("makeUIView", validURL)
         let web = WKWebView()
-        //        webView = web  // Set the binding
         configureWebView(webView: web, context: context)
         viewModel.updateWebView(newWebView: web)
         return web

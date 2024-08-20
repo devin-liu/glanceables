@@ -34,17 +34,17 @@ struct WebClipBrowserMenuView: View {
                                     .frame(width: geometry.size.width)
                                     .gesture(
                                         DragGesture(minimumDistance: 0)
-                                            .onChanged { value in
-                                                       webClipSelector.setStartLocation(webClipSelector.startLocation ?? value.location)
-                                                       webClipSelector.setEndLocation(value.location)
-                                                       // Note: We don't need to set dragging and dragEnded explicitly here,
-                                                       // as they're handled in the setStartLocation and setEndLocation methods
-                                                       webClipSelector.updateClipRect(endLocation: value.location, bounds: geometry.size)
-                                                       pendingClip.currentClipRect = webClipSelector.currentClipRect
-                                                   }
-                                            .onEnded { _ in
-                                                webClipSelector.setDragging(false)
-                                                webClipSelector.setDragEnded(true)                                                
+                                            .onChanged { [weak webClipSelector, weak pendingClip] value in
+                                                webClipSelector!.setStartLocation(webClipSelector?.startLocation ?? value.location)
+                                                webClipSelector!.setEndLocation(value.location)
+                                                // Note: We don't need to set dragging and dragEnded explicitly here,
+                                                // as they're handled in the setStartLocation and setEndLocation methods
+                                                webClipSelector!.updateClipRect(endLocation: value.location, bounds: geometry.size)
+                                                pendingClip!.currentClipRect = webClipSelector?.currentClipRect
+                                            }
+                                            .onEnded {  [weak webClipSelector] _ in
+                                                webClipSelector!.setDragging(false)
+                                                webClipSelector!.setDragEnded(true)
                                             }
                                     )
                             }
@@ -78,7 +78,7 @@ struct WebClipBrowserMenuView: View {
 //        model.urlString = "https://news.ycombinator.com/"
 //        return model
 //    }()
-//    
+//
 //    static var previews: some View {
 //        let pendingClip = WebClipCreatorViewModel()
 //        WebClipBrowserMenuView(webClipSelector: WebClipSelectorViewModel(), pendingClip: pendingClip
