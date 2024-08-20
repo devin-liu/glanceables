@@ -16,10 +16,10 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
         let leakAvoider = LeakAvoider(delegate: context.coordinator)
         
         context.coordinator.webView = webView
+        webView.configuration.userContentController.add(leakAvoider, name: "elementsFromSelectorsHandler")
         
-        JavaScriptLoader.loadJavaScript(webView: webView, resourceName: "captureElements", extensionType: "js")
-        
-        injectGetElementsFromSelectorsScript(webView: webView, messageHandler: leakAvoider)
+        JavaScriptLoader.loadJavaScript(webView: webView, resourceName: "captureElements", extensionType: "js")        
+        injectGetElementsFromSelectorsScript(webView: webView)
         
         let request = URLRequest(url: webClipManager.webClip(webClipId)!.url)
         webView.load(request)
@@ -78,10 +78,10 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
         }
     }
     
-    func injectGetElementsFromSelectorsScript(webView: WKWebView, messageHandler: WKScriptMessageHandler) {
+    func injectGetElementsFromSelectorsScript(webView: WKWebView) {
         guard let capturedElement = webClipManager.webClip(webClipId)?.capturedElements?.last else { return }
         let elementSelector = capturedElement.selector
-        JavaScriptLoader.injectGetElementsFromSelectorsScript(webView: webView, elementSelector: elementSelector, messageHandler: messageHandler)
+        JavaScriptLoader.injectGetElementsFromSelectorsScript(webView: webView, elementSelector: elementSelector)
     }
     
     func injectIsolateElementFromSelectorScript(webView: WKWebView) {
