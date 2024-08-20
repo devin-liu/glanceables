@@ -15,12 +15,11 @@ struct WebClipRefresherGrid: View {
     
     var body: some View {
         LazyVGrid(columns: columns) {
-            ForEach(webClipManager.getClips(), id: \.self) { item in
+            ForEach(webClipManager.webClips, id: \.self) { item in
                 WebViewSnapshotRefresher(webClipId: item.id)
                     .frame(width: item.originalSize?.width, height: 600)
                     .edgesIgnoringSafeArea(.all)
                     .opacity(0)  // Make the ScrollView invisible
-                    .frame(width: 0, height: 0)  // Make the ScrollView occupy no space
             }
         }
     }

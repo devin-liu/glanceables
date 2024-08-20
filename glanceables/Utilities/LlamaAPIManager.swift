@@ -1,11 +1,11 @@
 import Foundation
 
 // Class for managing interaction with the Llama API
-class LlamaAPIManager: ObservableObject {
+@Observable class LlamaAPIManager {
     
-    @Published var isSending: Bool = false
-    @Published var response: String? = nil
-    @Published var conciseText: String? = nil
+    var isSending: Bool = false
+    var response: String? = nil
+    var conciseText: String? = nil
     
     // Modular function to perform the API request
     private func performRequest(prompt: String, innerText: String, completion: @escaping (Result<LlamaResult, Error>) -> Void) {

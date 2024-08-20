@@ -3,7 +3,7 @@ import WebKit
 import Combine
 
 class WebViewCoordinator: NSObject, WKNavigationDelegate, WKUIDelegate, UIScrollViewDelegate, WKScriptMessageHandler {
-    var parent: WebViewSnapshotRefresher
+    var parent: WebViewSnapshotRefresher?
     var webView: WKWebView?
 //    var reloadSubscription: AnyCancellable?
 //    var webClipId: UUID
@@ -24,20 +24,14 @@ class WebViewCoordinator: NSObject, WKNavigationDelegate, WKUIDelegate, UIScroll
     }
     
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        //        let simplifiedPageTitle = URLUtilities.simplifyPageTitle(webView.title ?? "No Title")
-        parent.handleDidFinishNavigation(webView: webView)
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.1) { [weak self] in
-            guard let self = self else { return }
-            parent.handleDidFinishNavigation(webView: webView)
-        }
+        parent!.handleDidFinishNavigation(webView: webView)
     }
     
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
         guard let webView = webView else { return }
         if message.name == "elementsFromSelectorsHandler", let messageBody = message.body as? String {
             parseElementsFromSelectors(messageBody)
-            parent.captureScreenshot(webView: webView)
+            parent!.captureScreenshot(webView: webView)
         }
     }
     
@@ -51,11 +45,25 @@ class WebViewCoordinator: NSObject, WKNavigationDelegate, WKUIDelegate, UIScroll
             let elements = try JSONDecoder().decode([HTMLElement].self, from: data)
             if let innerText = elements.first?.innerText {
                 print("InnerText result: ", innerText)
-                parent.processElementsInnerText(innerText)
+                parent!.processElementsInnerText(innerText)
             }
             
         } catch {
             print("Error: \(error)")
         }
+    }
+}
+
+// An solution to avoid memory leaks
+class LeakAvoider : NSObject, WKScriptMessageHandler {
+    weak var delegate : WKScriptMessageHandler?
+    init(delegate:WKScriptMessageHandler) {
+        self.delegate = delegate
+        super.init()
+    }
+    func userContentController(_ userContentController: WKUserContentController,
+                               didReceive message: WKScriptMessage) {
+        self.delegate?.userContentController(
+            userContentController, didReceive: message)
     }
 }

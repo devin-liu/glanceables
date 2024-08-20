@@ -29,6 +29,8 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
         webView.uiDelegate = coordinator
         webView.scrollView.delegate = coordinator
         
+        let leakAvoider = LeakAvoider(delegate: context.coordinator)
+        
         context.coordinator.webView = webView
         
         
@@ -37,7 +39,7 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
         //        webView.addObserver(coordinator, forKeyPath: #keyPath(WKWebView.canGoBack), options: .new, context: nil)
         //        webView.addObserver(coordinator, forKeyPath: #keyPath(WKWebView.canGoForward), options: .new, context: nil)
         //
-        configureMessageHandler(webView: webView, contentController: webView.configuration.userContentController, context: context)
+        configureMessageHandler(webView: webView, contentController: webView.configuration.userContentController, leakAvoider: leakAvoider)
         JavaScriptLoader.loadJavaScript(webView: webView, resourceName: "captureElements", extensionType: "js")
         injectSelectionScript(webView: webView)
         injectCaptureElementsScript(webView: webView)
@@ -47,11 +49,11 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
     }
     
     
-    private func configureMessageHandler(webView: WKWebView, contentController: WKUserContentController, context: Context) {
+    private func configureMessageHandler(webView: WKWebView, contentController: WKUserContentController, leakAvoider: LeakAvoider) {
         contentController.removeAllScriptMessageHandlers()
-        contentController.add(context.coordinator, name: "selectionHandler")
-        contentController.add(context.coordinator, name: "capturedElementsHandler")
-        contentController.add(context.coordinator, name: "userStoppedInteracting")
+        contentController.add(leakAvoider, name: "selectionHandler")
+        contentController.add(leakAvoider, name: "capturedElementsHandler")
+        contentController.add(leakAvoider, name: "userStoppedInteracting")
     }
     
     private func injectCaptureElementsScript(webView: WKWebView){

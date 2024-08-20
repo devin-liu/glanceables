@@ -2,7 +2,7 @@ import Foundation
 import SwiftUI
 
 @Observable class WebClipManagerViewModel {
-    private var webClips: [WebClip] = []
+    var webClips: [WebClip] = []
     
     init() {
         loadWebClips()

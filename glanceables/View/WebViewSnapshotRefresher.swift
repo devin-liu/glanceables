@@ -4,17 +4,20 @@ import WebKit
 struct WebViewSnapshotRefresher: UIViewRepresentable {
     @Environment(WebClipManagerViewModel.self) private var webClipManager
     var webClipId: UUID
-    @StateObject var llamaAPIManager = LlamaAPIManager()
+    @State var llamaAPIManager = LlamaAPIManager()
     
     func makeUIView(context: Context) -> WKWebView {
         let webView = WKWebView()
         webView.navigationDelegate = context.coordinator
         webView.uiDelegate = context.coordinator
+        context.coordinator.webView = webView
         
-        configureMessageHandler(webView: webView, contentController: webView.configuration.userContentController, context: context)
+        let leakAvoider = LeakAvoider(delegate: context.coordinator)
+        webView.configuration.userContentController.add(leakAvoider, name: "elementsFromSelectorsHandler")
+            
         JavaScriptLoader.loadJavaScript(webView: webView, resourceName: "captureElements", extensionType: "js")
         
-        context.coordinator.webView = webView
+        
         injectGetElementsFromSelectorsScript(webView: webView)
         
         let request = URLRequest(url: webClipManager.webClip(webClipId)!.url)
@@ -36,10 +39,6 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
     }
     func viewWillDisappear(){
         print("viewWillDisappear WebViewSnapshotRefresher")
-    }
-    
-    private func configureMessageHandler(webView: WKWebView, contentController: WKUserContentController, context: Context) {
-        contentController.add(context.coordinator, name: "elementsFromSelectorsHandler")
     }
     
     func handleDidFinishNavigation(webView: WKWebView){
@@ -65,7 +64,7 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
     }
     
     func processElementsInnerText(_ innerText: String) {
-        llamaAPIManager.analyzeInnerText(innerText: innerText) { [self] result in            
+        llamaAPIManager.analyzeInnerText(innerText: innerText) { [self] result in
             switch result {
             case .success(let result):
                 webClipManager.updateWebClip(withId: webClipId, newLlamaResult: result)
@@ -121,4 +120,6 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
         }
     }
 }
+
+
 
