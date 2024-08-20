@@ -4,21 +4,22 @@ import WebKit
 struct WebViewSnapshotRefresher: UIViewRepresentable {
     @Environment(WebClipManagerViewModel.self) private var webClipManager
     var webClipId: UUID
+    var id = UUID()
     @State var llamaAPIManager = LlamaAPIManager()
     
     func makeUIView(context: Context) -> WKWebView {
         let webView = WKWebView()
         webView.navigationDelegate = context.coordinator
         webView.uiDelegate = context.coordinator
-        context.coordinator.webView = webView
+        
         
         let leakAvoider = LeakAvoider(delegate: context.coordinator)
-        webView.configuration.userContentController.add(leakAvoider, name: "elementsFromSelectorsHandler")
-            
+        
+        context.coordinator.webView = webView
+        
         JavaScriptLoader.loadJavaScript(webView: webView, resourceName: "captureElements", extensionType: "js")
         
-        
-        injectGetElementsFromSelectorsScript(webView: webView)
+        injectGetElementsFromSelectorsScript(webView: webView, messageHandler: leakAvoider)
         
         let request = URLRequest(url: webClipManager.webClip(webClipId)!.url)
         webView.load(request)
@@ -77,10 +78,10 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
         }
     }
     
-    func injectGetElementsFromSelectorsScript(webView: WKWebView) {
+    func injectGetElementsFromSelectorsScript(webView: WKWebView, messageHandler: WKScriptMessageHandler) {
         guard let capturedElement = webClipManager.webClip(webClipId)?.capturedElements?.last else { return }
         let elementSelector = capturedElement.selector
-        JavaScriptLoader.injectGetElementsFromSelectorsScript(webView: webView, elementSelector: elementSelector)
+        JavaScriptLoader.injectGetElementsFromSelectorsScript(webView: webView, elementSelector: elementSelector, messageHandler: messageHandler)
     }
     
     func injectIsolateElementFromSelectorScript(webView: WKWebView) {

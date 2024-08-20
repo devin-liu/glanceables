@@ -5,21 +5,22 @@ import Combine
 class WebViewCoordinator: NSObject, WKNavigationDelegate, WKUIDelegate, UIScrollViewDelegate, WKScriptMessageHandler {
     var parent: WebViewSnapshotRefresher?
     var webView: WKWebView?
-//    var reloadSubscription: AnyCancellable?
-//    var webClipId: UUID
-//    var llamaAPIManager: LlamaAPIManager
+    //    var reloadSubscription: AnyCancellable?
+    //    var webClipId: UUID
+    //    var llamaAPIManager: LlamaAPIManager
     
     private var cancellables = Set<AnyCancellable>()
     
     init(_ parent: WebViewSnapshotRefresher) {
         self.parent = parent
-//        self.webClipId = webClipId
-//        self.llamaAPIManager = llamaAPIManager
+        //        self.webClipId = webClipId
+        //        self.llamaAPIManager = llamaAPIManager
         super.init()
     }
     
     deinit {
-        print("WebViewcoordinator deinit")
+        //        TODO make this get hit as well
+        print("Snapshot WebViewcoordinator deinitialized")
         //        schedulerViewModel.stopScheduler()
     }
     

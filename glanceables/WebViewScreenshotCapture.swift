@@ -32,8 +32,7 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
         let leakAvoider = LeakAvoider(delegate: context.coordinator)
         
         context.coordinator.webView = webView
-        
-        
+                
         // Observers Setup
         //        webView.addObserver(coordinator, forKeyPath: #keyPath(WKWebView.title), options: .new, context: nil)
         //        webView.addObserver(coordinator, forKeyPath: #keyPath(WKWebView.canGoBack), options: .new, context: nil)

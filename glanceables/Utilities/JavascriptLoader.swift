@@ -12,7 +12,7 @@ struct JavaScriptLoader {
         webView.configuration.userContentController.addUserScript(userScript)
     }
     
-    static func injectGetElementsFromSelectorsScript(webView: WKWebView, elementSelector: String) {
+    static func injectGetElementsFromSelectorsScript(webView: WKWebView, elementSelector: String, messageHandler: WKScriptMessageHandler) {
         let jsCode = """
         (function() {
             function restoreElement() {
@@ -52,8 +52,10 @@ struct JavaScriptLoader {
         })();
         """
         
-        webView.configuration.userContentController.addUserScript(WKUserScript(source: jsCode, injectionTime: .atDocumentEnd, forMainFrameOnly: false))
-    }
+        let userScript = WKUserScript(source: jsCode, injectionTime: .atDocumentEnd, forMainFrameOnly: false)
+         webView.configuration.userContentController.addUserScript(userScript)
+         webView.configuration.userContentController.add(messageHandler, name: "elementsFromSelectorsHandler")
+     }
     
     static func injectIsolateElementFromSelectorScript(webView: WKWebView, elementSelector: String) {
         let jsCode = """
