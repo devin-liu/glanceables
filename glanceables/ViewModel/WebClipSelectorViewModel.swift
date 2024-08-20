@@ -1,16 +1,16 @@
 import SwiftUI
 
-class WebClipSelectorViewModel: ObservableObject {    
-    @Published var currentClipRect: CGRect?
-    @Published var userInteracting: Bool = false
-    @Published var scrollY: Double = 0
-    @Published var capturedElements: [CapturedElement]?
-    @Published var startLocation: CGPoint? = nil
-    @Published var endLocation: CGPoint? = nil
-    @Published var dragging: Bool = false
-    @Published var dragEnded: Bool = false
-    @Published var showPreview: Bool = false
-    @Published var captureModeOn: Bool = true
+@Observable class WebClipSelectorViewModel {
+    var currentClipRect: CGRect?
+    var userInteracting: Bool = false
+    var scrollY: Double = 0
+    var capturedElements: [CapturedElement]?
+    var startLocation: CGPoint? = nil
+    var endLocation: CGPoint? = nil
+    var dragging: Bool = false
+    var dragEnded: Bool = false
+    var showPreview: Bool = false
+    var captureModeOn: Bool = true
     
     func updateClipRect(endLocation: CGPoint, bounds: CGSize) {
         let width = 300.0

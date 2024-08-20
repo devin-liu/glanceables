@@ -3,7 +3,7 @@ import SwiftUI
 struct WebClipCreatorView: View {
     @Environment(WebClipManagerViewModel.self) private var webClipManager
     @Environment(\.dismiss) private var dismiss
-    @StateObject private var webClipSelector = WebClipSelectorViewModel()
+    @State private var webClipSelector = WebClipSelectorViewModel()
     @State var pendingClip = WebClipCreatorViewModel()    
     private var webClip: WebClip?
     

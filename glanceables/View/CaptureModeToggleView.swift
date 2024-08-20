@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct CaptureModeToggleView: View {
-    @ObservedObject var viewModel: WebClipSelectorViewModel
+    @Bindable var viewModel: WebClipSelectorViewModel
     
     
     var body: some View {

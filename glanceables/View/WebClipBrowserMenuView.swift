@@ -2,7 +2,7 @@ import SwiftUI
 import WebKit
 
 struct WebClipBrowserMenuView: View {
-    @ObservedObject var webClipSelector: WebClipSelectorViewModel
+    var webClipSelector: WebClipSelectorViewModel
     var dismiss: DismissAction
     var pendingClip:WebClipCreatorViewModel
     

@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct BlackEditMenuBarView: View {
-    @ObservedObject var webClipSelector: WebClipSelectorViewModel
+    var webClipSelector: WebClipSelectorViewModel
     
     var body: some View {
         HStack {

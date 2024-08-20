@@ -20,13 +20,6 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
         // Perform any dynamic updates to your view's content.
     }
     
-    func dismantleUIView(_ uiView: WKWebView, coordinator: Coordinator) {
-        // Remove observers when the view is dismantled.
-        //        uiView.removeObserver(coordinator, forKeyPath: #keyPath(WKWebView.title))
-        //        uiView.removeObserver(coordinator, forKeyPath: #keyPath(WKWebView.canGoBack))
-        //        uiView.removeObserver(coordinator, forKeyPath: #keyPath(WKWebView.canGoForward))
-    }
-    
     func makeCoordinator() -> Coordinator {
         return Coordinator(self)
     }
@@ -45,7 +38,7 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
         //        webView.addObserver(coordinator, forKeyPath: #keyPath(WKWebView.title), options: .new, context: nil)
         //        webView.addObserver(coordinator, forKeyPath: #keyPath(WKWebView.canGoBack), options: .new, context: nil)
         //        webView.addObserver(coordinator, forKeyPath: #keyPath(WKWebView.canGoForward), options: .new, context: nil)
-        //        
+        //
         configureMessageHandler(webView: webView, contentController: webView.configuration.userContentController, context: context)
         JavaScriptLoader.loadJavaScript(webView: webView, resourceName: "captureElements", extensionType: "js")
         injectSelectionScript(webView: webView)
@@ -145,7 +138,7 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
         
         override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
             guard let webView = object as? WKWebView else { return }
-            if keyPath == #keyPath(WKWebView.title) {                                
+            if keyPath == #keyPath(WKWebView.title) {
                 initializeClipRect()
                 
             }
@@ -190,7 +183,7 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
         func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
                 guard let self = self else { return }
-                parent.viewModel.updatePageTitle(webView.title)                
+                parent.viewModel.updatePageTitle(webView.title)
                 parent.viewModel.saveOriginalSize(newOriginalSize: webView.scrollView.contentSize)
                 
                 // Initialize clipRect in the center of the WebView frame
