@@ -99,10 +99,47 @@ import WebKit
     func finalizeClip(){
         if let webView = webView {
             updatePageTitle(webView.title)
-            updateUrlString(webView.url!.absoluteString)
-            validateURL(webView.url!.absoluteString)            
-        }
+            if let newURL = webView.url {
+                validURLs.append(newURL)
+            }
+            
+        }        
     }
+    
+    func reset() {
+        // Reset basic string and URL properties
+        urlString = ""
+        validURLs.removeAll()
+        
+        // Reset state flags
+        isURLValid = true
+        showValidationError = false
+        
+        // Reset geometry and image properties
+        currentClipRect = nil
+        originalSize = nil
+        pageTitle = nil
+        screenShot = nil
+        screenshotPath = nil
+        
+        // Reset collections
+        capturedElements = []
+        snapshots.removeAll()
+        
+        // Reset web view
+        webView = nil
+        
+        // Clear any held subscriptions if any
+        cancellables.forEach { $0.cancel() }
+        cancellables.removeAll()
+        
+        // Reset the internal web clip model
+        webClip = PendingWebClip()
+        
+        // Clear any pending operations in debouncer
+        debouncer.cancel()
+    }
+    
     
     private func validateURL(_ urlString: String) {
         debouncer.cancel()

@@ -48,6 +48,9 @@ struct CaptureRectangleView: View {
     private var saveButtonOverlay: some View {
         if captureMenuViewModel.dragEnded {
             SaveButtonView {
+                if let dismiss {
+                    dismiss()
+                }
                 pendingClip.finalizeClip()
                 // Check if a web clip is selected and if it's in editing mode
                 if let webClip = webClipManager.selectedWebClip(), webClipManager.isEditing {
@@ -62,9 +65,8 @@ struct CaptureRectangleView: View {
                     // Add a new web clip if no web clip is selected or not in editing mode
                     webClipManager.createWebClip(newClip: pendingClip.getNewClip())
                 }
-                if let dismiss {
-                    dismiss()
-                }
+                
+                
                 
             }
             .offset(x: -10, y: -65)

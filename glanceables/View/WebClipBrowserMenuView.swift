@@ -2,9 +2,8 @@ import SwiftUI
 import WebKit
 
 struct WebClipBrowserMenuView: View {
-    @Environment(\.dismiss) private var dismiss
     @ObservedObject var webClipSelector: WebClipSelectorViewModel
-    //    @StateObject var pendingClip = WebClipCreatorViewModel()
+    var dismiss: DismissAction
     var pendingClip:WebClipCreatorViewModel
     
     
@@ -73,16 +72,16 @@ struct WebClipBrowserMenuView: View {
     }
 }
 
-struct WebPreviewCaptureMenuView_Previews: PreviewProvider {
-    static var previewViewModel: WebClipCreatorViewModel = {
-        let model = WebClipCreatorViewModel()
-        model.urlString = "https://news.ycombinator.com/"
-        return model
-    }()
-    
-    static var previews: some View {
-        let pendingClip = WebClipCreatorViewModel()
-        WebClipBrowserMenuView(webClipSelector: WebClipSelectorViewModel(), pendingClip: pendingClip
-        )
-    }
-}
+//struct WebPreviewCaptureMenuView_Previews: PreviewProvider {
+//    static var previewViewModel: WebClipCreatorViewModel = {
+//        let model = WebClipCreatorViewModel()
+//        model.urlString = "https://news.ycombinator.com/"
+//        return model
+//    }()
+//    
+//    static var previews: some View {
+//        let pendingClip = WebClipCreatorViewModel()
+//        WebClipBrowserMenuView(webClipSelector: WebClipSelectorViewModel(), pendingClip: pendingClip
+//        )
+//    }
+//}
