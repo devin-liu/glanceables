@@ -26,7 +26,7 @@ import WebKit
     var screenshotPath: String?
     var capturedElements: [CapturedElement]?
     var snapshots: [SnapshotTimelineModel] = []
-    var webView: WKWebView?
+    weak var webView: WKWebView?
     
     private var webClip: PendingWebClip = PendingWebClip()
     
@@ -103,7 +103,7 @@ import WebKit
                 validURLs.append(newURL)
             }
             
-        }        
+        }
     }
     
     func reset() {

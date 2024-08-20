@@ -3,7 +3,7 @@ import WebKit
 
 struct WebViewScreenshotCapture: UIViewRepresentable {
     var viewModel: WebClipCreatorViewModel
-    var captureMenuViewModel: WebClipSelectorViewModel    
+    var captureMenuViewModel: WebClipSelectorViewModel
     var validURL: URL
     
     func makeUIView(context: Context) -> WKWebView {
@@ -126,7 +126,7 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
     
     class Coordinator: NSObject, WKNavigationDelegate, WKUIDelegate, UIScrollViewDelegate, WKScriptMessageHandler {
         var parent: WebViewScreenshotCapture
-        var webView: WKWebView?
+        weak var webView: WKWebView?
         private var screenshotCaptureWorkItem: DispatchWorkItem?
         
         
