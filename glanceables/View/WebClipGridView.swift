@@ -7,6 +7,7 @@ struct WebClipGridView: View {
     var body: some View {
         WebClipGridItems(webClips: webClipManager.getClips())
             .animation(.easeInOut, value: webClipManager.getClips())
+        WebClipRefresherGrid()
     }
 }
 
@@ -22,10 +23,7 @@ struct WebClipGridItems: View {
                 VStack {
                     GridScreenshotView(webClipId: item.id)
                         .padding(10)
-                    
                     WebGridSingleSnapshotView(item: item)
-                    
-                    
                 } .contextMenu {
                     NavigationLink(destination: WebClipEditorView(webClipId: item.id)) {
                         Text("Edit")
@@ -38,7 +36,5 @@ struct WebClipGridItems: View {
                 }
             }
         }
-        
-        WebClipRefresherGrid()
     }
 }

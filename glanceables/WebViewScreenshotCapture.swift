@@ -125,7 +125,6 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
         webView.configuration.userContentController.addUserScript(WKUserScript(source: jsString, injectionTime: .atDocumentStart, forMainFrameOnly: false))
     }
     
-    
     class Coordinator: NSObject, WKNavigationDelegate, WKUIDelegate, UIScrollViewDelegate, WKScriptMessageHandler {
         var parent: WebViewScreenshotCapture
         weak var webView: WKWebView?
