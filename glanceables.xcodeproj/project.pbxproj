@@ -38,9 +38,9 @@
 		03A868572C48880600CCB79D /* Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03A868562C48880600CCB79D /* Response.swift */; };
 		03A868592C489B3100CCB79D /* JavascriptLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03A868582C489B3100CCB79D /* JavascriptLoader.swift */; };
 		03A8685B2C4B312E00CCB79D /* LlamaResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03A8685A2C4B312E00CCB79D /* LlamaResult.swift */; };
-		03A868612C4F0FB300CCB79D /* WebViewCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03A868602C4F0FB300CCB79D /* WebViewCoordinator.swift */; };
 		03A868632C51FF0800CCB79D /* NavigationButtonsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03A868622C51FF0800CCB79D /* NavigationButtonsView.swift */; };
 		03B557922C753488001466BB /* LeakAvoider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03B557912C753488001466BB /* LeakAvoider.swift */; };
+		03B557942C755446001466BB /* WebClipUpdaterViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03B557932C755446001466BB /* WebClipUpdaterViewModel.swift */; };
 		03B798572C62E9A400E431E4 /* SchedulerManagerViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03B798562C62E9A400E431E4 /* SchedulerManagerViewModel.swift */; };
 		03B798592C62EA5600E431E4 /* SchedulerModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03B798582C62EA5600E431E4 /* SchedulerModel.swift */; };
 		03B7985B2C62F0BA00E431E4 /* WebClipCreatorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03B7985A2C62F0BA00E431E4 /* WebClipCreatorViewModel.swift */; };
@@ -100,9 +100,9 @@
 		03A868562C48880600CCB79D /* Response.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Response.swift; sourceTree = "<group>"; };
 		03A868582C489B3100CCB79D /* JavascriptLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JavascriptLoader.swift; sourceTree = "<group>"; };
 		03A8685A2C4B312E00CCB79D /* LlamaResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LlamaResult.swift; sourceTree = "<group>"; };
-		03A868602C4F0FB300CCB79D /* WebViewCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewCoordinator.swift; sourceTree = "<group>"; };
 		03A868622C51FF0800CCB79D /* NavigationButtonsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationButtonsView.swift; sourceTree = "<group>"; };
 		03B557912C753488001466BB /* LeakAvoider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LeakAvoider.swift; sourceTree = "<group>"; };
+		03B557932C755446001466BB /* WebClipUpdaterViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebClipUpdaterViewModel.swift; sourceTree = "<group>"; };
 		03B798562C62E9A400E431E4 /* SchedulerManagerViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SchedulerManagerViewModel.swift; sourceTree = "<group>"; };
 		03B798582C62EA5600E431E4 /* SchedulerModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SchedulerModel.swift; sourceTree = "<group>"; };
 		03B7985A2C62F0BA00E431E4 /* WebClipCreatorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebClipCreatorViewModel.swift; sourceTree = "<group>"; };
@@ -248,11 +248,11 @@
 		03A8685E2C4EE5B300CCB79D /* ViewModel */ = {
 			isa = PBXGroup;
 			children = (
-				03A868602C4F0FB300CCB79D /* WebViewCoordinator.swift */,
 				036D58E42C3C99300042D491 /* WebClipManagerViewModel.swift */,
 				03553FE22C41F6A800FCB4CC /* WebClipSelectorViewModel.swift */,
 				03B798562C62E9A400E431E4 /* SchedulerManagerViewModel.swift */,
 				03B7985A2C62F0BA00E431E4 /* WebClipCreatorViewModel.swift */,
+				03B557932C755446001466BB /* WebClipUpdaterViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -384,6 +384,7 @@
 				03553FE32C41F6A800FCB4CC /* WebClipSelectorViewModel.swift in Sources */,
 				03A8685B2C4B312E00CCB79D /* LlamaResult.swift in Sources */,
 				03A868512C4865C900CCB79D /* CaptureRectangleView.swift in Sources */,
+				03B557942C755446001466BB /* WebClipUpdaterViewModel.swift in Sources */,
 				03778E422C36028F009CB9A1 /* CapturedElement.swift in Sources */,
 				0378B8772C096DB00005BAE5 /* WebGridSingleSnapshotView.swift in Sources */,
 				03BEC9B32C6EAA2500372E6E /* ImageLoader.swift in Sources */,
@@ -415,7 +416,6 @@
 				038DAC2A2C618AE20000EA6A /* WebClipEditorView.swift in Sources */,
 				03C5DAD12C23A76B0061FA25 /* ScreenshotUtils.swift in Sources */,
 				038DAC312C61C97D0000EA6A /* WebClipUserDefaultsRepository.swift in Sources */,
-				03A868612C4F0FB300CCB79D /* WebViewCoordinator.swift in Sources */,
 				03BEC9AF2C6AD34E00372E6E /* WebClipGridView.swift in Sources */,
 				0378B8672C096D850005BAE5 /* glanceablesApp.swift in Sources */,
 				03B557922C753488001466BB /* LeakAvoider.swift in Sources */,

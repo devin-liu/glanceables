@@ -1,7 +1,7 @@
 import WebKit
 
 struct JavaScriptLoader {
-    static func loadJavaScript(webView: WKWebView, resourceName: String, extensionType: String) {
+    static func loadJavaScript(userContentController: WKUserContentController, resourceName: String, extensionType: String) {
         guard let scriptURL = Bundle.main.url(forResource: resourceName, withExtension: extensionType),
               let scriptContent = try? String(contentsOf: scriptURL) else {
             print("Failed to load JavaScript file: \(resourceName).\(extensionType)")
@@ -9,10 +9,10 @@ struct JavaScriptLoader {
         }
         
         let userScript = WKUserScript(source: scriptContent, injectionTime: .atDocumentStart, forMainFrameOnly: false)
-        webView.configuration.userContentController.addUserScript(userScript)
+        userContentController.addUserScript(userScript)
     }
     
-    static func injectGetElementsFromSelectorsScript(webView: WKWebView, elementSelector: String) {
+    static func injectGetElementsFromSelectorsScript(userContentController: WKUserContentController, elementSelector: String) {
         let jsCode = """
         (function() {
             function restoreElement() {
@@ -43,7 +43,7 @@ struct JavaScriptLoader {
                 // Check if the elements are already present
                 const element = document.querySelector(elementSelector);
                 if (element) {
-                    restoreElements();
+                    restoreElement();
                     observer.disconnect();
                 }
             }
@@ -52,8 +52,7 @@ struct JavaScriptLoader {
         })();
         """
         
-        let userScript = WKUserScript(source: jsCode, injectionTime: .atDocumentEnd, forMainFrameOnly: false)
-        webView.configuration.userContentController.addUserScript(userScript)
+        userContentController.addUserScript(WKUserScript(source: jsCode, injectionTime: .atDocumentEnd, forMainFrameOnly: false))
     }
     
     static func injectIsolateElementFromSelectorScript(webView: WKWebView, elementSelector: String) {

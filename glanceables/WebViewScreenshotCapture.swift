@@ -40,7 +40,7 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
         //        webView.addObserver(coordinator, forKeyPath: #keyPath(WKWebView.canGoForward), options: .new, context: nil)
         //
         configureMessageHandler(webView: webView, contentController: webView.configuration.userContentController, leakAvoider: leakAvoider)
-        JavaScriptLoader.loadJavaScript(webView: webView, resourceName: "captureElements", extensionType: "js")
+        JavaScriptLoader.loadJavaScript(userContentController: webView.configuration.userContentController, resourceName: "captureElements", extensionType: "js")
         injectSelectionScript(webView: webView)
         injectCaptureElementsScript(webView: webView)
         
@@ -202,7 +202,7 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
                 if scrollY != 0 {
                     parent.captureMenuViewModel.setScrollY(scrollY)
                 }
-                
+                userDidStopInteracting()
             }
             
             if message.name == "capturedElementsHandler", let messageBody = message.body as? String {
@@ -237,7 +237,8 @@ struct WebViewScreenshotCapture: UIViewRepresentable {
         }
         
         func processCapturedElements(_ elements: [CapturedElement]) {
-            parent.captureMenuViewModel.setCapturedElements(elements)
+//            parent.captureMenuViewModel.setCapturedElements(elements)
+            parent.viewModel.saveCapturedElements(newElements: elements)
         }
         
         private func parseScrollY(_ message: String) -> Double {

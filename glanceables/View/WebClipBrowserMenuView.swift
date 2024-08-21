@@ -45,11 +45,11 @@ struct WebClipBrowserMenuView: View {
                                             .onEnded {  [weak webClipSelector] _ in
                                                 webClipSelector!.setDragging(false)
                                                 webClipSelector!.setDragEnded(true)
+                                                
                                             }
                                     )
+                                    .overlay(CaptureRectangleView(dismiss: dismiss, captureMenuViewModel: webClipSelector, pendingClip: pendingClip))
                             }
-                            
-                            CaptureRectangleView(dismiss: dismiss, captureMenuViewModel: webClipSelector, pendingClip: pendingClip)
                         }
                     }
                 }

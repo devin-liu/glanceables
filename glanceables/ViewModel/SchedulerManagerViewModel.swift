@@ -10,11 +10,12 @@ class SchedulerViewModel: ObservableObject {
     private var screenshotAction: () -> Void = {}
     private var reloadAction: () -> Void = {}
     private var interval: TimeInterval = 60.0
+    
+    var pendingUpdates: [SnapshotUpdate] = []
 
     init() {}
 
-    func configure(interval: TimeInterval, actions: @escaping (SchedulerViewModel) -> (() -> Void, () -> Void)) {
-        print("configure SchedulerViewModel")
+    func configure(interval: TimeInterval, actions: @escaping (SchedulerViewModel) -> (() -> Void, () -> Void)) {        
         self.interval = interval
 
         let (screenshotAction, reloadAction) = actions(self)

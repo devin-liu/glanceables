@@ -1,31 +1,38 @@
 import SwiftUI
 import WebKit
+import Combine
 
 struct WebViewSnapshotRefresher: UIViewRepresentable {
     @Environment(WebClipManagerViewModel.self) private var webClipManager
     var webClipId: UUID
-    var id = UUID()
-    @State var llamaAPIManager = LlamaAPIManager()
-    @State private var webView: WKWebView?
-    @StateObject private var schedulerViewModel = SchedulerViewModel()
+    var llamaAPIManager = LlamaAPIManager()
+    @State private var schedulerViewModel = SchedulerViewModel()
+    var updaterViewModel: WebClipUpdaterViewModel
     
-    init(webClipId: UUID) {
+    init(webClipId: UUID, updaterViewModel: WebClipUpdaterViewModel) {
         self.webClipId = webClipId
+        self.updaterViewModel = updaterViewModel
     }
     
     func makeUIView(context: Context) -> WKWebView {
         let webView = WKWebView()
-        webView.navigationDelegate = context.coordinator
-        webView.uiDelegate = context.coordinator
+        
+        let coordinator = context.coordinator
+        webView.navigationDelegate = coordinator
+        webView.uiDelegate = coordinator
+        webView.scrollView.delegate = coordinator
         
         
         let leakAvoider = LeakAvoider(delegate: context.coordinator)
         
         context.coordinator.webView = webView
-        webView.configuration.userContentController.add(leakAvoider, name: "elementsFromSelectorsHandler")
         
-        JavaScriptLoader.loadJavaScript(webView: webView, resourceName: "captureElements", extensionType: "js")
-        injectGetElementsFromSelectorsScript(webView: webView)
+        configureMessageHandler(webView: webView, contentController: webView.configuration.userContentController, leakAvoider: leakAvoider)
+        
+        
+        JavaScriptLoader.loadJavaScript(userContentController: webView.configuration.userContentController, resourceName: "captureElements", extensionType: "js")
+        injectGetElementsFromSelectorsScript(userContentController: webView.configuration.userContentController)
+        
         
         let request = URLRequest(url: webClipManager.webClip(webClipId)!.url)
         webView.load(request)
@@ -42,19 +49,24 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
         
         schedulerViewModel.startScheduler()
         
-        
         return webView
+    }
+    
+    private func configureMessageHandler(webView: WKWebView, contentController: WKUserContentController, leakAvoider: LeakAvoider) {
+        contentController.removeAllScriptMessageHandlers()
+        contentController.add(leakAvoider, name: "capturedElementsHandler")
+        contentController.add(leakAvoider, name: "elementsFromSelectorsHandler")
     }
     
     func updateUIView(_ webView: WKWebView, context: Context) {
         print("updateUIView")
     }
     
-    func makeCoordinator() -> WebViewCoordinator {
-        WebViewCoordinator(self)
+    func makeCoordinator() -> Coordinator {
+        return Coordinator(self)
     }
     
-    func dismantleUIView(_ uiView: WKWebView, coordinator: WebViewCoordinator) {
+    func dismantleUIView(_ uiView: WKWebView, coordinator: Coordinator) {
         print("dismantleUIView WebViewSnapshotRefresher")
         schedulerViewModel.stopScheduler()
         
@@ -76,6 +88,8 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
         // Assuming 'CapturedElement' has properties like 'relativeTop' that can be used for scrolling
         guard let firstElement = elements.first else { return }
         
+        print("firstelement \(firstElement.selector) | top \(firstElement.relativeTop)")
+        
         let scrollScript = """
         scrollToElementWithRelativeTop("\(firstElement.selector)", \(firstElement.relativeTop));
         """
@@ -88,23 +102,23 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
     }
     
     func processElementsInnerText(_ innerText: String) {
+        updaterViewModel.queueSnapshotUpdate(innerText: innerText, conciseText: innerText)
         llamaAPIManager.analyzeInnerText(innerText: innerText) { [self] result in
             switch result {
             case .success(let result):
                 webClipManager.updateWebClip(withId: webClipId, newLlamaResult: result)
                 print("Generated result: \(result)")
-                webClipManager.webClip(webClipId)?.queueSnapshotUpdate(innerText: innerText, conciseText: result.conciseText)
+                updaterViewModel.queueSnapshotUpdate(innerText: innerText, conciseText: result.conciseText)
             case .failure(let error):
                 print("Error interpreting changes: \(error.localizedDescription)")
-                webClipManager.webClip(webClipId)?.queueSnapshotUpdate(innerText: innerText, conciseText: innerText)
             }
         }
     }
     
-    func injectGetElementsFromSelectorsScript(webView: WKWebView) {
-        guard let capturedElement = webClipManager.webClip(webClipId)?.capturedElements?.last else { return }
+    func injectGetElementsFromSelectorsScript(userContentController: WKUserContentController) {
+        guard let capturedElement = webClipManager.webClip(webClipId)?.capturedElements?.first else { return }
         let elementSelector = capturedElement.selector
-        JavaScriptLoader.injectGetElementsFromSelectorsScript(webView: webView, elementSelector: elementSelector)
+        JavaScriptLoader.injectGetElementsFromSelectorsScript(userContentController: userContentController, elementSelector: elementSelector)
     }
     
     func injectIsolateElementFromSelectorScript(webView: WKWebView) {
@@ -139,9 +153,73 @@ struct WebViewSnapshotRefresher: UIViewRepresentable {
             if let image = image {
                 let newSnapshot = webClipManager.updateScreenshot(image, toClipId: webClipId)
                 if newSnapshot != nil {
-                    webClipManager.webClip(webClipId)?.queueSnapshotUpdate(newSnapshot: newSnapshot)
+                    updaterViewModel.queueSnapshotUpdate(newSnapshot: newSnapshot)
                 }
             }
         }
+    }
+    
+    
+    class Coordinator: NSObject, WKNavigationDelegate, WKUIDelegate, UIScrollViewDelegate, WKScriptMessageHandler {
+        var parent: WebViewSnapshotRefresher
+        weak var webView: WKWebView?
+        
+        private var cancellables = Set<AnyCancellable>()
+        
+        init(_ parent: WebViewSnapshotRefresher) {
+            self.parent = parent
+        }
+        
+        deinit {
+            // Print to console that the coordinator is being deinitialized
+            print("Snapshot WebViewCoordinator deinitialized")
+            
+            // Remove any script message handlers
+            webView?.configuration.userContentController.removeScriptMessageHandler(forName: "elementsFromSelectorsHandler")
+            
+            // Cancel all active Combine subscriptions
+            cancellables.forEach { $0.cancel() }
+            cancellables.removeAll()
+            
+            // Clear the webView's delegate to avoid retain cycles
+            webView?.navigationDelegate = nil
+            webView?.uiDelegate = nil
+        }
+        
+        func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!
+        ) {
+            
+        }
+        
+        func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+            parent.handleDidFinishNavigation(webView: webView)
+        }
+        
+        func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
+            guard let webView = webView else { return }
+            if message.name == "elementsFromSelectorsHandler", let messageBody = message.body as? String {
+                parseElementsFromSelectors(messageBody)
+                parent.captureScreenshot(webView: webView)
+            }
+        }
+        
+        func parseElementsFromSelectors(_ jsonString: String) {
+            guard let data = jsonString.data(using: .utf8) else {
+                print("Error: Cannot create data from jsonString")
+                return
+            }
+            
+            do {
+                let elements = try JSONDecoder().decode([HTMLElement].self, from: data)
+                if let innerText = elements.first?.innerText {
+                    print("InnerText result: ", innerText)
+                    parent.processElementsInnerText(innerText)
+                }
+                
+            } catch {
+                print("Error: \(error)")
+            }
+        }
+        
     }
 }

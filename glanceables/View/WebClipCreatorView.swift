@@ -11,7 +11,7 @@ struct WebClipCreatorView: View {
         self.webClip = webClip
         if let webClip {
             pendingClip.updatePendingWebClip(newPendingClip: webClip.toPendingWebClip())
-        }        
+        }
     }
     
     var body: some View {

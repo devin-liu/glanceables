@@ -16,8 +16,9 @@ struct WebClipRefresherGrid: View {
     
     var body: some View {
         LazyVGrid(columns: columns) {
-            ForEach(webClipManager.webClips) { item in
-                WebViewSnapshotRefresher(webClipId: item.id)
+            ForEach(webClipManager.webClips, id: \.self) { item in            
+                let updaterViewModel = WebClipUpdaterViewModel(webClip: item)
+                WebViewSnapshotRefresher(webClipId: item.id, updaterViewModel: updaterViewModel)
                     .edgesIgnoringSafeArea(.all)
                     .opacity(0)  // Make the ScrollView invisible
             }

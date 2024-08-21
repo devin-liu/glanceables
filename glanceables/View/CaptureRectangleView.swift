@@ -51,7 +51,6 @@ struct CaptureRectangleView: View {
                 if let dismiss {
                     dismiss()
                 }
-                pendingClip.finalizeClip()
                 // Check if a web clip is selected and if it's in editing mode
                 if let webClip = webClipManager.selectedWebClip(), webClipManager.isEditing {
                     // Call updateWebClip function with correct parameters
@@ -71,6 +70,7 @@ struct CaptureRectangleView: View {
             }
             .offset(x: -10, y: -65)
             .onAppear {
+                pendingClip.finalizeClip()
                 print("save button overlay appear")
             }
         } else {

@@ -12,7 +12,11 @@ class WebClip: ObservableObject, Identifiable, Equatable {
     var capturedElements: [CapturedElement]?
     var htmlElements: [HTMLElement]?
     @Published var snapshots: [SnapshotTimelineModel] = []
-    private var pendingUpdates: [SnapshotUpdate] = []
+    //    private var pendingUpdates: [SnapshotUpdate] = [] {
+    //        didSet {
+    //            print("pendingUpdates \(id) \(pendingUpdates.count)", pendingUpdates)
+    //        }
+    //    }
     
     init(id: UUID, url: URL, clipRect: CGRect? = nil, originalSize: CGSize? = nil, screenshotPath: String? = nil, screenshot: UIImage? = nil, scrollY: Double? = nil, pageTitle: String? = nil, capturedElements: [CapturedElement]? = nil, htmlElements: [HTMLElement]? = nil, snapshots: [SnapshotTimelineModel]? = nil) {
         self.id = id
@@ -30,48 +34,6 @@ class WebClip: ObservableObject, Identifiable, Equatable {
     
     static func ==(lhs: WebClip, rhs: WebClip) -> Bool {
         return lhs.id == rhs.id && lhs.url == rhs.url
-    }
-    
-    func queueSnapshotUpdate(newSnapshot: String? = nil, innerText: String? = nil, conciseText: String? = nil) {
-        let update = SnapshotUpdate(newSnapshot: newSnapshot, innerText: innerText, conciseText: conciseText)
-        pendingUpdates.append(update)
-        processPendingUpdates()
-    }
-    
-    private func processPendingUpdates() {
-        // Initialize a dictionary to keep track of the first occurrence of each update component
-        var fieldsDictionary: [String: String] = [:]
-        
-        // Iterate over all pending updates to merge them
-        for update in pendingUpdates {
-            // Collect only the first non-nil occurrence of each field
-            if let innerText = update.innerText, fieldsDictionary["innerText"] == nil {
-                fieldsDictionary["innerText"] = innerText
-            }
-            if let conciseText = update.conciseText, fieldsDictionary["conciseText"] == nil {
-                fieldsDictionary["conciseText"] = conciseText
-            }
-            if let newSnapshot = update.newSnapshot, fieldsDictionary["newSnapshot"] == nil {
-                fieldsDictionary["newSnapshot"] = newSnapshot
-            }
-        }
-        
-        // Track if a valid update was processed
-        var updateProcessed = false
-        
-        // Check if we have collected all necessary fields
-        if let innerText = fieldsDictionary["innerText"],
-           let conciseText = fieldsDictionary["conciseText"],
-           let newSnapshot = fieldsDictionary["newSnapshot"] {
-            // If all required fields are present, process the update
-            addSnapshotIfNeeded(screenshotPath: newSnapshot, innerText: innerText, conciseText: conciseText)
-            updateProcessed = true
-        }
-        
-        // Clear the pending updates list only if a valid update was processed
-        if updateProcessed {
-            pendingUpdates.removeAll()
-        }
     }
     
     func addSnapshotIfNeeded(screenshotPath: String, innerText: String, conciseText: String? = nil) {
@@ -99,23 +61,20 @@ class WebClip: ObservableObject, Identifiable, Equatable {
     }
     
     func reset() {
-            // Reset URL and path-related properties
-            url = URL(string: "about:blank")!  // Assigning a default blank URL
-            clipRect = nil
-            originalSize = nil
-            screenshotPath = nil
-            screenshot = nil
-            scrollY = nil
-            pageTitle = nil
-            
-            // Clear collections
-            capturedElements = []
-            htmlElements = []
-            snapshots = []
-            
-            // Clear any pending updates
-            pendingUpdates.removeAll()
-        }
+        // Reset URL and path-related properties
+        url = URL(string: "about:blank")!  // Assigning a default blank URL
+        clipRect = nil
+        originalSize = nil
+        screenshotPath = nil
+        screenshot = nil
+        scrollY = nil
+        pageTitle = nil
+        
+        // Clear collections
+        capturedElements = []
+        htmlElements = []
+        snapshots = []                        
+    }
 }
 
 
@@ -145,17 +104,17 @@ extension WebClip: Hashable {
     }
     
     func toPendingWebClip() -> PendingWebClip {
-           var pendingClip = PendingWebClip()
-           pendingClip.id = self.id  // Retain the same UUID for continuity
-           pendingClip.url = self.url
-           pendingClip.clipRect = self.clipRect
-           pendingClip.originalSize = self.originalSize
-           pendingClip.screenshotPath = self.screenshotPath
-           pendingClip.scrollY = self.scrollY
-           pendingClip.pageTitle = self.pageTitle
-           pendingClip.capturedElements = self.capturedElements
-           pendingClip.htmlElements = self.htmlElements
-           
-           return pendingClip
-       }
+        var pendingClip = PendingWebClip()
+        pendingClip.id = self.id  // Retain the same UUID for continuity
+        pendingClip.url = self.url
+        pendingClip.clipRect = self.clipRect
+        pendingClip.originalSize = self.originalSize
+        pendingClip.screenshotPath = self.screenshotPath
+        pendingClip.scrollY = self.scrollY
+        pendingClip.pageTitle = self.pageTitle
+        pendingClip.capturedElements = self.capturedElements
+        pendingClip.htmlElements = self.htmlElements
+        
+        return pendingClip
+    }
 }

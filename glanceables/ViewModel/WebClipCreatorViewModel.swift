@@ -63,7 +63,7 @@ import WebKit
     }
     
     
-    func getNewClip() -> WebClip{
+    func getNewClip() -> WebClip{        
         return WebClip(
             id: UUID(),
             url: validURL!,
@@ -98,6 +98,7 @@ import WebKit
     
     func finalizeClip(){
         if let webView = webView {
+            webView.evaluateJavaScript("window.webkit.messageHandlers.userStoppedInteracting.postMessage(null);")
             updatePageTitle(webView.title)
             if let newURL = webView.url {
                 validURLs.append(newURL)

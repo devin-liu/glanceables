@@ -38,8 +38,7 @@ import SwiftUI
     
     func updateScreenshot(_ newScreenShot: UIImage, toClipId:UUID) -> String? {
         if let toClip = webClip(toClipId){
-            if let screenshotPath = toClip.screenshotPath{
-                print("updateScreenshot ", screenshotPath)
+            if let screenshotPath = toClip.screenshotPath{                
                 if let newScreenshotPath = ScreenshotUtils.saveScreenshotToFile(screenshotPath: screenshotPath, from: newScreenShot) {
                     updateWebClip(withId: toClip.id, newScreenshotPath: newScreenshotPath)
                     return newScreenshotPath
