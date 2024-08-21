@@ -22,6 +22,10 @@ Our web clip capture & restoring algorithm enhances precise selection and automa
 - **Data Capture and Storage:** For each detected element, a unique CSS selector is generated. We record this selector along with the element’s position relative to the scroll position at the time of capture, ensuring detailed and precise information storage.
 - **Boundary Restoration:** When accessing the widget again, the system uses the stored CSS selector to locate the element and adjusts the webpage's scroll to the original position, perfectly restoring the view to its previous state.
 
+
+### Change Detection and Notifications
+Glanceables detects changes in your saved web clips and notifies you directly on your desktop. This ensures that you're always aware of the latest updates without needing to manually check back.
+
 ### Auto-Refresh
 To ensure you are viewing the most current information, webpages within Glanceables refresh automatically every 60 seconds.
 
